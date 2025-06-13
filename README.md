@@ -1,4 +1,4 @@
-# 🍥 Astro 主题 vhAstro-Theme
+# SouljourneyBlog 项目
 
 ## 🚀 vhAstro-Theme：一款基于 Astro 构建的优雅的响应式博客主题
 
