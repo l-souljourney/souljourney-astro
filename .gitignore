@@ -5,7 +5,7 @@ dist/
 
 # dependencies
 node_modules/
-pnpm-lock.yaml
+# pnpm-lock.yaml - 需要提交以确保依赖版本一致
 
 # logs
 npm-debug.log*
