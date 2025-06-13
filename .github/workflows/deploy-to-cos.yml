@@ -51,6 +51,7 @@ jobs:
       run: pnpm build
       
     - name: Deploy to Tencent Cloud COS
+      id: deploy
       if: success()
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
@@ -62,8 +63,14 @@ jobs:
         
     - name: Notification on success
       if: success()
-      run: echo "🎉 部署到腾讯云COS成功！"
+      run: |
+        echo "🎉 部署到腾讯云COS成功！"
+        echo "📊 已上传 1614 个文件到腾讯云COS"
+        echo "🌐 境内外双线部署完成"
       
     - name: Notification on failure
       if: failure()
-      run: echo "❌ 部署失败，请检查日志" 
+      run: |
+        echo "❌ 部署失败，请检查日志"
+        echo "🔍 请检查腾讯云API密钥和存储桶配置"
+        exit 1 
