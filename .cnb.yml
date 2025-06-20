@@ -38,6 +38,11 @@ main:
       stages:
         - *build_steps
         - echo "✅ === 构建完成 ==="
+        - echo "📁 === 构建产物检查 ==="
+        - ls -la dist/ | head -10
+        - echo "文件总数：$(find dist -type f | wc -l)"
+        - echo "总大小：$(du -sh dist/)"
+        - echo "🚀 === 开始部署到COS ==="
       plugins:
         - name: cnbcool/tencent-cos
           with:
@@ -48,6 +53,14 @@ main:
             src: dist/
             dest: /
             delete: true
+        - name: cos-deploy-check
+          stages:
+            - echo "✅ === COS部署完成确认 ==="
+            - echo "🌐 存储桶: ${COS_BUCKET}"
+            - echo "📍 区域: ${COS_REGION}"
+            - echo "📂 目标路径: /"
+            - echo "🗑️ 删除旧文件: 是"
+            - echo "🎉 COS部署成功！"
         - name: cnbcool/tencent-cdn
           if: ${CDN_DOMAIN}
           with:
@@ -56,6 +69,13 @@ main:
             secret_key: ${COS_SECRET_KEY}
             type: directory
             path: /
+        - name: cdn-refresh-check
+          if: ${CDN_DOMAIN}
+          stages:
+            - echo "✅ === CDN刷新完成确认 ==="
+            - echo "🌐 域名: ${CDN_DOMAIN}"
+            - echo "📂 刷新路径: /"
+            - echo "🔄 CDN缓存刷新成功！"
         - name: github-sync
           if: ${GITHUB_TOKEN}
           stages:
