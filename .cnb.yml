@@ -6,10 +6,15 @@ main:
   push:
     - name: astro-blog-deploy
       image: node:18
+      # 从密钥仓库导入敏感环境变量
+      # imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
         NODE_ENV: production
         ASTRO_TELEMETRY_DISABLED: "1"
         TZ: Asia/Shanghai
+        # 腾讯云COS配置
+        COS_BUCKET: "souljourney-1251969283"
+        COS_REGION: "ap-shanghai"
       
       script: |
         echo "🚀 开始构建 L-Souljourney 博客..."
@@ -38,8 +43,27 @@ main:
         du -sh dist/
         find dist -type f | wc -l | xargs echo "文件数量:"
         
-        echo "✅ 博客构建完成！"
-        echo "💡 请在CNB控制台配置COS部署插件完成自动上传"
+        # 检查COS环境变量
+        if [ -n "$COS_SECRET_ID" ] && [ -n "$COS_SECRET_KEY" ]; then
+          echo "🔧 检测到COS配置，准备上传..."
+          
+          # 安装 Python 和 coscmd 工具
+          apt-get update && apt-get install -y python3 python3-pip
+          pip3 install coscmd
+          
+          # 配置 coscmd
+          coscmd config -a $COS_SECRET_ID -s $COS_SECRET_KEY -b $COS_BUCKET -r $COS_REGION
+          
+          # 上传构建产物到COS
+          echo "📤 上传文件到腾讯云COS..."
+          coscmd upload -r -s --delete ./dist/ /
+          
+          echo "✅ 博客部署完成！"
+          echo "🌐 访问地址: https://blog.l-souljourney.cn"
+        else
+          echo "⚠️  未配置COS环境变量，跳过上传步骤"
+          echo "💡 请在CNB项目设置中配置 COS_SECRET_ID 和 COS_SECRET_KEY 环境变量"
+        fi
 
 # 开发分支 - 仅构建测试
 develop:
