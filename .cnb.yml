@@ -5,51 +5,48 @@
 # 只有main分支推送才会触发构建和同步
 main:
   push:
-    - name: sync-to-github
-      image: ubuntu:latest
-      # 从密钥仓库导入GitHub Token
+    - # 从密钥仓库导入GitHub Token
       imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
         TZ: Asia/Shanghai
       
-      script: |
-        echo "🔄 开始同步代码到GitHub..."
-        
-        # 安装git
-        apt-get update && apt-get install -y git
-        
-        # 检查GitHub Token
-        if [ -z "$GITHUB_TOKEN" ]; then
-          echo "⚠️  未配置GITHUB_TOKEN，跳过同步"
-          echo "💡 请在CNB密钥仓库中配置GITHUB_TOKEN环境变量"
-          exit 0
-        fi
-        
-        # 配置Git用户信息
-        git config --global user.email "cnb-sync@l-souljourney.cn"
-        git config --global user.name "CNB Auto Sync"
-        
-        # 添加GitHub远程仓库
-        echo "📡 配置GitHub远程仓库..."
-        git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
-        git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-        
-        # 推送到GitHub
-        echo "📤 推送到GitHub仓库..."
-        git push github main --force
-        
-        echo "✅ 代码同步完成！"
-        echo "🚀 GitHub Actions将自动触发构建部署"
-        echo "📊 同步信息:"
-        echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
-        echo "   - 分支: $CNB_GIT_REF"
-        echo "   - 同步时间: $(date)"
+      stages:
+        - name: sync-to-github
+          script: |
+            echo "🔄 开始同步代码到GitHub..."
+            
+            # 检查GitHub Token
+            if [ -z "$GITHUB_TOKEN" ]; then
+              echo "⚠️  未配置GITHUB_TOKEN，跳过同步"
+              echo "💡 请在CNB密钥仓库中配置GITHUB_TOKEN环境变量"
+              exit 0
+            fi
+            
+            # 配置Git用户信息
+            git config --global user.email "cnb-sync@l-souljourney.cn"
+            git config --global user.name "CNB Auto Sync"
+            
+            # 添加GitHub远程仓库
+            echo "📡 配置GitHub远程仓库..."
+            git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
+            git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+            
+            # 推送到GitHub
+            echo "📤 推送到GitHub仓库..."
+            git push github main --force
+            
+            echo "✅ 代码同步完成！"
+            echo "🚀 GitHub Actions将自动触发构建部署"
+            echo "📊 同步信息:"
+            echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
+            echo "   - 分支: $CNB_GIT_REF"
+            echo "   - 同步时间: $(date)"
 
 # Pull Request - 同步到GitHub触发PR检查
 "**":
   pull_request:
-    - name: sync-pr-to-github
-      image: ubuntu:latest
-      script: |
-        echo "🔍 PR事件 - 同步到GitHub..."
-        echo "💡 GitHub Actions将处理PR构建检查" 
+    - stages:
+        - name: sync-pr-to-github
+          script: |
+            echo "🔍 PR事件 - 同步到GitHub..."
+            echo "💡 GitHub Actions将处理PR构建检查" 
