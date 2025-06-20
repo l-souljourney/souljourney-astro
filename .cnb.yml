@@ -6,11 +6,12 @@
   imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
   docker:
     image: node:18-alpine
-  # 配置数据卷缓存
+  # 配置CNB数据卷缓存 - 修复错误的映射路径
   volumes:
     - /cnb/cache/node_modules:/workspace/node_modules
     - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
-    - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
+    - /cnb/cache/pnpm-cache:/root/.cache/pnpm
+    - /cnb/cache/npm-cache:/root/.npm
 
 # 通用构建步骤
 .build_steps: &build_steps
@@ -19,16 +20,27 @@
   - echo "📦 === 配置pnpm ==="
   - npm install -g pnpm@latest
   - pnpm --version
-  # 配置pnpm镜像源和缓存
+  # 配置pnpm镜像源和缓存 - 与volumes映射保持一致
   - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
   - pnpm config set store-dir /root/.local/share/pnpm/store
-  - pnpm config set cache-dir /cnb/cache/pnpm-cache
+  - pnpm config set cache-dir /root/.cache/pnpm
+  - pnpm config set state-dir /root/.local/state/pnpm
   - pnpm config set prefer-offline true
-  # 简化网络配置，有缓存后降低超时设置
+  # 优化网络配置
   - pnpm config set network-timeout 120000
   - pnpm config set fetch-retries 3
+  - pnpm config set network-concurrency 16
+  - echo "🔍 === 缓存状态检查 ==="
+  - echo "检查node_modules缓存："
+  - ls -la /workspace/node_modules 2>/dev/null | head -3 || echo "❌ node_modules缓存不存在"
+  - echo "检查pnpm store缓存："
+  - ls -la /root/.local/share/pnpm/store 2>/dev/null | head -3 || echo "❌ pnpm store缓存不存在"
+  - echo "检查pnpm cache缓存："
+  - ls -la /root/.cache/pnpm 2>/dev/null | head -3 || echo "❌ pnpm cache缓存不存在"
   - echo "📦 === 安装依赖 ==="
+  - echo "开始时间：$(date '+%H:%M:%S')"
   - pnpm install --frozen-lockfile --prefer-offline
+  - echo "完成时间：$(date '+%H:%M:%S')"
   - echo "🏗️ === 构建项目 ==="
   - pnpm build
 
