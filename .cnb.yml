@@ -10,52 +10,61 @@ imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
 main:
   push:
     - docker:
-        # 第一阶段：构建带缓存的镜像
-        - name: build-cache
-          type: cache
-          image: node:18-alpine
-          dockerfile: cache.dockerfile
-          by:
-            - package.json
-            - pnpm-lock.yaml
-        
-        # 第二阶段：使用缓存构建项目
-        - name: build-project
-          image: "*build-cache"
-          commands:
-            - /usr/local/bin/setup-cache.sh
-            - /usr/local/bin/build-astro.sh
+        image: node:18-alpine
+        stages:
+          # 第一阶段：构建带缓存的镜像
+          - name: build-cache
+            type: docker:cache
+            options:
+              dockerfile: cache.dockerfile
+              by:
+                - package.json
+                - pnpm-lock.yaml
+            exports:
+              name: CACHE_IMAGE
+          
+          # 第二阶段：使用缓存构建项目
+          - name: build-project
+            image: $CACHE_IMAGE
+            commands:
+              - /usr/local/bin/setup-cache.sh
+              - /usr/local/bin/build-astro.sh
 
 # 开发分支：仅构建测试
 develop:
   push:
     - docker:
-        # 第一阶段：构建带缓存的镜像
-        - name: build-cache
-          type: cache
-          image: node:18-alpine
-          dockerfile: cache.dockerfile
-          by:
-            - package.json
-            - pnpm-lock.yaml
-        
-        # 第二阶段：使用缓存构建项目
-        - name: build-project
-          image: "*build-cache"
-          commands:
-            - /usr/local/bin/setup-cache.sh
-            - /usr/local/bin/build-astro.sh
+        image: node:18-alpine
+        stages:
+          # 第一阶段：构建带缓存的镜像
+          - name: build-cache
+            type: docker:cache
+            options:
+              dockerfile: cache.dockerfile
+              by:
+                - package.json
+                - pnpm-lock.yaml
+            exports:
+              name: CACHE_IMAGE
+          
+          # 第二阶段：使用缓存构建项目
+          - name: build-project
+            image: $CACHE_IMAGE
+            commands:
+              - /usr/local/bin/setup-cache.sh
+              - /usr/local/bin/build-astro.sh
 
 # PR分支：快速构建检查
-merge_request:
-  - docker:
-      image: node:18-alpine
-      commands:
-        - echo "🔍 PR构建检查"
-        - apk add --no-cache git python3 py3-pip
-        - npm install -g pnpm@latest
-        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm install --frozen-lockfile
-        - pnpm run build
+"**":
+  pull_request:
+    - docker:
+        image: node:18-alpine
+        commands:
+          - echo "🔍 PR构建检查"
+          - apk add --no-cache git python3 py3-pip
+          - npm install -g pnpm@latest
+          - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+          - pnpm install --frozen-lockfile
+          - pnpm run build
 
 
