@@ -40,94 +40,6 @@
   - du -sh dist/
   - find dist/ -type f | wc -l | xargs echo "文件总数："
 
-# COS部署步骤
-.cos_deploy: &cos_deploy
-  - echo "☁️ === 开始部署到腾讯云COS ==="
-  - echo "配置信息："
-  - echo "- 存储桶：$COS_BUCKET"
-  - echo "- 区域：$COS_REGION" 
-  - echo "- 路径：/"
-  - python3 -c "
-    import os, time
-    from qcloud_cos import CosConfig, CosS3Client
-    
-    print('🔐 初始化COS客户端...')
-    config = CosConfig(Region=os.environ['COS_REGION'], SecretId=os.environ['COS_SECRET_ID'], SecretKey=os.environ['COS_SECRET_KEY'])
-    client = CosS3Client(config)
-    
-    print('📁 开始上传文件...')
-    import subprocess
-    result = subprocess.run(['find', 'dist/', '-type', 'f'], capture_output=True, text=True)
-    files = result.stdout.strip().split('\n')
-    
-    total_files = len([f for f in files if f])
-    uploaded = 0
-    
-    for file_path in files:
-        if not file_path:
-            continue
-        key = file_path.replace('dist/', '')
-        try:
-            client.upload_file(
-                Bucket=os.environ['COS_BUCKET'],
-                LocalFilePath=file_path,
-                Key=key
-            )
-            uploaded += 1
-            if uploaded % 10 == 0:
-                print(f'已上传 {uploaded}/{total_files} 个文件')
-        except Exception as e:
-            print(f'上传失败 {file_path}: {e}')
-    
-    print(f'✅ COS部署完成！共上传 {uploaded}/{total_files} 个文件')
-    print(f'🌐 网站地址: https://{os.environ[\"COS_BUCKET\"]}.cos-website.{os.environ[\"COS_REGION\"]}.myqcloud.com')
-    "
-
-# CDN刷新步骤
-.cdn_refresh: &cdn_refresh
-  - echo "🔄 === 刷新CDN缓存 ==="
-  - |
-    if [ -n "$CDN_DOMAIN" ]; then
-      echo "CDN域名：$CDN_DOMAIN"
-      python3 -c "
-    import os, json, time, hmac, hashlib, base64
-    from urllib.request import Request, urlopen
-    from urllib.parse import urlencode
-    
-    def refresh_cdn():
-        try:
-            # 模拟CDN刷新（实际需要根据腾讯云CDN API实现）
-            print('🔄 模拟CDN刷新...')
-            time.sleep(2)
-            print(f'✅ CDN刷新完成！域名: {os.environ[\"CDN_DOMAIN\"]}')
-            print(f'🌐 访问地址: https://{os.environ[\"CDN_DOMAIN\"]}')
-        except Exception as e:
-            print(f'CDN刷新失败: {e}')
-    
-    refresh_cdn()
-      "
-    else
-      echo "未配置CDN_DOMAIN，跳过CDN刷新"
-    fi
-
-# GitHub同步步骤
-.github_sync: &github_sync
-  - echo "🔄 === 同步到GitHub ==="
-  - |
-    if [ -n "$GITHUB_TOKEN" ]; then
-      git config --global user.name "CNB Bot"
-      git config --global user.email "bot@cnb.cool"
-      
-      # 添加GitHub远程仓库
-      git remote add github https://x-access-token:$GITHUB_TOKEN@github.com/L-Souljourney/souljourney-astro.git || true
-      
-      # 推送到GitHub
-      git push github $CI_COMMIT_REF_NAME || echo "GitHub同步失败，请检查token权限"
-      echo "✅ GitHub同步完成"
-    else
-      echo "未配置GITHUB_TOKEN，跳过GitHub同步"
-    fi
-
 # ===== 分支配置 =====
 
 # 主分支：生产环境构建+部署
@@ -156,12 +68,46 @@ main:
           commands: *build_with_cache
         - name: build-astro
           commands: *astro_build
+        # 第三阶段：部署到COS
         - name: deploy-cos
-          commands: *cos_deploy  
+          commands:
+            - echo "☁️ === 开始部署到腾讯云COS ==="
+            - echo "配置信息："
+            - echo "- 存储桶：$COS_BUCKET"
+            - echo "- 区域：$COS_REGION"
+            - echo "- 路径：/"
+          plugins:
+            - name: cnbcool/tencent-cos
+              with:
+                secret_id: ${COS_SECRET_ID}
+                secret_key: ${COS_SECRET_KEY}
+                bucket: ${COS_BUCKET}
+                region: ${COS_REGION}
+                src: dist/
+                dest: /
+                delete: true
+        # 第四阶段：CDN刷新（如果配置了CDN域名）
         - name: refresh-cdn
-          commands: *cdn_refresh
+          if: ${CDN_DOMAIN}
+          plugins:
+            - name: cnbcool/tencent-cdn
+              with:
+                domain: ${CDN_DOMAIN}
+                secret_id: ${COS_SECRET_ID}
+                secret_key: ${COS_SECRET_KEY}
+                type: directory
+                path: /
+        # 第五阶段：同步到GitHub（如果配置了GitHub Token）
         - name: sync-github
-          commands: *github_sync
+          if: ${GITHUB_TOKEN}
+          commands:
+            - echo "🔄 === 同步到GitHub ==="
+            - apk add --no-cache git
+            - git config --global user.name "CNB Deploy Bot"
+            - git config --global user.email "noreply@cnb.cool"
+            - git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+            - git push github main --force
+            - echo "✅ GitHub同步完成"
 
 # 开发分支：仅构建测试
 develop:
