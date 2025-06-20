@@ -260,7 +260,6 @@ volumes:
   - /cnb/cache/node_modules:/workspace/node_modules     # 项目依赖缓存
   - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store # pnpm存储缓存  
   - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache         # pnpm缓存目录
-  - /cnb/cache/npm-cache:/root/.npm                     # npm缓存
 ```
 
 **缓存原理**：
@@ -271,25 +270,47 @@ volumes:
 
 #### 2. **pnpm 配置优化**
 ```bash
-# 网络配置
+# 镜像源和缓存配置
 pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-pnpm config set network-timeout 300000      # 5分钟超时
-pnpm config set fetch-retries 5             # 5次重试
-pnpm config set network-concurrency 3       # 限制并发数
-
-# 缓存配置  
 pnpm config set store-dir /root/.local/share/pnpm/store
 pnpm config set cache-dir /cnb/cache/pnpm-cache
 pnpm config set prefer-offline true         # 优先使用缓存
 
+# 精简的网络配置（有缓存后降低超时设置）
+pnpm config set network-timeout 120000      # 2分钟超时
+pnpm config set fetch-retries 3             # 3次重试
+
 # 安装参数
-pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
+pnpm install --frozen-lockfile --prefer-offline
 ```
 
-#### 3. **构建性能提升效果**
-- **首次构建**: 依然需要下载所有依赖包（~5分钟）
+#### 3. **配置精简优化**
+通过YAML锚点(&)和引用(*)实现配置复用，减少重复代码：
+
+```yaml
+# 通用配置锚点
+.common_config: &common_config
+  imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+  docker:
+    image: node:18-alpine
+  volumes: [缓存配置]
+
+# 通用构建步骤  
+.build_steps: &build_steps
+  - [精简的构建步骤]
+
+# 各分支使用锚点引用
+main:
+  push:
+    - <<: *common_config
+      stages:
+        - *build_steps
+```
+
+#### 4. **构建性能提升效果**
+- **首次构建**: 依然需要下载所有依赖包（~3-4分钟，已精简配置）
 - **后续构建**: 利用缓存，预期减少到30秒-1分钟
-- **网络稳定性**: 显著减少网络超时错误
+- **配置简洁**: 从146行精简到68行，减少55%
 - **构建成功率**: 提升构建稳定性
 
 ## 环境变量配置

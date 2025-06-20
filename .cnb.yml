@@ -1,46 +1,43 @@
 # 腾讯云 CNB 构建配置文件
 # L-Souljourney 博客项目
 
+# 通用配置锚点
+.common_config: &common_config
+  imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+  docker:
+    image: node:18-alpine
+  # 配置数据卷缓存
+  volumes:
+    - /cnb/cache/node_modules:/workspace/node_modules
+    - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
+    - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
+
+# 通用构建步骤
+.build_steps: &build_steps
+  - echo "🔧 === 环境准备 ==="
+  - node --version
+  - echo "📦 === 配置pnpm ==="
+  - npm install -g pnpm@latest
+  - pnpm --version
+  # 配置pnpm镜像源和缓存
+  - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+  - pnpm config set store-dir /root/.local/share/pnpm/store
+  - pnpm config set cache-dir /cnb/cache/pnpm-cache
+  - pnpm config set prefer-offline true
+  # 简化网络配置，有缓存后降低超时设置
+  - pnpm config set network-timeout 120000
+  - pnpm config set fetch-retries 3
+  - echo "📦 === 安装依赖 ==="
+  - pnpm install --frozen-lockfile --prefer-offline
+  - echo "🏗️ === 构建项目 ==="
+  - pnpm build
+
 main:
   push:
-    - # 导入密钥仓库中的环境变量文件
-      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      docker:
-        image: node:18-alpine
-      # 配置数据卷缓存
-      volumes:
-        - /cnb/cache/node_modules:/workspace/node_modules
-        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
-        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
-        - /cnb/cache/npm-cache:/root/.npm
+    - <<: *common_config
       stages:
-        - echo "🔧 === 环境准备 ==="
-        - node --version
-        - npm --version
-        - echo "📦 === pnpm环境配置 ==="
-        - npm install -g pnpm@latest
-        - pnpm --version
-        # 优化pnpm网络配置和缓存配置
-        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm config set store-dir /root/.local/share/pnpm/store
-        - pnpm config set cache-dir /cnb/cache/pnpm-cache
-        - pnpm config set network-timeout 300000
-        - pnpm config set fetch-retries 5
-        - pnpm config set fetch-retry-mintimeout 20000
-        - pnpm config set fetch-retry-maxtimeout 120000
-        - pnpm config set network-concurrency 3
-        - pnpm config set prefer-offline true
-        - echo "📦 === 检查缓存状态 ==="
-        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
-        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
-        - echo "📦 === 安装项目依赖 ==="
-        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
-        - echo "🏗️ === 构建Astro项目 ==="
-        - pnpm build
-        - echo "=== 构建产物检查 ==="
-        - ls -la dist/
-        - echo "文件总数：$(find dist -type f | wc -l)"
-        - echo "构建完成 ✅"
+        - *build_steps
+        - echo "✅ === 构建完成 ==="
       plugins:
         - name: cnbcool/tencent-cos
           with:
@@ -68,78 +65,20 @@ main:
             - git config --global user.email "noreply@cnb.cool"
             - git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
             - git push github main --force
-            - echo "GitHub同步完成 ✅"
+            - echo "✅ GitHub同步完成"
 
 develop:
   push:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      docker:
-        image: node:18-alpine
-      # 配置数据卷缓存
-      volumes:
-        - /cnb/cache/node_modules:/workspace/node_modules
-        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
-        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
-        - /cnb/cache/npm-cache:/root/.npm
+    - <<: *common_config
       stages:
-        - echo "🔧 === 开发环境构建测试 ==="
-        - node --version
-        - echo "📦 === pnpm环境配置 ==="
-        - npm install -g pnpm@latest
-        - pnpm --version
-        # 优化pnpm配置和缓存配置
-        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm config set store-dir /root/.local/share/pnpm/store
-        - pnpm config set cache-dir /cnb/cache/pnpm-cache
-        - pnpm config set network-timeout 300000
-        - pnpm config set fetch-retries 5
-        - pnpm config set fetch-retry-mintimeout 20000
-        - pnpm config set fetch-retry-maxtimeout 120000
-        - pnpm config set network-concurrency 3
-        - pnpm config set prefer-offline true
-        - echo "📦 === 检查缓存状态 ==="
-        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
-        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
-        - echo "📦 === 安装项目依赖 ==="
-        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
-        - echo "🏗️ === 构建测试 ==="
-        - pnpm build
-        - echo "开发构建测试完成 ✅"
+        - *build_steps
+        - echo "✅ === 开发测试完成 ==="
 
 "**":
   pull_request:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      docker:
-        image: node:18-alpine
-      # 配置数据卷缓存
-      volumes:
-        - /cnb/cache/node_modules:/workspace/node_modules
-        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
-        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
-        - /cnb/cache/npm-cache:/root/.npm
+    - <<: *common_config
       stages:
-        - echo "🔍 === PR构建检查 ==="
-        - node --version
-        - echo "📦 === pnpm环境配置 ==="
-        - npm install -g pnpm@latest
-        - pnpm --version
-        # 优化pnpm配置和缓存配置
-        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm config set store-dir /root/.local/share/pnpm/store
-        - pnpm config set cache-dir /cnb/cache/pnpm-cache
-        - pnpm config set network-timeout 300000
-        - pnpm config set fetch-retries 5
-        - pnpm config set fetch-retry-mintimeout 20000
-        - pnpm config set fetch-retry-maxtimeout 120000
-        - pnpm config set network-concurrency 3
-        - pnpm config set prefer-offline true
-        - echo "📦 === 检查缓存状态 ==="
-        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
-        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
-        - echo "📦 === 安装项目依赖 ==="
-        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
-        - echo "🏗️ === 构建检查 ==="
-        - pnpm build
-        - echo "PR构建检查完成 ✅"
+        - *build_steps
+        - echo "✅ === PR检查完成 ==="
 
 
