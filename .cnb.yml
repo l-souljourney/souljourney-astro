@@ -11,14 +11,18 @@ main:
         - echo "🔧 === 环境准备 ==="
         - node --version
         - npm --version
-        - echo "安装pnpm..."
-        - npm install -g pnpm
+        - echo "📦 === pnpm环境配置 ==="
+        - npm install -g pnpm@latest
         - pnpm --version
-        - echo "📦 === 配置pnpm镜像源 ==="
-        # 使用腾讯云镜像源优化下载速度
+        # 优化pnpm网络配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm config set network-timeout 300000
+        - pnpm config set fetch-retries 5
+        - pnpm config set fetch-retry-mintimeout 20000
+        - pnpm config set fetch-retry-maxtimeout 120000
+        - pnpm config set network-concurrency 3
         - echo "📦 === 安装项目依赖 ==="
-        - pnpm install --frozen-lockfile
+        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
         - echo "🏗️ === 构建Astro项目 ==="
         - pnpm build
         - echo "=== 构建产物检查 ==="
@@ -62,9 +66,19 @@ develop:
       stages:
         - echo "🔧 === 开发环境构建测试 ==="
         - node --version
-        - npm install -g pnpm
+        - echo "📦 === pnpm环境配置 ==="
+        - npm install -g pnpm@latest
+        - pnpm --version
+        # 优化pnpm配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm install --frozen-lockfile
+        - pnpm config set network-timeout 300000
+        - pnpm config set fetch-retries 5
+        - pnpm config set fetch-retry-mintimeout 20000
+        - pnpm config set fetch-retry-maxtimeout 120000
+        - pnpm config set network-concurrency 3
+        - echo "📦 === 安装项目依赖 ==="
+        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
+        - echo "🏗️ === 构建测试 ==="
         - pnpm build
         - echo "开发构建测试完成 ✅"
 
@@ -76,9 +90,19 @@ develop:
       stages:
         - echo "🔍 === PR构建检查 ==="
         - node --version
-        - npm install -g pnpm
+        - echo "📦 === pnpm环境配置 ==="
+        - npm install -g pnpm@latest
+        - pnpm --version
+        # 优化pnpm配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-        - pnpm install --frozen-lockfile
+        - pnpm config set network-timeout 300000
+        - pnpm config set fetch-retries 5
+        - pnpm config set fetch-retry-mintimeout 20000
+        - pnpm config set fetch-retry-maxtimeout 120000
+        - pnpm config set network-concurrency 3
+        - echo "📦 === 安装项目依赖 ==="
+        - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
+        - echo "🏗️ === 构建检查 ==="
         - pnpm build
         - echo "PR构建检查完成 ✅"
 

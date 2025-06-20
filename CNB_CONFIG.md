@@ -42,6 +42,20 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx
 
 ## 配置变更历史
 
+### 2025-06-20 - pnpm性能优化版本
+
+**性能优化：**
+1. **pnpm网络配置优化**：
+   - 增加网络超时时间：`network-timeout 300000` (5分钟)
+   - 增强重试机制：`fetch-retries 5`，`fetch-retry-mintimeout 20000`，`fetch-retry-maxtimeout 120000`
+   - 限制并发连接：`network-concurrency 3` (避免过多并发导致超时)
+   - 使用最新pnpm版本：`pnpm@latest`
+
+2. **安装参数优化**：
+   - 添加 `--prefer-offline` 标志优先使用缓存
+   - 使用 `--reporter=append-only` 简化日志输出
+   - 保持 `--frozen-lockfile` 确保版本一致性
+
 ### 2025-06-20 - 环境变量修复版本
 
 **关键修复：**
