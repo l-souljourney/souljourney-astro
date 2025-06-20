@@ -6,91 +6,113 @@ main:
     name: 主分支部署流水线
     env:
       TZ: Asia/Shanghai
+      NODE_ENV: production
     image: node:18-alpine
-    stages:
-      - name: 环境准备
-        script: |
-          echo "🔧 === 环境准备 ==="
-          node --version
-          npm --version
-          echo "安装pnpm..."
-          npm install -g pnpm
-          pnpm --version
-          echo "环境准备完成 ✅"
-          
-      - name: 安装依赖
-        script: |
-          echo "📦 === 安装项目依赖 ==="
-          pnpm config set registry https://registry.npmmirror.com
-          pnpm install --frozen-lockfile
-          echo "依赖安装完成 ✅"
-          
-      - name: 构建项目
-        script: |
-          echo "🏗️ === 构建Astro项目 ==="
-          pnpm build
-          echo "=== 构建产物检查 ==="
-          ls -la dist/
-          echo "文件总数: $(find dist -type f | wc -l)"
-          echo "构建完成 ✅"
-          
-      - name: 部署到COS
-        image: cnbcool/tencent-cos
-        script: |
-          echo "🚀 === 部署到腾讯云COS ==="
-          plugin-deploy
-          echo "COS部署完成 ✅"
-          
-      - name: 刷新CDN
-        image: cnbcool/tencent-cdn
-        script: |
-          echo "🔄 === 刷新CDN缓存 ==="
-          plugin-refresh
-          echo "CDN刷新完成 ✅"
-          
-      - name: 同步GitHub
+    script: |
+      echo "🔧 === 环境准备 ==="
+      node --version
+      npm --version
+      echo "安装pnpm..."
+      npm install -g pnpm
+      pnpm --version
+      echo "环境准备完成 ✅"
+      
+      echo "📦 === 安装项目依赖 ==="
+      pnpm config set registry https://registry.npmmirror.com
+      pnpm install --frozen-lockfile
+      echo "依赖安装完成 ✅"
+      
+      echo "🏗️ === 构建Astro项目 ==="
+      pnpm build
+      echo "=== 构建产物检查 ==="
+      ls -la dist/
+      echo "文件总数: $(find dist -type f | wc -l)"
+      echo "构建完成 ✅"
+      
+      echo "🚀 === 部署到腾讯云COS ==="
+      echo "使用COS插件部署..."
+    plugins:
+      - name: cnbcool/tencent-cos
+        with:
+          secret_id: ${COS_SECRET_ID}
+          secret_key: ${COS_SECRET_KEY}
+          bucket: ${COS_BUCKET}
+          region: ${COS_REGION}
+          src: dist/
+          dest: /
+          delete: true
+          exclude: |
+            *.tmp
+            .DS_Store
+      - name: cnbcool/tencent-cdn
+        if: env.CDN_DOMAIN
+        with:
+          secret_id: ${COS_SECRET_ID}
+          secret_key: ${COS_SECRET_KEY}
+          domain: ${CDN_DOMAIN}
+          type: purge
+          urls: |
+            https://${CDN_DOMAIN}/
+            https://${CDN_DOMAIN}/index.html
+      - name: github-sync
+        if: env.GITHUB_TOKEN
         script: |
           echo "📤 === 同步到GitHub ==="
-          if [ -n "$GITHUB_TOKEN" ]; then
-            apk add --no-cache git
-            git config --global user.email "cnb@l-souljourney.cn"
-            git config --global user.name "CNB Deploy"
-            git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
-            git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-            git push github main --force
-            echo "GitHub同步完成 ✅"
-          else
-            echo "⚠️ 未配置GITHUB_TOKEN，跳过同步"
-          fi
+          git config --global user.name "CNB Deploy Bot"
+          git config --global user.email "noreply@cnb.cool"
+          git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || true
+          git push github main --force
+          echo "GitHub同步完成 ✅"
 
 develop:
   push:
     name: 开发分支测试流水线
     env:
       TZ: Asia/Shanghai
+      NODE_ENV: development
     image: node:18-alpine
-    stages:
-      - name: 构建测试
-        script: |
-          echo "🧪 === 开发分支构建测试 ==="
-          npm install -g pnpm
-          pnpm config set registry https://registry.npmmirror.com
-          pnpm install --frozen-lockfile
-          pnpm build
-          echo "✅ 构建测试通过"
+    script: |
+      echo "🧪 === 开发环境构建测试 ==="
+      node --version
+      npm --version
+      npm install -g pnpm
+      pnpm --version
+      
+      echo "📦 === 安装依赖 ==="
+      pnpm config set registry https://registry.npmmirror.com
+      pnpm install --frozen-lockfile
+      
+      echo "🏗️ === 构建测试 ==="
+      pnpm build
+      ls -la dist/
+      echo "开发环境构建测试完成 ✅"
 
-'**':
+"**":
   pull_request:
     name: PR构建检查
     env:
       TZ: Asia/Shanghai
     image: node:18-alpine
-    stages:
-      - name: PR检查
-        script: |
-          echo "🔍 === PR构建检查 ==="
-          npm install -g pnpm
-          pnpm config set registry https://registry.npmmirror.com
-          pnpm install --frozen-lockfile
-          pnpm build
-          echo "✅ PR检查通过"
+    script: |
+      echo "🔍 === PR构建检查 ==="
+      node --version
+      npm install -g pnpm
+      pnpm config set registry https://registry.npmmirror.com
+      pnpm install --frozen-lockfile
+      pnpm build
+      echo "PR检查完成 ✅"
+
+"$":
+  push:
+    name: 默认分支构建
+    env:
+      TZ: Asia/Shanghai
+    image: node:18-alpine
+    script: |
+      echo "🔧 === 基础构建测试 ==="
+      node --version
+      npm install -g pnpm
+      pnpm config set registry https://registry.npmmirror.com
+      pnpm install --frozen-lockfile
+      pnpm build
+      echo "基础构建完成 ✅"
