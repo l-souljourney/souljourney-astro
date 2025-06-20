@@ -1,97 +1,79 @@
 # 腾讯云 CNB (Cloud Native Builder) 构建配置文件
-# L-Souljourney 博客简化部署配置
+# L-Souljourney 博客 - 代码同步到GitHub方案
 
-# 主分支 - 生产部署
+# 主分支 - 同步到GitHub触发GitHub Actions
 main:
   push:
-    - name: astro-blog-deploy
-      image: node:18
-      # 从密钥仓库导入敏感环境变量
+    - name: sync-to-github
+      image: alpine/git
+      # 从密钥仓库导入GitHub Token
       # imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
-        NODE_ENV: production
-        ASTRO_TELEMETRY_DISABLED: "1"
         TZ: Asia/Shanghai
-        # 腾讯云COS配置
-        COS_BUCKET: "souljourney-1251969283"
-        COS_REGION: "ap-shanghai"
       
       script: |
-        echo "🚀 开始构建 L-Souljourney 博客..."
+        echo "🔄 开始同步代码到GitHub..."
         
-        # 环境信息
-        echo "📋 环境信息:"
-        node --version
-        npm --version
-        
-        # 安装 pnpm
-        echo "📦 安装 pnpm 包管理器..."
-        npm install -g pnpm@latest
-        pnpm --version
-        
-        # 安装依赖
-        echo "📚 安装项目依赖..."
-        pnpm install --frozen-lockfile
-        
-        # 构建项目
-        echo "🔨 构建 Astro 项目..."
-        pnpm build
-        
-        # 显示构建结果
-        echo "📊 构建产物信息:"
-        ls -la dist/
-        du -sh dist/
-        find dist -type f | wc -l | xargs echo "文件数量:"
-        
-        # 检查COS环境变量
-        if [ -n "$COS_SECRET_ID" ] && [ -n "$COS_SECRET_KEY" ]; then
-          echo "🔧 检测到COS配置，准备上传..."
-          
-          # 安装 Python 和 coscmd 工具
-          apt-get update && apt-get install -y python3 python3-pip
-          pip3 install coscmd
-          
-          # 配置 coscmd
-          coscmd config -a $COS_SECRET_ID -s $COS_SECRET_KEY -b $COS_BUCKET -r $COS_REGION
-          
-          # 上传构建产物到COS
-          echo "📤 上传文件到腾讯云COS..."
-          coscmd upload -r -s --delete ./dist/ /
-          
-          echo "✅ 博客部署完成！"
-          echo "🌐 访问地址: https://blog.l-souljourney.cn"
-        else
-          echo "⚠️  未配置COS环境变量，跳过上传步骤"
-          echo "💡 请在CNB项目设置中配置 COS_SECRET_ID 和 COS_SECRET_KEY 环境变量"
+        # 检查GitHub Token
+        if [ -z "$GITHUB_TOKEN" ]; then
+          echo "⚠️  未配置GITHUB_TOKEN，跳过同步"
+          echo "💡 请在CNB密钥仓库中配置GITHUB_TOKEN环境变量"
+          exit 0
         fi
+        
+        # 配置Git用户信息
+        git config --global user.email "cnb-sync@l-souljourney.cn"
+        git config --global user.name "CNB Auto Sync"
+        
+        # 添加GitHub远程仓库
+        echo "📡 配置GitHub远程仓库..."
+        git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
+        git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+        
+        # 推送到GitHub
+        echo "📤 推送到GitHub仓库..."
+        git push github main --force
+        
+        echo "✅ 代码同步完成！"
+        echo "🚀 GitHub Actions将自动触发构建部署"
+        echo "📊 同步信息:"
+        echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
+        echo "   - 分支: $CNB_GIT_REF"
+        echo "   - 同步时间: $(date)"
 
-# 开发分支 - 仅构建测试
+# 开发分支 - 同步到GitHub的develop分支
 develop:
   push:
-    - name: astro-blog-test
-      image: node:18
+    - name: sync-develop-to-github
+      image: alpine/git
+      # imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
-        NODE_ENV: development
-        ASTRO_TELEMETRY_DISABLED: "1"
+        TZ: Asia/Shanghai
       
       script: |
-        echo "🧪 开发分支构建测试..."
+        echo "🧪 同步开发分支到GitHub..."
         
-        # 安装依赖并构建
-        npm install -g pnpm@latest
-        pnpm install --frozen-lockfile
-        pnpm build
+        if [ -z "$GITHUB_TOKEN" ]; then
+          echo "⚠️  未配置GITHUB_TOKEN，跳过同步"
+          exit 0
+        fi
         
-        echo "✅ 开发构建测试完成！"
+        # 配置Git用户信息
+        git config --global user.email "cnb-sync@l-souljourney.cn"
+        git config --global user.name "CNB Auto Sync"
+        
+        # 添加GitHub远程仓库并推送
+        git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
+        git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+        git push github develop --force
+        
+        echo "✅ 开发分支同步完成！"
 
-# Pull Request - 代码检查
+# Pull Request - 同步到GitHub触发PR检查
 "**":
   pull_request:
-    - name: pr-check
-      image: node:18
+    - name: sync-pr-to-github
+      image: alpine/git
       script: |
-        echo "🔍 PR 构建检查..."
-        npm install -g pnpm@latest
-        pnpm install --frozen-lockfile
-        pnpm build
-        echo "✅ PR 构建检查通过" 
+        echo "🔍 PR事件 - 同步到GitHub..."
+        echo "💡 GitHub Actions将处理PR构建检查" 

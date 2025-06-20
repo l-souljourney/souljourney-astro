@@ -1,1 +1,20 @@
- 
+# CNB 环境变量配置示例文件
+# 此文件用于说明需要在 CNB 密钥仓库中配置的环境变量
+# 
+# 使用方法：
+# 1. 在 CNB 中创建一个密钥仓库（如：l-souljourney/env）
+# 2. 在密钥仓库中创建 env.yml 文件
+# 3. 将下面的配置复制到 env.yml 中，并填入实际的密钥值
+# 4. 在 .cnb.yml 中通过 imports 引用这个文件
+
+# GitHub Token（用于CNB同步代码到GitHub）
+GITHUB_TOKEN: "ghp_..."   # 在GitHub生成的Personal Access Token，需要repo权限
+
+# 声明允许使用这些环境变量的镜像
+allow_images:
+  - alpine/git
+  - ubuntu:latest
+
+# 声明允许使用这些环境变量的仓库
+allow_slugs:
+  - l-souljourney/souljourney-astro 

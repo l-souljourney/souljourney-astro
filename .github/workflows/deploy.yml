@@ -1,0 +1,114 @@
+name: 🚀 Deploy Astro Blog
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 构建和部署到腾讯云COS
+  deploy-to-cos:
+    name: 🏗️ Build & Deploy to Tencent COS
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+        
+    - name: 📚 Install dependencies
+      run: pnpm install --frozen-lockfile
+      
+    - name: 🔨 Build Astro project
+      run: pnpm build
+      env:
+        NODE_ENV: production
+        ASTRO_TELEMETRY_DISABLED: 1
+        
+    - name: 📊 Show build info
+      run: |
+        echo "📊 构建产物信息:"
+        ls -la dist/
+        du -sh dist/
+        find dist -type f | wc -l | xargs echo "文件数量:"
+        
+    - name: 🚀 Deploy to Tencent COS
+      uses: zkqiang/tencent-cos-action@v0.1.0
+      with:
+        args: upload -rs --delete ./dist/ /
+        secret_id: ${{ secrets.COS_SECRET_ID }}
+        secret_key: ${{ secrets.COS_SECRET_KEY }}
+        bucket: ${{ vars.COS_BUCKET || 'souljourney-1251969283' }}
+        region: ${{ vars.COS_REGION || 'ap-shanghai' }}
+        
+    - name: 🔄 Refresh CDN
+      if: success()
+      run: |
+        echo "🔄 触发CDN刷新..."
+        curl -X POST "https://cdn.tencentcloudapi.com/" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "Action": "PurgePathCache",
+            "Version": "2018-06-06",
+            "Region": "'${{ vars.COS_REGION || 'ap-shanghai' }}'",
+            "Paths": ["https://blog.l-souljourney.cn/*"],
+            "FlushType": "flush"
+          }' || echo "⚠️ CDN刷新失败，请手动刷新"
+          
+    - name: 🎉 Deployment Success
+      if: success()
+      run: |
+        echo "🎉 博客部署成功！"
+        echo "🌐 国内访问: https://blog.l-souljourney.cn"
+        echo "🌍 海外访问: 等待 Cloudflare Pages 构建完成"
+        echo "📊 部署统计:"
+        echo "   - 构建时间: $(date)"
+        echo "   - Git 提交: ${{ github.sha }}"
+        echo "   - 分支: ${{ github.ref_name }}"
+
+  # PR构建检查
+  pr-check:
+    name: 🔍 PR Build Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+        
+    - name: 📚 Install dependencies
+      run: pnpm install --frozen-lockfile
+      
+    - name: 🔨 Build test
+      run: pnpm build
+      env:
+        NODE_ENV: production
+        ASTRO_TELEMETRY_DISABLED: 1
+        
+    - name: ✅ PR Check Complete
+      run: |
+        echo "✅ PR 构建检查通过"
+        echo "📊 构建产物:"
+        ls -la dist/
+        echo "🎯 可以安全合并到主分支" 
