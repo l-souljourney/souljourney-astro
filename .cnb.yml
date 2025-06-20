@@ -14,7 +14,7 @@ main:
         TZ: Asia/Shanghai
       
       # 构建镜像
-      image: node:18-alpine
+      image: node:18
       
       # 构建阶段
       stages:
@@ -137,7 +137,7 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18-alpine
+      image: node:18
       
       stages:
         - name: setup-environment
@@ -177,7 +177,7 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18-alpine
+      image: node:18
       
       stages:
         - name: pr-check
@@ -202,7 +202,7 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18-alpine
+      image: node:18
       
       stages:
         - name: branch-build-test
