@@ -94,10 +94,6 @@ pnpm build
 pnpm newpost '文章标题'
 ```
 
-### ⚠️ Hexo 迁移 Astro 方法
-
-> 将 `Hexo` 博客的 `src/_posts/` 目录下的文章文件，复制到 `Astro` 的 `src/content/blog/` 目录下即可，然后自定义 `src/config.ts` 配置文件去自定义博客。<br>⚠️ `Hexo` 的部署、使用、自动化部署等方法 完全适用于 `Astro` 博客！<br>🎉 此时，你已成功迁移 Hexo 博客至 Astro 博客！
-
 ## 🍬 特色页面
 
 ### 友情链接

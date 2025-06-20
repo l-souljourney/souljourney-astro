@@ -41,33 +41,18 @@ main:
         echo "   - 分支: $CNB_GIT_REF"
         echo "   - 同步时间: $(date)"
 
-# 开发分支 - 同步到GitHub的develop分支
+# 开发分支 - 仅用于开发测试，不自动同步到GitHub
+# 只有合并到main分支时才会触发GitHub同步和自动部署
 develop:
   push:
-    - name: sync-develop-to-github
-      image: alpine/git
-      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      env:
-        TZ: Asia/Shanghai
-      
+    - name: develop-build-check
+      image: node:18
       script: |
-        echo "🧪 同步开发分支到GitHub..."
-        
-        if [ -z "$GITHUB_TOKEN" ]; then
-          echo "⚠️  未配置GITHUB_TOKEN，跳过同步"
-          exit 0
-        fi
-        
-        # 配置Git用户信息
-        git config --global user.email "cnb-sync@l-souljourney.cn"
-        git config --global user.name "CNB Auto Sync"
-        
-        # 添加GitHub远程仓库并推送
-        git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
-        git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-        git push github develop --force
-        
-        echo "✅ 开发分支同步完成！"
+        echo "🧪 开发分支推送检查..."
+        echo "📝 当前分支: develop"
+        echo "💡 此分支不会自动同步到GitHub"
+        echo "🔄 只有合并到main分支时才会触发部署"
+        echo "✅ 开发分支检查完成"
 
 # Pull Request - 同步到GitHub触发PR检查
 "**":
