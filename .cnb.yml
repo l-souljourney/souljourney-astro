@@ -4,7 +4,7 @@
 main:
   push:
     - # 导入密钥仓库中的环境变量文件
-      imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
       stages:
@@ -56,7 +56,7 @@ main:
 
 develop:
   push:
-    - imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
       stages:
@@ -70,7 +70,7 @@ develop:
 
 "**":
   pull_request:
-    - imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
       stages:

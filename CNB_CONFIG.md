@@ -22,7 +22,7 @@ env.yml - 密钥仓库中的环境变量配置文件
 
 ### 导入语法
 ```yaml
-imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
 ```
 
 ### env.yml 文件示例
@@ -46,7 +46,7 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx
 
 **关键修复：**
 1. **添加imports配置**：正确导入密钥仓库中的环境变量
-   - 路径：`https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml`
+   - 路径：`https://cnb.cool/l-souljourney/env/-/blob/main/env.yml`
    - 适用于所有分支和触发条件
 
 2. **COS部署问题解决**：
@@ -213,7 +213,7 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx     # GitHub Personal Access Token
 3. **验证导入路径**：
    ```bash
    # 确认文件可访问
-   curl https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+   curl https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
    ```
 
 ## 相关文档
