@@ -1,125 +1,52 @@
-name: 🚀 Deploy Astro Blog
+name: 🚀 部署到腾讯云COS
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: 
+      - main
+  workflow_dispatch:
 
 jobs:
-  # 构建和部署到腾讯云COS
-  deploy-to-cos:
-    name: 🏗️ Build & Deploy to Tencent COS
+  build-and-deploy:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     
     steps:
-    - name: 📥 Checkout code
+    - name: 📥 检出代码
       uses: actions/checkout@v4
       
-    - name: 📦 Setup Node.js
+    - name: 📦 设置Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
+        cache: 'npm'
         
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-        
-    - name: 📚 Install dependencies
-      run: pnpm install --frozen-lockfile
+    - name: 🔧 安装依赖
+      run: npm ci
       
-    - name: 🔨 Build Astro project
-      run: pnpm build
-      env:
-        NODE_ENV: production
-        ASTRO_TELEMETRY_DISABLED: 1
-        
-    - name: 📊 Verify build output
+    - name: 🏗️ 构建项目
+      run: npm run build
+      
+    - name: 📋 检查构建文件
       run: |
-        echo "📊 构建产物信息:"
-        ls -la dist/
-        du -sh dist/
-        find dist -type f | wc -l | xargs echo "文件数量:"
-        echo "🔍 检查可能有问题的文件:"
-        find dist -name "*.html" | grep -E "(中文|特殊字符)" || echo "未发现明显问题文件"
-        echo "📝 验证关键文件存在:"
-        ls -la dist/index.html || echo "⚠️ 缺少index.html"
+        echo "=== 构建产物检查 ==="
+        echo "构建目录大小: $(du -sh dist/)"
+        echo "文件总数: $(find dist -type f | wc -l)"
+        echo "文件列表（前20个）:"
+        find dist -type f | head -20
         
-    - name: 🚀 Deploy to Tencent COS
+    - name: 🚀 部署到腾讯云COS
       uses: TencentCloud/cos-action@v1
       with:
         secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         cos_bucket: ${{ secrets.COS_BUCKET }}
-        cos_region: ${{ secrets.COS_REGION }}
-        local_path: ./dist
+        cos_region: ap-guangzhou
+        local_path: dist/
         remote_path: /
         clean: true
-        skip_src: false
         
-    - name: 🔄 Refresh CDN (Optional)
-      if: success()
-      continue-on-error: true
-      run: |
-        echo "🔄 部署完成，CDN将自动刷新"
-        echo "💡 如需手动刷新CDN，请登录腾讯云控制台"
-          
-    - name: 🎉 Deployment Success
+    - name: 🎉 部署完成
       if: success()
       run: |
         echo "🎉 博客部署成功！"
-        echo "🌐 国内访问: https://blog.l-souljourney.cn"
-        echo "🌍 海外访问: Cloudflare Pages 已自动构建"
-        echo "📊 部署统计:"
-        echo "   - 构建时间: $(date)"
-        echo "   - Git 提交: ${{ github.sha }}"
-        echo "   - 分支: ${{ github.ref_name }}"
-        
-    - name: 🚨 Debug on failure
-      if: failure()
-      run: |
-        echo "🚨 部署失败，收集调试信息:"
-        echo "📁 dist目录内容:"
-        find dist -type f | head -20
-        echo "🔍 检查文件权限:"
-        ls -la dist/ | head -10
-        echo "💾 磁盘空间:"
-        df -h
-
-  # PR构建检查
-  pr-check:
-    name: 🔍 PR Build Check
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    
-    steps:
-    - name: 📥 Checkout code
-      uses: actions/checkout@v4
-      
-    - name: 📦 Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-        
-    - name: 📚 Install dependencies
-      run: pnpm install --frozen-lockfile
-      
-    - name: 🔨 Build test
-      run: pnpm build
-      env:
-        NODE_ENV: production
-        ASTRO_TELEMETRY_DISABLED: 1
-        
-    - name: ✅ PR Check Complete
-      run: |
-        echo "✅ PR 构建检查通过"
-        echo "📊 构建产物:"
-        ls -la dist/
-        echo "🎯 可以安全合并到主分支" 
+        echo "🌐 访问地址: https://blog.l-souljourney.cn" 
