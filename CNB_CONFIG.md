@@ -1,147 +1,225 @@
-# CNB (云原生构建) 配置指南
+# CNB 配置说明文档
 
-## 🚨 重要修复说明
+## 文件结构
 
-根据CNB官方文档和构建日志分析，之前的配置语法完全错误。CNB使用类似Docker的声明式语法，而非流水线语法。
+```
+.cnb.yml - 主要的CNB构建配置文件
+env.yml - 密钥仓库中的环境变量配置文件
+```
 
-### 修复的关键问题：
-1. **语法结构**: 使用 `docker:` + `stages:` 的官方标准格式
-2. **镜像指定**: 正确的镜像配置让CNB能识别并使用Node.js环境
-3. **插件调用**: 使用正确的插件格式和参数传递
+## 配置概述
 
-## 📋 配置文件说明
+本项目使用腾讯云CNB (Cloud Native Build) 进行自动化构建和部署。配置文件 `.cnb.yml` 定义了完整的CI/CD流程。
 
-项目使用 `.cnb.yml` 文件，采用CNB官方标准语法：
+## 🔑 环境变量配置方式
 
-### 标准语法格式
+**重要说明**：CNB的环境变量配置通过**密钥仓库**进行管理，而不是在CNB控制台直接设置。
+
+### 配置方法
+1. **密钥仓库文件**：在项目仓库中创建 `env.yml` 文件
+2. **导入配置**：在 `.cnb.yml` 中使用 `imports` 导入环境变量
+3. **引用变量**：使用 `${VARIABLE_NAME}` 格式引用变量
+
+### 导入语法
+```yaml
+imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+```
+
+### env.yml 文件示例
+```yaml
+# 腾讯云COS配置
+COS_SECRET_ID: your_secret_id
+COS_SECRET_KEY: your_secret_key
+COS_BUCKET: your_bucket_name
+COS_REGION: ap-shanghai
+
+# CDN配置(可选)
+CDN_DOMAIN: blog.l-souljourney.cn
+
+# GitHub同步(可选)
+GITHUB_TOKEN: ghp_xxxxxxxxxxxx
+```
+
+## 配置变更历史
+
+### 2025-06-20 - 环境变量修复版本
+
+**关键修复：**
+1. **添加imports配置**：正确导入密钥仓库中的环境变量
+   - 路径：`https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml`
+   - 适用于所有分支和触发条件
+
+2. **COS部署问题解决**：
+   - 环境变量现在能正确传递给COS插件
+   - 应该能看到COS部署的日志输出
+
+### 2025-06-20 - 性能优化版本
+
+**主要优化：**
+1. **镜像源优化**：改用腾讯云官方镜像源 `https://mirrors.cloud.tencent.com/npm/`
+   - 提供更好的国内访问速度
+   - 腾讯云内部网络优化
+   - 减少网络延迟和超时问题
+
+2. **配置精简**：
+   - 移除不必要的超时保护机制
+   - 简化网络配置参数
+   - 移除复杂的fallback策略
+
+3. **构建流程优化**：
+   - 简化依赖安装步骤
+   - 保留核心构建检查
+   - 优化日志输出
+
+### 2025-06-20 - 问题修复版本
+
+**修复内容：**
+1. **构建超时问题**：
+   - 添加 `timeout` 命令防止卡死
+   - 配置网络超时参数
+   - 添加重试机制
+
+2. **网络优化**：
+   - 使用国内镜像源加速
+   - 配置离线优先安装
+   - 添加fallback安装策略
+
+### 2025-06-19 - 语法修复版本
+
+**修复内容：**
+1. **CNB语法标准化**：使用 `docker: {image:}` + `stages:` 格式
+2. **插件配置修复**：正确配置腾讯云COS和CDN插件
+3. **分支策略**：定义main、develop、PR的不同构建策略
+
+## 部署架构
+
+```mermaid
+graph TD
+    A[Git Push] --> B[CNB 触发构建]
+    B --> C[导入环境变量 env.yml]
+    C --> D[Node.js 环境准备]
+    D --> E[pnpm 依赖安装]
+    E --> F[Astro 项目构建]
+    F --> G[生成 dist/ 静态文件]
+    G --> H[部署到腾讯云COS]
+    H --> I[CDN缓存刷新]
+    I --> J[同步到GitHub]
+    J --> K[部署完成]
+```
+
+## 环境变量配置
+
+### 配置位置
+**密钥仓库文件**：`env.yml`（位于项目根目录）
+
+### 必需环境变量
 
 ```yaml
-分支名称:
-  触发事件:
-    - docker:
-        image: 镜像名称
-      stages:
-        - 命令1
-        - 命令2
-      plugins:
-        - name: 插件名称
-          with:
-            参数1: 值1
-            参数2: 值2
+# 腾讯云COS配置
+COS_SECRET_ID: your_secret_id       # 腾讯云Secret ID
+COS_SECRET_KEY: your_secret_key     # 腾讯云Secret Key  
+COS_BUCKET: your_bucket_name        # COS存储桶名称
+COS_REGION: ap-shanghai             # COS区域
 ```
 
-### 分支配置策略
+### 可选环境变量
 
-- **main分支**: 完整部署流程（构建→COS→CDN）
-- **develop分支**: 开发环境构建测试
-- **PR检查**: 拉取请求构建验证（`"**"` 匹配所有分支）
-
-### 构建环境
-
-- **镜像**: `node:18-alpine` 
-- **包管理器**: pnpm (配置为使用国内镜像源)
-- **构建工具**: Astro
-
-## 🔐 环境变量配置
-
-在CNB控制台的密钥仓库中配置：
-
-### 必需变量 - 腾讯云COS
-```
-COS_SECRET_ID=你的腾讯云SecretId
-COS_SECRET_KEY=你的腾讯云SecretKey
-COS_BUCKET=你的COS存储桶名称
-COS_REGION=ap-guangzhou
-```
-
-### 可选变量 - CDN刷新
-```
-CDN_DOMAIN=blog.l-souljourney.cn
-```
-
-### 可选变量 - GitHub同步
-```
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
-```
-
-## 🔧 插件配置详解
-
-### cnbcool/tencent-cos 插件
 ```yaml
-- name: cnbcool/tencent-cos
-  with:
-    secret_id: ${COS_SECRET_ID}      # 腾讯云SecretId
-    secret_key: ${COS_SECRET_KEY}    # 腾讯云SecretKey  
-    bucket: ${COS_BUCKET}            # COS存储桶名称
-    region: ${COS_REGION}            # COS地域
-    src: dist/                       # 本地源目录
-    dest: /                          # COS目标路径
-    delete: true                     # 清理旧文件
+# CDN配置(可选)
+CDN_DOMAIN: blog.l-souljourney.cn   # CDN域名
+
+# GitHub同步(可选) 
+GITHUB_TOKEN: ghp_xxxxxxxxxxxx     # GitHub Personal Access Token
 ```
 
-### cnbcool/tencent-cdn 插件
-```yaml
-- name: cnbcool/tencent-cdn
-  if: ${CDN_DOMAIN}                  # 条件执行
-  with:
-    domain: ${CDN_DOMAIN}            # CDN域名
-    secret_id: ${COS_SECRET_ID}      # 腾讯云SecretId
-    secret_key: ${COS_SECRET_KEY}    # 腾讯云SecretKey
-    type: directory                  # 刷新类型
-    path: /                          # 刷新路径
-```
+### 变量命名规则
+根据 [CNB环境变量文档](https://docs.cnb.cool/zh/build/env.html)：
+- 只能包含字母（大小写）、数字和下划线（_）
+- 第一个字符不能是数字
+- 不符合规则的变量会被忽略
+- 变量值长度不能超过 100KiB
 
-## 🚀 构建流程说明
+## 构建分支策略
 
-### 主分支 (main)
-1. **环境准备**: 检查Node.js版本，安装pnpm
-2. **依赖安装**: 使用国内镜像源安装项目依赖
-3. **项目构建**: 执行Astro构建，生成静态文件到dist/
-4. **COS部署**: 上传构建产物到腾讯云COS
-5. **CDN刷新**: 自动刷新CDN缓存（如果配置了CDN_DOMAIN）
-6. **GitHub同步**: 推送代码到GitHub触发Cloudflare Pages（如果配置了GITHUB_TOKEN）
+### main分支 (生产环境)
+- **触发条件**：推送到main分支
+- **环境变量**：导入完整的 `env.yml` 配置
+- **构建步骤**：完整构建 → COS部署 → CDN刷新 → GitHub同步
+- **部署目标**：生产环境 (blog.l-souljourney.cn)
 
-### 开发分支 (develop)
-1. **构建测试**: 执行完整构建流程验证代码正确性
-2. **无部署**: 仅进行构建测试，不执行部署操作
+### develop分支 (开发环境)  
+- **触发条件**：推送到develop分支
+- **环境变量**：导入完整的 `env.yml` 配置
+- **构建步骤**：构建测试(不部署)
+- **用途**：验证代码可构建性
 
-### PR检查
-1. **快速验证**: 执行构建检查确保PR不会破坏构建
-2. **轻量化**: 最小化构建步骤，快速反馈
+### Pull Request (代码审查)
+- **触发条件**：创建或更新PR
+- **环境变量**：导入完整的 `env.yml` 配置
+- **构建步骤**：快速构建检查
+- **用途**：确保PR不会破坏构建
 
-## 📊 与之前配置的区别
+## 构建性能优化
 
-| 项目 | ❌ 之前错误配置 | ✅ 现在正确配置 |
-|------|-------------|-------------|
-| 语法格式 | `name:` + `script:` | `docker:` + `stages:` |
-| 镜像指定 | `image: node:18-alpine` | `docker: {image: node:18-alpine}` |
-| 命令执行 | 单一script块 | stages数组，每行一个命令 |
-| 插件调用 | 错误的plugins语法 | 标准的name+with格式 |
+### 镜像源优化
+- 使用腾讯云官方镜像源：`https://mirrors.cloud.tencent.com/npm/`
+- 腾讯云内部网络优化，减少网络延迟
+- 相比淘宝镜像源更稳定可靠
 
-## 🔍 故障排查
+### 依赖缓存
+- CNB自动缓存 `node_modules` 和 pnpm store
+- 二次构建时复用缓存，大幅提升速度
+- `--frozen-lockfile` 确保依赖版本一致
+
+### 构建产物
+- 检查构建产物完整性
+- 统计文件数量验证构建成功
+- 清晰的日志输出便于问题排查
+
+## 故障排查
 
 ### 常见问题
-1. **镜像无法识别**: 确保使用 `docker:` 块包裹 `image:` 配置
-2. **命令执行失败**: 检查stages中每个命令的语法正确性
-3. **插件参数错误**: 确保使用 `with:` 传递参数，而非直接并列
 
-### 验证方法
-- 查看CNB构建日志确认使用的镜像是否为 `node:18-alpine`
-- 检查构建过程中的输出信息
-- 确认环境变量是否正确配置
+1. **环境变量无法读取**
+   - 检查 `env.yml` 文件是否存在于仓库根目录
+   - 验证 `imports` 路径是否正确
+   - 确认变量名符合命名规则
 
-### 成功标志
-构建日志应该显示：
-```
-docker run ... node:18-alpine ...
-```
-而不是：
-```
-docker run ... cnbcool/default-build-env:latest ...
-```
+2. **COS部署无日志**
+   - ✅ 现在应该已修复（通过imports导入环境变量）
+   - 检查 `env.yml` 中COS相关变量是否正确配置
+   - 验证COS权限设置
 
-## 📚 参考资料
+3. **构建时间过长**
+   - 当前4分钟是正常范围
+   - 主要时间消耗在依赖下载
+   - 二次构建会利用缓存加速
 
-- [CNB官方文档](https://docs.cnb.cool/zh/build/)
-- [CNB流水线语法](https://docs.cnb.cool/zh/build/grammar.html)
-- [CNB构建环境](https://docs.cnb.cool/zh/build/environment.html)
+### 调试建议
+
+1. **本地测试**：
+   ```bash
+   pnpm install
+   pnpm build
+   ls -la dist/
+   ```
+
+2. **检查环境变量文件**：
+   ```bash
+   cat env.yml
+   # 确认变量格式正确
+   ```
+
+3. **验证导入路径**：
+   ```bash
+   # 确认文件可访问
+   curl https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+   ```
+
+## 相关文档
+
+- [CNB环境变量配置](https://docs.cnb.cool/zh/build/env.html)
+- [腾讯云CNB官方文档](https://cloud.tencent.com/document/product/1135)
+- [腾讯云COS文档](https://cloud.tencent.com/document/product/436)  
+- [Astro构建指南](https://docs.astro.build/en/guides/deploy/)
+- [pnpm官方文档](https://pnpm.io/zh/)

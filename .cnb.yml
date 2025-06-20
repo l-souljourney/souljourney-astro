@@ -3,25 +3,22 @@
 
 main:
   push:
-    - docker:
+    - # 导入密钥仓库中的环境变量文件
+      imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+      docker:
         image: node:18-alpine
       stages:
         - echo "🔧 === 环境准备 ==="
         - node --version
         - npm --version
         - echo "安装pnpm..."
-        - npm install -g pnpm --registry=https://registry.npmmirror.com
+        - npm install -g pnpm
         - pnpm --version
-        - echo "环境准备完成 ✅"
-        - echo "📦 === 配置pnpm ==="
-        - pnpm config set registry https://registry.npmmirror.com
-        - pnpm config set @astrojs:registry https://registry.npmmirror.com
-        - pnpm config set network-timeout 300000
-        - pnpm config set fetch-retries 3
-        - echo "pnpm配置完成 ✅"
+        - echo "📦 === 配置pnpm镜像源 ==="
+        # 使用腾讯云镜像源优化下载速度
+        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
         - echo "📦 === 安装项目依赖 ==="
-        - timeout 600 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
-        - echo "依赖安装完成 ✅"
+        - pnpm install --frozen-lockfile
         - echo "🏗️ === 构建Astro项目 ==="
         - pnpm build
         - echo "=== 构建产物检查 ==="
@@ -59,30 +56,29 @@ main:
 
 develop:
   push:
-    - docker:
+    - imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+      docker:
         image: node:18-alpine
       stages:
         - echo "🔧 === 开发环境构建测试 ==="
         - node --version
-        - npm install -g pnpm --registry=https://registry.npmmirror.com
-        - pnpm config set registry https://registry.npmmirror.com
-        - pnpm config set network-timeout 300000
-        - pnpm config set fetch-retries 3
-        - timeout 600 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
+        - npm install -g pnpm
+        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm install --frozen-lockfile
         - pnpm build
         - echo "开发构建测试完成 ✅"
 
 "**":
   pull_request:
-    - docker:
+    - imports: https://cnb.cool/l-souljourney/souljourney-astro/-/blob/main/env.yml
+      docker:
         image: node:18-alpine
       stages:
         - echo "🔍 === PR构建检查 ==="
         - node --version
-        - npm install -g pnpm --registry=https://registry.npmmirror.com
-        - pnpm config set registry https://registry.npmmirror.com
-        - pnpm config set network-timeout 300000
-        - timeout 300 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
+        - npm install -g pnpm
+        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm install --frozen-lockfile
         - pnpm build
         - echo "PR构建检查完成 ✅"
 
