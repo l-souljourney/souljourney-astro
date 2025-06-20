@@ -7,33 +7,13 @@
 
 # 通用构建步骤（使用缓存镜像）
 .build_with_cache: &build_with_cache
-  - echo "🔧 === 环境准备 ==="
-  - node --version
-  - echo "📦 === 使用缓存依赖 ==="
-  # 从缓存镜像复制node_modules
-  - cp -r "$NODE_MODULES_PATH" ./node_modules || echo "缓存不存在，将重新安装"
-  - cp -r "$PNPM_STORE_PATH" /root/.local/share/pnpm/store || echo "pnpm store缓存不存在"
-  - echo "🔍 === 检查依赖状态 ==="
-  - ls -la node_modules/ | head -10 || echo "node_modules为空"
-  - du -sh node_modules/ 2>/dev/null || echo "node_modules不存在"
-  - echo "📦 === 配置pnpm ==="
-  - npm install -g pnpm@latest
-  - pnpm --version
-  # 配置pnpm
-  - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-  - pnpm config set store-dir /root/.local/share/pnpm/store
-  - pnpm config set cache-dir /root/.cache/pnpm
-  - pnpm config set prefer-offline true
-  - pnpm config set network-timeout 300000
-  - pnpm config set fetch-retries 5
-  - pnpm config set network-concurrency 16
-  - echo "🚀 === 安装/更新依赖 ==="
-  - time pnpm install --prefer-offline --reporter=append-only
-  - echo "✅ === 依赖安装完成 ==="
+  - /workspace/setup-cache.sh
 
 # 构建Astro项目步骤
 .astro_build: &astro_build
   - echo "🏗️ === 开始构建Astro项目 ==="
+  - export PATH="/usr/local/bin:$PATH"
+  - which pnpm
   - time pnpm run build
   - echo "📊 === 构建产物统计 ==="
   - ls -la dist/
