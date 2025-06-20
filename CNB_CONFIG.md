@@ -59,6 +59,11 @@ COS_REGION=ap-guangzhou
 CDN_DOMAIN=blog.l-souljourney.cn
 ```
 
+### 可选变量 - GitHub同步
+```
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
 ## 🔧 插件配置详解
 
 ### cnbcool/tencent-cos 插件
@@ -94,6 +99,7 @@ CDN_DOMAIN=blog.l-souljourney.cn
 3. **项目构建**: 执行Astro构建，生成静态文件到dist/
 4. **COS部署**: 上传构建产物到腾讯云COS
 5. **CDN刷新**: 自动刷新CDN缓存（如果配置了CDN_DOMAIN）
+6. **GitHub同步**: 推送代码到GitHub触发Cloudflare Pages（如果配置了GITHUB_TOKEN）
 
 ### 开发分支 (develop)
 1. **构建测试**: 执行完整构建流程验证代码正确性

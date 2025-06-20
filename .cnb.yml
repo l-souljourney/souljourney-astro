@@ -10,12 +10,17 @@ main:
         - node --version
         - npm --version
         - echo "安装pnpm..."
-        - npm install -g pnpm
+        - npm install -g pnpm --registry=https://registry.npmmirror.com
         - pnpm --version
         - echo "环境准备完成 ✅"
-        - echo "📦 === 安装项目依赖 ==="
+        - echo "📦 === 配置pnpm ==="
         - pnpm config set registry https://registry.npmmirror.com
-        - pnpm install --frozen-lockfile
+        - pnpm config set @astrojs:registry https://registry.npmmirror.com
+        - pnpm config set network-timeout 300000
+        - pnpm config set fetch-retries 3
+        - echo "pnpm配置完成 ✅"
+        - echo "📦 === 安装项目依赖 ==="
+        - timeout 600 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
         - echo "依赖安装完成 ✅"
         - echo "🏗️ === 构建Astro项目 ==="
         - pnpm build
@@ -41,6 +46,16 @@ main:
             secret_key: ${COS_SECRET_KEY}
             type: directory
             path: /
+        - name: github-sync
+          if: ${GITHUB_TOKEN}
+          stages:
+            - echo "📤 === 同步到GitHub ==="
+            - apk add --no-cache git
+            - git config --global user.name "CNB Deploy Bot"
+            - git config --global user.email "noreply@cnb.cool"
+            - git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+            - git push github main --force
+            - echo "GitHub同步完成 ✅"
 
 develop:
   push:
@@ -49,9 +64,11 @@ develop:
       stages:
         - echo "🔧 === 开发环境构建测试 ==="
         - node --version
-        - npm install -g pnpm
+        - npm install -g pnpm --registry=https://registry.npmmirror.com
         - pnpm config set registry https://registry.npmmirror.com
-        - pnpm install --frozen-lockfile
+        - pnpm config set network-timeout 300000
+        - pnpm config set fetch-retries 3
+        - timeout 600 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
         - pnpm build
         - echo "开发构建测试完成 ✅"
 
@@ -62,23 +79,11 @@ develop:
       stages:
         - echo "🔍 === PR构建检查 ==="
         - node --version
-        - npm install -g pnpm
+        - npm install -g pnpm --registry=https://registry.npmmirror.com
         - pnpm config set registry https://registry.npmmirror.com
-        - pnpm install --frozen-lockfile
+        - pnpm config set network-timeout 300000
+        - timeout 300 pnpm install --frozen-lockfile --prefer-offline || pnpm install --no-frozen-lockfile
         - pnpm build
         - echo "PR构建检查完成 ✅"
 
-"$":
-  push:
-    name: 默认分支构建
-    env:
-      TZ: Asia/Shanghai
-    image: node:18-alpine
-    script: |
-      echo "🔧 === 基础构建测试 ==="
-      node --version
-      npm install -g pnpm
-      pnpm config set registry https://registry.npmmirror.com
-      pnpm install --frozen-lockfile
-      pnpm build
-      echo "基础构建完成 ✅"
+
