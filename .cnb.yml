@@ -6,12 +6,11 @@
   imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
   docker:
     image: node:18-alpine
-    # 配置CNB数据卷缓存 - 使用正确的CNB volumes格式
+    # 配置CNB数据卷缓存 - 使用CNB官方建议的明确路径命名（优化版）
     volumes:
-      - node_modules:copy-on-write
-      - /root/.local/share/pnpm/store:copy-on-write
-      - /root/.cache/pnpm:copy-on-write
-      - /root/.npm:copy-on-write
+      - /workspace/.cnb_cache/node_modules:/workspace/node_modules
+      - /workspace/.cnb_cache/pnpm-store:/root/.local/share/pnpm/store
+      - /workspace/.cnb_cache/pnpm-cache:/root/.cache/pnpm
 
 # 通用构建步骤
 .build_steps: &build_steps
@@ -32,7 +31,7 @@
   - pnpm config set network-concurrency 16
   - echo "🔍 === 缓存状态检查 ==="
   - echo "检查node_modules缓存："
-  - ls -la node_modules 2>/dev/null | head -3 || echo "❌ node_modules缓存不存在"
+  - ls -la /workspace/node_modules 2>/dev/null | head -3 || echo "❌ node_modules缓存不存在"
   - echo "检查pnpm store缓存："
   - ls -la /root/.local/share/pnpm/store 2>/dev/null | head -3 || echo "❌ pnpm store缓存不存在"
   - echo "检查pnpm cache缓存："
