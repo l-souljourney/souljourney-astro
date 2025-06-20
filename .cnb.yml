@@ -5,7 +5,7 @@
 main:
   push:
     - name: sync-to-github
-      image: node:18-alpine
+      image: alpine/git
       # 从密钥仓库导入GitHub Token
       imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
@@ -13,9 +13,6 @@ main:
       
       script: |
         echo "🔄 开始同步代码到GitHub..."
-        
-        # 安装git
-        apk add --no-cache git
         
         # 检查GitHub Token
         if [ -z "$GITHUB_TOKEN" ]; then
@@ -49,7 +46,7 @@ main:
 develop:
   push:
     - name: develop-build-check
-      image: node:18
+      image: alpine/git
       script: |
         echo "🧪 开发分支推送检查..."
         echo "📝 当前分支: develop"
@@ -61,7 +58,7 @@ develop:
 "**":
   pull_request:
     - name: sync-pr-to-github
-      image: node:18-alpine
+      image: alpine/git
       script: |
         echo "🔍 PR事件 - 同步到GitHub..."
         echo "💡 GitHub Actions将处理PR构建检查" 
