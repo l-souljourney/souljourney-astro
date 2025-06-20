@@ -45,30 +45,39 @@ ENV PNPM_STORE_PATH=/root/.local/share/pnpm/store
 ENV PNPM_CACHE_PATH=/root/.cache/pnpm
 ENV PATH="/usr/local/bin:$PATH"
 
-# 创建启动脚本来处理缓存复用
-RUN echo '#!/bin/sh' > /workspace/setup-cache.sh && \
-    echo 'echo "🔧 === 环境准备 ==="' >> /workspace/setup-cache.sh && \
-    echo 'node --version' >> /workspace/setup-cache.sh && \
-    echo 'echo "📦 === 使用缓存依赖 ==="' >> /workspace/setup-cache.sh && \
-    echo 'if [ -d "/root/.local/share/pnpm/store" ]; then' >> /workspace/setup-cache.sh && \
-    echo '  echo "发现pnpm store缓存，复制到当前环境..."' >> /workspace/setup-cache.sh && \
-    echo '  mkdir -p /root/.local/share/pnpm/' >> /workspace/setup-cache.sh && \
-    echo '  cp -r /root/.local/share/pnpm/store /root/.local/share/pnpm/ 2>/dev/null || true' >> /workspace/setup-cache.sh && \
-    echo 'fi' >> /workspace/setup-cache.sh && \
-    echo 'if [ ! -d "node_modules" ]; then' >> /workspace/setup-cache.sh && \
-    echo '  echo "缓存不存在，将重新安装"' >> /workspace/setup-cache.sh && \
-    echo 'else' >> /workspace/setup-cache.sh && \
-    echo '  echo "发现node_modules缓存"' >> /workspace/setup-cache.sh && \
-    echo 'fi' >> /workspace/setup-cache.sh && \
-    echo 'echo "🔍 === 检查依赖状态 ==="' >> /workspace/setup-cache.sh && \
-    echo 'ls -la node_modules/ 2>/dev/null || echo "node_modules不存在"' >> /workspace/setup-cache.sh && \
-    echo 'echo "📦 === 配置pnpm ==="' >> /workspace/setup-cache.sh && \
-    echo 'pnpm config set registry https://mirrors.cloud.tencent.com/npm/' >> /workspace/setup-cache.sh && \
-    echo 'pnpm --version' >> /workspace/setup-cache.sh && \
-    echo 'echo "🚀 === 安装/更新依赖 ==="' >> /workspace/setup-cache.sh && \
-    echo 'pnpm install --frozen-lockfile' >> /workspace/setup-cache.sh && \
-    echo 'echo "✅ === 依赖安装完成 ==="' >> /workspace/setup-cache.sh && \
-    chmod +x /workspace/setup-cache.sh
+# 创建启动脚本来处理缓存复用，放在系统路径下
+RUN echo '#!/bin/sh' > /usr/local/bin/setup-cache.sh && \
+    echo 'echo "🔧 === 环境准备 ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "当前工作目录：$(pwd)"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'node --version' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "📦 === 使用缓存依赖 ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'if [ -d "/workspace/node_modules" ]; then' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "发现缓存镜像中的node_modules，复制到当前目录..."' >> /usr/local/bin/setup-cache.sh && \
+    echo '  cp -r /workspace/node_modules . 2>/dev/null || echo "复制失败，将重新安装"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'else' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "缓存镜像中未找到node_modules"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'fi' >> /usr/local/bin/setup-cache.sh && \
+    echo 'if [ -d "/root/.local/share/pnpm/store" ]; then' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "发现pnpm store缓存，确保目录存在..."' >> /usr/local/bin/setup-cache.sh && \
+    echo '  mkdir -p /root/.local/share/pnpm/' >> /usr/local/bin/setup-cache.sh && \
+    echo 'else' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "pnpm store缓存不存在"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'fi' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "🔍 === 检查依赖状态 ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'if [ -d "node_modules" ]; then' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "发现node_modules缓存"' >> /usr/local/bin/setup-cache.sh && \
+    echo '  ls -la node_modules/ | head -5' >> /usr/local/bin/setup-cache.sh && \
+    echo '  du -sh node_modules/' >> /usr/local/bin/setup-cache.sh && \
+    echo 'else' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "node_modules不存在，将重新安装"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'fi' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "📦 === 配置pnpm ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'pnpm config set registry https://mirrors.cloud.tencent.com/npm/' >> /usr/local/bin/setup-cache.sh && \
+    echo 'pnpm --version' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "🚀 === 安装/更新依赖 ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'pnpm install --frozen-lockfile' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "✅ === 依赖安装完成 ==="' >> /usr/local/bin/setup-cache.sh && \
+    chmod +x /usr/local/bin/setup-cache.sh
 
 # 设置默认命令
 CMD ["echo", "CNB依赖缓存镜像构建完成"] 

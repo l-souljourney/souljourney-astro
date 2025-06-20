@@ -7,7 +7,7 @@
 
 # 通用构建步骤（使用缓存镜像）
 .build_with_cache: &build_with_cache
-  - /workspace/setup-cache.sh
+  - /usr/local/bin/setup-cache.sh
 
 # 构建Astro项目步骤
 .astro_build: &astro_build
