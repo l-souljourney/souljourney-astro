@@ -1,150 +1,61 @@
 # 腾讯云 CNB 构建配置文件
-# L-Souljourney 博客项目 - 使用Docker缓存方案
+# 采用Docker缓存方案 - 官方推荐的简化配置
 
-# 通用配置锚点
-.common_config: &common_config
-  imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-
-# 通用构建步骤（使用缓存镜像）
-.build_with_cache: &build_with_cache
-  - /usr/local/bin/setup-cache.sh
-
-# 构建Astro项目步骤
-.astro_build: &astro_build
-  - echo "🏗️ === 开始构建Astro项目 ==="
-  - export PATH="/usr/local/bin:$PATH"
-  - which pnpm
-  - time pnpm run build
-  - echo "📊 === 构建产物统计 ==="
-  - ls -la dist/
-  - du -sh dist/
-  - find dist/ -type f | wc -l | xargs echo "文件总数："
+# 全局配置
+imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
 
 # ===== 分支配置 =====
 
 # 主分支：生产环境构建+部署
 main:
   push:
-    - <<: *common_config
-      docker:
-        image: node:18-alpine
-      stages:
-        # 第一阶段：构建依赖缓存镜像
+    - docker:
+        # 第一阶段：构建带缓存的镜像
         - name: build-cache
-          type: docker:cache
-          options:
-            dockerfile: cache.dockerfile
-            by:
-              - package.json
-              - pnpm-lock.yaml
-            versionBy:
-              - pnpm-lock.yaml
-            sync: false
-          exports:
-            name: CACHE_IMAGE
+          type: cache
+          image: node:18-alpine
+          dockerfile: cache.dockerfile
+          by:
+            - package.json
+            - pnpm-lock.yaml
+        
         # 第二阶段：使用缓存构建项目
-        - name: build-with-cache
-          image: $CACHE_IMAGE
-          commands: *build_with_cache
-        - name: build-astro
-          commands: *astro_build
-        # 第三阶段：部署到COS
-        - name: deploy-cos
+        - name: build-project
+          image: "*build-cache"
           commands:
-            - echo "☁️ === 开始部署到腾讯云COS ==="
-            - echo "配置信息："
-            - echo "- 存储桶：$COS_BUCKET"
-            - echo "- 区域：$COS_REGION"
-            - echo "- 路径：/"
-          plugins:
-            - name: cnbcool/tencent-cos
-              with:
-                secret_id: ${COS_SECRET_ID}
-                secret_key: ${COS_SECRET_KEY}
-                bucket: ${COS_BUCKET}
-                region: ${COS_REGION}
-                src: dist/
-                dest: /
-                delete: true
-        # 第四阶段：CDN刷新（如果配置了CDN域名）
-        - name: refresh-cdn
-          if: ${CDN_DOMAIN}
-          plugins:
-            - name: cnbcool/tencent-cdn
-              with:
-                domain: ${CDN_DOMAIN}
-                secret_id: ${COS_SECRET_ID}
-                secret_key: ${COS_SECRET_KEY}
-                type: directory
-                path: /
-        # 第五阶段：同步到GitHub（如果配置了GitHub Token）
-        - name: sync-github
-          if: ${GITHUB_TOKEN}
-          commands:
-            - echo "🔄 === 同步到GitHub ==="
-            - apk add --no-cache git
-            - git config --global user.name "CNB Deploy Bot"
-            - git config --global user.email "noreply@cnb.cool"
-            - git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-            - git push github main --force
-            - echo "✅ GitHub同步完成"
+            - /usr/local/bin/setup-cache.sh
+            - /usr/local/bin/build-astro.sh
 
 # 开发分支：仅构建测试
 develop:
   push:
-    - <<: *common_config
-      docker:
-        image: node:18-alpine
-      stages:
-        # 构建依赖缓存镜像
+    - docker:
+        # 第一阶段：构建带缓存的镜像
         - name: build-cache
-          type: docker:cache
-          options:
-            dockerfile: cache.dockerfile
-            by:
-              - package.json
-              - pnpm-lock.yaml
-            versionBy:
-              - pnpm-lock.yaml
-            sync: false
-          exports:
-            name: CACHE_IMAGE
-        # 使用缓存构建项目
-        - name: build-with-cache
-          image: $CACHE_IMAGE
-          commands: *build_with_cache
-        - name: build-astro
-          commands: *astro_build
-        - name: test-complete
-          script: echo "✅ 开发环境构建测试完成"
+          type: cache
+          image: node:18-alpine
+          dockerfile: cache.dockerfile
+          by:
+            - package.json
+            - pnpm-lock.yaml
+        
+        # 第二阶段：使用缓存构建项目
+        - name: build-project
+          image: "*build-cache"
+          commands:
+            - /usr/local/bin/setup-cache.sh
+            - /usr/local/bin/build-astro.sh
 
 # PR分支：快速构建检查
-"**":
-  pull_request:
-    - <<: *common_config
-      docker:
-        image: node:18-alpine
-      stages:
-        # 构建依赖缓存镜像
-        - name: build-cache
-          type: docker:cache
-          options:
-            dockerfile: cache.dockerfile
-            by:
-              - package.json
-              - pnpm-lock.yaml
-            versionBy:
-              - pnpm-lock.yaml
-            sync: false
-          exports:
-            name: CACHE_IMAGE
-        # 使用缓存快速构建
-        - name: build-with-cache
-          image: $CACHE_IMAGE
-          commands: *build_with_cache
-        - name: build-astro
-          commands: *astro_build
-        - name: pr-check-complete
-          script: echo "✅ PR构建检查完成"
+merge_request:
+  - docker:
+      image: node:18-alpine
+      commands:
+        - echo "🔍 PR构建检查"
+        - apk add --no-cache git python3 py3-pip
+        - npm install -g pnpm@latest
+        - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm install --frozen-lockfile
+        - pnpm run build
 
 

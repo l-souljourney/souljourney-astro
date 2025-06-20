@@ -36,60 +36,74 @@ RUN echo "🚀 开始安装依赖..." && \
     du -sh node_modules/ && \
     find node_modules/ -type f | wc -l | xargs echo "文件总数："
 
-# 将node_modules复制到备用位置，避免被volume挂载覆盖
+# 备份node_modules到临时目录，避免volume挂载覆盖
 RUN cp -r node_modules /tmp/cached_node_modules && \
     echo "缓存的node_modules已备份到/tmp/cached_node_modules"
 
-# 安装腾讯云COS Python SDK（使用--break-system-packages绕过PEP 668限制）
+# 安装COS SDK用于部署
 RUN pip3 install --break-system-packages cos-python-sdk-v5
 
-# 设置环境变量，指向缓存位置
-ENV NODE_MODULES_PATH=/tmp/cached_node_modules
-ENV PNPM_STORE_PATH=/root/.local/share/pnpm/store
-ENV PNPM_CACHE_PATH=/root/.cache/pnpm
-ENV PATH="/usr/local/bin:$PATH"
-
-# 创建启动脚本来处理缓存复用，放在系统路径下
+# 创建缓存设置脚本
 RUN echo '#!/bin/sh' > /usr/local/bin/setup-cache.sh && \
+    echo 'set -e' >> /usr/local/bin/setup-cache.sh && \
     echo 'echo "🔧 === 环境准备 ==="' >> /usr/local/bin/setup-cache.sh && \
     echo 'echo "当前工作目录：$(pwd)"' >> /usr/local/bin/setup-cache.sh && \
-    echo 'node --version' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm --version' >> /usr/local/bin/setup-cache.sh && \
-    echo 'echo "📦 === 使用缓存依赖 ==="' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "Node版本：$(node --version)"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "pnpm版本：$(pnpm --version)"' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo ""' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo "📦 === 恢复缓存依赖 ==="' >> /usr/local/bin/setup-cache.sh && \
     echo 'if [ -d "/tmp/cached_node_modules" ]; then' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "发现缓存的node_modules，复制到当前目录..."' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "✅ 发现缓存的node_modules，正在复制..."' >> /usr/local/bin/setup-cache.sh && \
     echo '  cp -r /tmp/cached_node_modules ./node_modules' >> /usr/local/bin/setup-cache.sh && \
     echo '  echo "✅ 缓存复制完成"' >> /usr/local/bin/setup-cache.sh && \
     echo 'else' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "⚠️ 未找到缓存的node_modules"' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "❌ 未找到缓存的node_modules"' >> /usr/local/bin/setup-cache.sh && \
+    echo '  exit 1' >> /usr/local/bin/setup-cache.sh && \
     echo 'fi' >> /usr/local/bin/setup-cache.sh && \
-    echo 'if [ -d "/root/.local/share/pnpm/store" ]; then' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "✅ 发现pnpm store缓存"' >> /usr/local/bin/setup-cache.sh && \
-    echo '  mkdir -p /root/.local/share/pnpm/' >> /usr/local/bin/setup-cache.sh && \
-    echo 'else' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "⚠️ pnpm store缓存不存在"' >> /usr/local/bin/setup-cache.sh && \
-    echo 'fi' >> /usr/local/bin/setup-cache.sh && \
+    echo 'echo ""' >> /usr/local/bin/setup-cache.sh && \
     echo 'echo "🔍 === 检查依赖状态 ==="' >> /usr/local/bin/setup-cache.sh && \
     echo 'if [ -d "node_modules" ]; then' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "✅ 发现node_modules缓存"' >> /usr/local/bin/setup-cache.sh && \
-    echo '  ls -la node_modules/ | head -5' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "✅ node_modules存在"' >> /usr/local/bin/setup-cache.sh && \
     echo '  du -sh node_modules/' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "使用缓存进行增量安装..."' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "🚀 开始增量安装..."' >> /usr/local/bin/setup-cache.sh && \
+    echo '  time pnpm install --frozen-lockfile --prefer-offline' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "✅ 依赖安装完成"' >> /usr/local/bin/setup-cache.sh && \
     echo 'else' >> /usr/local/bin/setup-cache.sh && \
-    echo '  echo "❌ node_modules不存在，将重新安装"' >> /usr/local/bin/setup-cache.sh && \
+    echo '  echo "❌ node_modules不存在"' >> /usr/local/bin/setup-cache.sh && \
+    echo '  exit 1' >> /usr/local/bin/setup-cache.sh && \
     echo 'fi' >> /usr/local/bin/setup-cache.sh && \
-    echo 'echo "📦 === 配置pnpm ==="' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set registry https://mirrors.cloud.tencent.com/npm/' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set store-dir /root/.local/share/pnpm/store' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set cache-dir /root/.cache/pnpm' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set prefer-offline true' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set network-timeout 300000' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set fetch-retries 5' >> /usr/local/bin/setup-cache.sh && \
-    echo 'pnpm config set network-concurrency 16' >> /usr/local/bin/setup-cache.sh && \
-    echo 'echo "🚀 === 安装/更新依赖 ==="' >> /usr/local/bin/setup-cache.sh && \
-    echo 'time pnpm install --frozen-lockfile --prefer-offline' >> /usr/local/bin/setup-cache.sh && \
-    echo 'echo "✅ === 依赖安装完成 ==="' >> /usr/local/bin/setup-cache.sh && \
     chmod +x /usr/local/bin/setup-cache.sh
+
+# 创建Astro构建脚本
+RUN echo '#!/bin/sh' > /usr/local/bin/build-astro.sh && \
+    echo 'set -e' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo ""' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "🏗️ === 开始构建Astro项目 ==="' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "📋 构建信息："' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "- 工作目录：$(pwd)"' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "- Node版本：$(node --version)"' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "- pnpm版本：$(pnpm --version)"' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo ""' >> /usr/local/bin/build-astro.sh && \
+    echo 'echo "🚀 开始执行构建..."' >> /usr/local/bin/build-astro.sh && \
+    echo 'if time pnpm run build; then' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo ""' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo "✅ === Astro构建成功 ==="' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo "📊 === 构建产物统计 ==="' >> /usr/local/bin/build-astro.sh && \
+    echo '  if [ -d "dist" ]; then' >> /usr/local/bin/build-astro.sh && \
+    echo '    ls -la dist/' >> /usr/local/bin/build-astro.sh && \
+    echo '    du -sh dist/' >> /usr/local/bin/build-astro.sh && \
+    echo '    find dist/ -type f | wc -l | xargs echo "文件总数："' >> /usr/local/bin/build-astro.sh && \
+    echo '  else' >> /usr/local/bin/build-astro.sh && \
+    echo '    echo "❌ dist目录不存在"' >> /usr/local/bin/build-astro.sh && \
+    echo '    exit 1' >> /usr/local/bin/build-astro.sh && \
+    echo '  fi' >> /usr/local/bin/build-astro.sh && \
+    echo 'else' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo ""' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo "❌ === Astro构建失败 ==="' >> /usr/local/bin/build-astro.sh && \
+    echo '  echo "🔍 查看错误日志上方的输出信息"' >> /usr/local/bin/build-astro.sh && \
+    echo '  exit 1' >> /usr/local/bin/build-astro.sh && \
+    echo 'fi' >> /usr/local/bin/build-astro.sh && \
+    chmod +x /usr/local/bin/build-astro.sh
 
 # 设置默认命令
 CMD ["echo", "CNB依赖缓存镜像构建完成"] 
