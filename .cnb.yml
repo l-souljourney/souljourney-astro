@@ -38,63 +38,8 @@ main:
         du -sh dist/
         find dist -type f | wc -l | xargs echo "文件数量:"
         
-        echo "✅ 构建完成"
-      
-      # 部署阶段
-      stages:
-        # 部署到腾讯云 COS
-        - name: deploy-to-cos
-          image: cnbcool/tencent-cos
-          settings:
-            bucket: souljourney-1251969283
-            region: ap-shanghai
-            source: ./dist/
-            target: /
-            delete_extra: true
-            exclude:
-              - "*.map"
-              - "*.log"
-              - ".DS_Store"
-            headers:
-              "*.html":
-                content-type: "text/html; charset=utf-8"
-                cache-control: "public, max-age=3600"
-              "*.css":
-                content-type: "text/css; charset=utf-8"
-                cache-control: "public, max-age=31536000"
-              "*.js":
-                content-type: "application/javascript; charset=utf-8"
-                cache-control: "public, max-age=31536000"
-              "*.{jpg,jpeg,png,gif,webp,svg,ico}":
-                cache-control: "public, max-age=31536000"
-              "*.{woff,woff2,ttf,eot}":
-                cache-control: "public, max-age=31536000"
-                
-        # 刷新 CDN
-        - name: refresh-cdn
-          image: cnbcool/tencent-cdn
-          settings:
-            paths:
-              - "/*"
-            type: flush
-            
-        # 部署成功通知
-        - name: notify-success
-          image: alpine
-          script: |
-            echo "🎉 博客部署成功！"
-            echo "🌐 访问地址: https://blog.l-souljourney.cn"
-            echo "📊 部署信息:"
-            echo "   - 构建时间: $(date)"
-            echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
-            echo "   - 分支: $CNB_GIT_REF"
-      
-      # 缓存配置
-      cache:
-        paths:
-          - node_modules
-          - .pnpm-store
-        key: pnpm-{{ checksum "pnpm-lock.yaml" }}
+        echo "✅ 博客构建完成！"
+        echo "💡 请在CNB控制台配置COS部署插件完成自动上传"
 
 # 开发分支 - 仅构建测试
 develop:
@@ -106,42 +51,23 @@ develop:
         ASTRO_TELEMETRY_DISABLED: "1"
       
       script: |
-        echo "🧪 开始测试构建..."
+        echo "🧪 开发分支构建测试..."
         
-        # 安装 pnpm 和依赖
+        # 安装依赖并构建
         npm install -g pnpm@latest
         pnpm install --frozen-lockfile
-        
-        # 构建测试
         pnpm build
         
-        echo "✅ 测试构建完成"
-        ls -la dist/
-      
-      cache:
-        paths:
-          - node_modules
-          - .pnpm-store
-        key: pnpm-test-{{ checksum "pnpm-lock.yaml" }}
+        echo "✅ 开发构建测试完成！"
 
-# PR 构建检查
+# Pull Request - 代码检查
 "**":
   pull_request:
     - name: pr-check
       image: node:18
-      env:
-        NODE_ENV: development
-        ASTRO_TELEMETRY_DISABLED: "1"
-      
       script: |
         echo "🔍 PR 构建检查..."
         npm install -g pnpm@latest
         pnpm install --frozen-lockfile
         pnpm build
-        echo "✅ PR 检查通过"
-      
-      cache:
-        paths:
-          - node_modules
-          - .pnpm-store
-        key: pnpm-pr-{{ checksum "pnpm-lock.yaml" }} 
+        echo "✅ PR 构建检查通过" 
