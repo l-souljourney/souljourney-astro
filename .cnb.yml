@@ -1,55 +1,48 @@
 # 腾讯云 CNB (Cloud Native Builder) 构建配置文件
-# L-Souljourney 博客双线部署配置
+# L-Souljourney 博客简化部署配置
 
-# 主分支触发配置
+# 主分支 - 生产部署
 main:
-  # Git 推送事件触发
   push:
     - name: astro-blog-deploy
-      # 环境变量
+      image: node:18
       env:
         NODE_ENV: production
-        NODE_OPTIONS: --max_old_space_size=4096
         ASTRO_TELEMETRY_DISABLED: "1"
         TZ: Asia/Shanghai
       
-      # 构建阶段
+      script: |
+        echo "🚀 开始构建 L-Souljourney 博客..."
+        
+        # 环境信息
+        echo "📋 环境信息:"
+        node --version
+        npm --version
+        
+        # 安装 pnpm
+        echo "📦 安装 pnpm 包管理器..."
+        npm install -g pnpm@latest
+        pnpm --version
+        
+        # 安装依赖
+        echo "📚 安装项目依赖..."
+        pnpm install --frozen-lockfile
+        
+        # 构建项目
+        echo "🔨 构建 Astro 项目..."
+        pnpm build
+        
+        # 显示构建结果
+        echo "📊 构建产物信息:"
+        ls -la dist/
+        du -sh dist/
+        find dist -type f | wc -l | xargs echo "文件数量:"
+        
+        echo "✅ 构建完成"
+      
+      # 部署阶段
       stages:
-        # 环境准备阶段
-        - name: setup-environment
-          image: node:18
-          script: |
-            echo "🚀 开始构建 L-Souljourney 博客..."
-            echo "📦 检查环境并安装 pnpm 包管理器..."
-            which node || echo "Node.js not found"
-            which npm || echo "npm not found"
-            npm install -g pnpm@latest
-            echo "✅ 环境信息:"
-            node --version
-            npm --version
-            pnpm --version
-            
-        # 依赖安装阶段
-        - name: install-dependencies
-          image: node:18
-          script: |
-            echo "📚 安装项目依赖..."
-            pnpm install --frozen-lockfile
-            echo "✅ 依赖安装完成"
-            
-        # 项目构建阶段
-        - name: build-project
-          image: node:18
-          script: |
-            echo "🔨 开始构建 Astro 项目..."
-            pnpm build
-            echo "📊 构建产物信息:"
-            ls -la dist/
-            du -sh dist/
-            find dist -type f | wc -l | xargs echo "文件数量:"
-            echo "✅ 构建完成"
-            
-        # 部署到 COS
+        # 部署到腾讯云 COS
         - name: deploy-to-cos
           image: cnbcool/tencent-cos
           settings:
@@ -77,7 +70,7 @@ main:
               "*.{woff,woff2,ttf,eot}":
                 cache-control: "public, max-age=31536000"
                 
-        # CDN 刷新
+        # 刷新 CDN
         - name: refresh-cdn
           image: cnbcool/tencent-cdn
           settings:
@@ -85,134 +78,70 @@ main:
               - "/*"
             type: flush
             
-        # 同步到 GitHub
-        - name: sync-to-github
-          image: alpine/git
-          when:
-            - env:
-                present: GITHUB_TOKEN
-          script: |
-            echo "🔄 开始同步到 GitHub..."
-            
-            # 配置 Git
-            git config --global user.email "cnb-deploy@l-souljourney.cn"
-            git config --global user.name "CNB Auto Deploy"
-            git config --global init.defaultBranch main
-            
-            # 同步到 GitHub（触发 Cloudflare Pages）
-            echo "📤 推送到 GitHub 仓库..."
-            git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
-            git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-            git push github main --force
-            
-            echo "✅ 同步到 GitHub 完成"
-            
-        # 部署完成通知
-        - name: deployment-notification
+        # 部署成功通知
+        - name: notify-success
           image: alpine
           script: |
             echo "🎉 博客部署成功！"
-            echo "🌐 国内访问: https://blog.l-souljourney.cn"
-            echo "🌍 海外访问: 等待 Cloudflare Pages 构建完成"
-            echo "📊 本次部署统计:"
+            echo "🌐 访问地址: https://blog.l-souljourney.cn"
+            echo "📊 部署信息:"
             echo "   - 构建时间: $(date)"
             echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
             echo "   - 分支: $CNB_GIT_REF"
-            
+      
       # 缓存配置
       cache:
         paths:
           - node_modules
           - .pnpm-store
-        key: pnpm-cache-{{ checksum "pnpm-lock.yaml" }}
-        
-      # 资源限制
-      resources:
-        cpu: 2
-        memory: 4096
-        timeout: 1800  # 30分钟超时
+        key: pnpm-{{ checksum "pnpm-lock.yaml" }}
 
-# 开发分支触发配置
+# 开发分支 - 仅构建测试
 develop:
-  # Git 推送事件触发（仅构建测试，不部署）
   push:
     - name: astro-blog-test
+      image: node:18
       env:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      stages:
-        - name: setup-environment
-          image: node:18
-          script: |
-            echo "🧪 开始测试构建..."
-            npm install -g pnpm@latest
-            
-        - name: install-dependencies
-          image: node:18
-          script: |
-            echo "📚 安装项目依赖..."
-            pnpm install --frozen-lockfile
-            
-        - name: build-test
-          image: node:18
-          script: |
-            echo "🔨 测试构建 Astro 项目..."
-            pnpm build
-            echo "✅ 测试构建完成"
-            
-        - name: test-complete
-          image: alpine
-          script: |
-            echo "🎯 测试构建成功！"
-            echo "📋 构建结果:"
-            ls -la dist/
-            du -sh dist/
-            
+      script: |
+        echo "🧪 开始测试构建..."
+        
+        # 安装 pnpm 和依赖
+        npm install -g pnpm@latest
+        pnpm install --frozen-lockfile
+        
+        # 构建测试
+        pnpm build
+        
+        echo "✅ 测试构建完成"
+        ls -la dist/
+      
       cache:
         paths:
           - node_modules
           - .pnpm-store
-        key: pnpm-cache-test-{{ checksum "pnpm-lock.yaml" }}
+        key: pnpm-test-{{ checksum "pnpm-lock.yaml" }}
 
-# Pull Request 事件
+# PR 构建检查
 "**":
   pull_request:
-    - name: pr-build-check
+    - name: pr-check
+      image: node:18
       env:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      stages:
-        - name: pr-check
-          image: node:18
-          script: |
-            echo "🔍 PR 构建检查..."
-            npm install -g pnpm@latest
-            pnpm install --frozen-lockfile
-            pnpm build
-            echo "✅ PR 构建检查通过"
-            
+      script: |
+        echo "🔍 PR 构建检查..."
+        npm install -g pnpm@latest
+        pnpm install --frozen-lockfile
+        pnpm build
+        echo "✅ PR 检查通过"
+      
       cache:
         paths:
           - node_modules
           - .pnpm-store
-        key: pnpm-cache-pr-{{ checksum "pnpm-lock.yaml" }}
-
-# 兜底配置 - 其他分支的推送事件
-"$":
-  push:
-    - name: other-branch-build
-      env:
-        NODE_ENV: development
-        ASTRO_TELEMETRY_DISABLED: "1"
-      
-      stages:
-        - name: branch-build-test
-          image: node:18
-          script: |
-            echo "🌿 分支构建测试: $CNB_GIT_REF"
-            npm install -g pnpm@latest
-            pnpm install --frozen-lockfile
-            pnpm build
-            echo "✅ 分支构建测试完成" 
+        key: pnpm-pr-{{ checksum "pnpm-lock.yaml" }} 
