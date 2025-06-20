@@ -1,0 +1,52 @@
+name: Test Build (Develop Branch)
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+        
+    - name: Install dependencies
+      run: |
+        if [ -f pnpm-lock.yaml ]; then
+          pnpm install --frozen-lockfile
+        else
+          pnpm install
+        fi
+      
+    - name: Build project
+      run: pnpm build
+      
+    - name: Test build result
+      run: |
+        echo "🧪 构建测试完成"
+        echo "📁 构建产物大小："
+        du -sh dist/
+        echo "📊 文件数量："
+        find dist -type f | wc -l
+        
+    - name: Build summary
+      run: |
+        echo "✅ develop分支构建测试成功"
+        echo "🔄 可以安全合并到main分支进行生产部署" 

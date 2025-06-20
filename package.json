@@ -1,7 +1,10 @@
 {
-  "name": "souljourney-astro",
+  "name": "l-souljourney-blog",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "L-Souljourney的个人博客，基于Astro构建",
+  "author": "L-Souljourney",
+  "license": "MIT",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
