@@ -2,6 +2,7 @@
 # L-Souljourney 博客 - 代码同步到GitHub方案
 
 # 主分支 - 同步到GitHub触发GitHub Actions
+# 只有main分支推送才会触发构建和同步
 main:
   push:
     - name: sync-to-github
@@ -43,19 +44,6 @@ main:
         echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
         echo "   - 分支: $CNB_GIT_REF"
         echo "   - 同步时间: $(date)"
-
-# 开发分支 - 仅用于开发测试，不自动同步到GitHub
-# 只有合并到main分支时才会触发GitHub同步和自动部署
-develop:
-  push:
-    - name: develop-build-check
-      image: ubuntu:latest
-      script: |
-        echo "🧪 开发分支推送检查..."
-        echo "📝 当前分支: develop"
-        echo "💡 此分支不会自动同步到GitHub"
-        echo "🔄 只有合并到main分支时才会触发部署"
-        echo "✅ 开发分支检查完成"
 
 # Pull Request - 同步到GitHub触发PR检查
 "**":
