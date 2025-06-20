@@ -13,16 +13,16 @@ main:
         ASTRO_TELEMETRY_DISABLED: "1"
         TZ: Asia/Shanghai
       
-      # 构建镜像
-      image: node:18
-      
       # 构建阶段
       stages:
         # 环境准备阶段
         - name: setup-environment
+          image: node:18
           script: |
             echo "🚀 开始构建 L-Souljourney 博客..."
-            echo "📦 安装 pnpm 包管理器..."
+            echo "📦 检查环境并安装 pnpm 包管理器..."
+            which node || echo "Node.js not found"
+            which npm || echo "npm not found"
             npm install -g pnpm@latest
             echo "✅ 环境信息:"
             node --version
@@ -31,6 +31,7 @@ main:
             
         # 依赖安装阶段
         - name: install-dependencies
+          image: node:18
           script: |
             echo "📚 安装项目依赖..."
             pnpm install --frozen-lockfile
@@ -38,6 +39,7 @@ main:
             
         # 项目构建阶段
         - name: build-project
+          image: node:18
           script: |
             echo "🔨 开始构建 Astro 项目..."
             pnpm build
@@ -85,6 +87,7 @@ main:
             
         # 同步到 GitHub
         - name: sync-to-github
+          image: alpine/git
           when:
             - env:
                 present: GITHUB_TOKEN
@@ -106,6 +109,7 @@ main:
             
         # 部署完成通知
         - name: deployment-notification
+          image: alpine
           script: |
             echo "🎉 博客部署成功！"
             echo "🌐 国内访问: https://blog.l-souljourney.cn"
@@ -137,26 +141,28 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18
-      
       stages:
         - name: setup-environment
+          image: node:18
           script: |
             echo "🧪 开始测试构建..."
             npm install -g pnpm@latest
             
         - name: install-dependencies
+          image: node:18
           script: |
             echo "📚 安装项目依赖..."
             pnpm install --frozen-lockfile
             
         - name: build-test
+          image: node:18
           script: |
             echo "🔨 测试构建 Astro 项目..."
             pnpm build
             echo "✅ 测试构建完成"
             
         - name: test-complete
+          image: alpine
           script: |
             echo "🎯 测试构建成功！"
             echo "📋 构建结果:"
@@ -177,10 +183,9 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18
-      
       stages:
         - name: pr-check
+          image: node:18
           script: |
             echo "🔍 PR 构建检查..."
             npm install -g pnpm@latest
@@ -202,10 +207,9 @@ develop:
         NODE_ENV: development
         ASTRO_TELEMETRY_DISABLED: "1"
       
-      image: node:18
-      
       stages:
         - name: branch-build-test
+          image: node:18
           script: |
             echo "🌿 分支构建测试: $CNB_GIT_REF"
             npm install -g pnpm@latest
