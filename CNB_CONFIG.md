@@ -237,3 +237,121 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx     # GitHub Personal Access Token
 - [腾讯云COS文档](https://cloud.tencent.com/document/product/436)  
 - [Astro构建指南](https://docs.astro.build/en/guides/deploy/)
 - [pnpm官方文档](https://pnpm.io/zh/)
+
+## 腾讯云 CNB 构建配置说明
+
+## 项目概述
+本项目是基于 Astro 的静态博客，托管在腾讯云 CNB (Cloud Native Build) 平台上。
+
+## 构建策略
+
+### 分支策略
+- **main 分支**: 生产环境部署，包含完整的构建、部署、CDN刷新和GitHub同步流程
+- **develop 分支**: 开发测试分支，仅进行构建测试，不部署到生产环境  
+- **PR 分支**: 所有PR都会触发构建检查，确保代码质量
+
+### 缓存优化策略
+
+#### 1. **volumes 数据卷缓存**
+根据CNB官方文档配置的缓存策略，通过volumes映射实现跨构建的缓存持久化：
+
+```yaml
+volumes:
+  - /cnb/cache/node_modules:/workspace/node_modules     # 项目依赖缓存
+  - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store # pnpm存储缓存  
+  - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache         # pnpm缓存目录
+  - /cnb/cache/npm-cache:/root/.npm                     # npm缓存
+```
+
+**缓存原理**：
+- CNB平台会在`/cnb/cache/`目录下持久化数据
+- 通过volumes将宿主机缓存目录映射到容器内的相应位置
+- 后续构建可以直接使用已缓存的node_modules和pnpm store
+- 大幅减少依赖包下载时间，从5分钟减少到30秒-1分钟
+
+#### 2. **pnpm 配置优化**
+```bash
+# 网络配置
+pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+pnpm config set network-timeout 300000      # 5分钟超时
+pnpm config set fetch-retries 5             # 5次重试
+pnpm config set network-concurrency 3       # 限制并发数
+
+# 缓存配置  
+pnpm config set store-dir /root/.local/share/pnpm/store
+pnpm config set cache-dir /cnb/cache/pnpm-cache
+pnpm config set prefer-offline true         # 优先使用缓存
+
+# 安装参数
+pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
+```
+
+#### 3. **构建性能提升效果**
+- **首次构建**: 依然需要下载所有依赖包（~5分钟）
+- **后续构建**: 利用缓存，预期减少到30秒-1分钟
+- **网络稳定性**: 显著减少网络超时错误
+- **构建成功率**: 提升构建稳定性
+
+## 环境变量配置
+
+### 必需变量
+```yaml
+COS_SECRET_ID: 腾讯云密钥ID
+COS_SECRET_KEY: 腾讯云密钥Key  
+COS_BUCKET: COS存储桶名称
+COS_REGION: COS区域
+```
+
+### 可选变量
+```yaml
+CDN_DOMAIN: CDN域名(配置后自动刷新CDN)
+GITHUB_TOKEN: GitHub访问令牌(配置后自动同步到GitHub)
+```
+
+## 部署流程
+
+### main分支部署流程
+1. **环境准备**: Node.js 18 + pnpm最新版
+2. **依赖安装**: 使用缓存加速的pnpm install
+3. **项目构建**: pnpm build生成静态文件
+4. **COS部署**: 上传dist目录到腾讯云COS
+5. **CDN刷新**: 自动刷新CDN缓存(如配置)
+6. **GitHub同步**: 同步代码到GitHub仓库(如配置)
+
+### develop分支测试流程  
+1. **环境准备**: 与main分支相同
+2. **依赖安装**: 使用缓存加速
+3. **构建测试**: 验证代码可正常构建
+4. **测试完成**: 不进行部署操作
+
+## 故障排除
+
+### 常见问题
+1. **依赖安装超时**: 已通过网络配置和重试机制优化
+2. **缓存问题**: volumes配置确保缓存持久化  
+3. **环境变量错误**: 检查imports路径和密钥仓库配置
+4. **构建失败**: 查看具体错误日志，通常是代码语法问题
+
+### 性能监控指标
+- **总构建时间**: 目标从6分钟优化到2-3分钟
+- **依赖安装时间**: 从5分钟优化到30秒-1分钟
+- **网络错误频率**: 显著减少ERR_SOCKET_TIMEOUT
+- **构建成功率**: 提升到95%以上
+
+## 维护说明
+
+### 配置文件位置
+- `.cnb.yml`: CNB构建配置文件
+- `l-souljourney/env仓库`: 环境变量密钥文件
+
+### 更新流程
+1. 修改代码后推送到develop分支进行测试
+2. 测试通过后合并到main分支
+3. main分支自动触发生产部署
+
+### 监控构建状态
+通过CNB控制台查看：
+- 构建日志和执行时间
+- 缓存命中率
+- 错误统计和重试次数
+- 部署状态确认

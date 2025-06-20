@@ -7,6 +7,12 @@ main:
       imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
+      # 配置数据卷缓存
+      volumes:
+        - /cnb/cache/node_modules:/workspace/node_modules
+        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
+        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
+        - /cnb/cache/npm-cache:/root/.npm
       stages:
         - echo "🔧 === 环境准备 ==="
         - node --version
@@ -14,13 +20,19 @@ main:
         - echo "📦 === pnpm环境配置 ==="
         - npm install -g pnpm@latest
         - pnpm --version
-        # 优化pnpm网络配置
+        # 优化pnpm网络配置和缓存配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm config set store-dir /root/.local/share/pnpm/store
+        - pnpm config set cache-dir /cnb/cache/pnpm-cache
         - pnpm config set network-timeout 300000
         - pnpm config set fetch-retries 5
         - pnpm config set fetch-retry-mintimeout 20000
         - pnpm config set fetch-retry-maxtimeout 120000
         - pnpm config set network-concurrency 3
+        - pnpm config set prefer-offline true
+        - echo "📦 === 检查缓存状态 ==="
+        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
+        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
         - echo "📦 === 安装项目依赖 ==="
         - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
         - echo "🏗️ === 构建Astro项目 ==="
@@ -63,19 +75,31 @@ develop:
     - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
+      # 配置数据卷缓存
+      volumes:
+        - /cnb/cache/node_modules:/workspace/node_modules
+        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
+        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
+        - /cnb/cache/npm-cache:/root/.npm
       stages:
         - echo "🔧 === 开发环境构建测试 ==="
         - node --version
         - echo "📦 === pnpm环境配置 ==="
         - npm install -g pnpm@latest
         - pnpm --version
-        # 优化pnpm配置
+        # 优化pnpm配置和缓存配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm config set store-dir /root/.local/share/pnpm/store
+        - pnpm config set cache-dir /cnb/cache/pnpm-cache
         - pnpm config set network-timeout 300000
         - pnpm config set fetch-retries 5
         - pnpm config set fetch-retry-mintimeout 20000
         - pnpm config set fetch-retry-maxtimeout 120000
         - pnpm config set network-concurrency 3
+        - pnpm config set prefer-offline true
+        - echo "📦 === 检查缓存状态 ==="
+        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
+        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
         - echo "📦 === 安装项目依赖 ==="
         - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
         - echo "🏗️ === 构建测试 ==="
@@ -87,19 +111,31 @@ develop:
     - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       docker:
         image: node:18-alpine
+      # 配置数据卷缓存
+      volumes:
+        - /cnb/cache/node_modules:/workspace/node_modules
+        - /cnb/cache/pnpm-store:/root/.local/share/pnpm/store
+        - /cnb/cache/pnpm-cache:/cnb/cache/pnpm-cache
+        - /cnb/cache/npm-cache:/root/.npm
       stages:
         - echo "🔍 === PR构建检查 ==="
         - node --version
         - echo "📦 === pnpm环境配置 ==="
         - npm install -g pnpm@latest
         - pnpm --version
-        # 优化pnpm配置
+        # 优化pnpm配置和缓存配置
         - pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+        - pnpm config set store-dir /root/.local/share/pnpm/store
+        - pnpm config set cache-dir /cnb/cache/pnpm-cache
         - pnpm config set network-timeout 300000
         - pnpm config set fetch-retries 5
         - pnpm config set fetch-retry-mintimeout 20000
         - pnpm config set fetch-retry-maxtimeout 120000
         - pnpm config set network-concurrency 3
+        - pnpm config set prefer-offline true
+        - echo "📦 === 检查缓存状态 ==="
+        - ls -la /cnb/cache/ || mkdir -p /cnb/cache/
+        - ls -la /root/.local/share/pnpm/store || echo "Store目录不存在，将自动创建"
         - echo "📦 === 安装项目依赖 ==="
         - pnpm install --frozen-lockfile --prefer-offline --reporter=append-only
         - echo "🏗️ === 构建检查 ==="
