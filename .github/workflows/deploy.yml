@@ -36,12 +36,16 @@ jobs:
         NODE_ENV: production
         ASTRO_TELEMETRY_DISABLED: 1
         
-    - name: 📊 Show build info
+    - name: 📊 Verify build output
       run: |
         echo "📊 构建产物信息:"
         ls -la dist/
         du -sh dist/
         find dist -type f | wc -l | xargs echo "文件数量:"
+        echo "🔍 检查可能有问题的文件:"
+        find dist -name "*.html" | grep -E "(中文|特殊字符)" || echo "未发现明显问题文件"
+        echo "📝 验证关键文件存在:"
+        ls -la dist/index.html || echo "⚠️ 缺少index.html"
         
     - name: 🚀 Deploy to Tencent COS
       uses: TencentCloud/cos-action@v1
@@ -53,6 +57,7 @@ jobs:
         local_path: ./dist
         remote_path: /
         clean: true
+        skip_src: false
         
     - name: 🔄 Refresh CDN (Optional)
       if: success()
@@ -71,6 +76,17 @@ jobs:
         echo "   - 构建时间: $(date)"
         echo "   - Git 提交: ${{ github.sha }}"
         echo "   - 分支: ${{ github.ref_name }}"
+        
+    - name: 🚨 Debug on failure
+      if: failure()
+      run: |
+        echo "🚨 部署失败，收集调试信息:"
+        echo "📁 dist目录内容:"
+        find dist -type f | head -20
+        echo "🔍 检查文件权限:"
+        ls -la dist/ | head -10
+        echo "💾 磁盘空间:"
+        df -h
 
   # PR构建检查
   pr-check:
