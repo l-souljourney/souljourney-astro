@@ -34,8 +34,8 @@ RUN echo "🚀 开始安装依赖..." && \
     du -sh node_modules/ && \
     find node_modules/ -type f | wc -l | xargs echo "文件总数："
 
-# 安装腾讯云COS Python SDK
-RUN pip3 install cos-python-sdk-v5
+# 安装腾讯云COS Python SDK（使用--break-system-packages绕过PEP 668限制）
+RUN pip3 install --break-system-packages cos-python-sdk-v5
 
 # 设置环境变量，指向缓存位置
 ENV NODE_MODULES_PATH=/workspace/node_modules
