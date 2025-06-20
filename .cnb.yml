@@ -1,11 +1,10 @@
-# 腾讯云 CNB (Cloud Native Builder) 构建配置文件
+# 腾讯云 CNB 构建配置文件
 # L-Souljourney 博客 - 双线部署方案
 
 # 主分支构建配置
 main:
   push:
-    - # 从密钥仓库导入环境变量
-      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
         TZ: Asia/Shanghai
       
@@ -70,48 +69,9 @@ main:
         - name: refresh-cdn
           script: |
             echo "🔄 === 刷新CDN缓存 ==="
-            
-            # 安装腾讯云CLI
-            pip3 install tencentcloud-sdk-python
-            
-            # 创建CDN刷新脚本
-            cat > refresh_cdn.py << 'EOD'
-import os
-import json
-from tencentcloud.common import credential
-from tencentcloud.common.profile.client_profile import ClientProfile
-from tencentcloud.common.profile.http_profile import HttpProfile
-from tencentcloud.cdn.v20180606 import cdn_client, models
-
-try:
-    # 实例化一个认证对象
-    cred = credential.Credential(os.environ.get("COS_SECRET_ID"), os.environ.get("COS_SECRET_KEY"))
-    
-    # 实例化要请求产品的client对象
-    httpProfile = HttpProfile()
-    httpProfile.endpoint = "cdn.tencentcloudapi.com"
-    clientProfile = ClientProfile()
-    clientProfile.httpProfile = httpProfile
-    client = cdn_client.CdnClient(cred, "", clientProfile)
-    
-    # 实例化一个请求对象
-    req = models.PurgePathCacheRequest()
-    params = {
-        "Paths": ["https://blog.l-souljourney.cn/*"],
-        "FlushType": "flush"
-    }
-    req.from_json_string(json.dumps(params))
-    
-    # 返回的resp是一个PurgePathCacheResponse的实例
-    resp = client.PurgePathCache(req)
-    print("CDN刷新请求已提交:", resp.to_json_string())
-    
-except Exception as err:
-    print("CDN刷新失败:", err)
-EOD
-            
-            python3 refresh_cdn.py
-            echo "CDN缓存刷新完成 ✅"
+            echo "💡 CDN缓存将在几分钟内自动更新"
+            echo "如需立即刷新，请手动在腾讯云CDN控制台操作"
+            echo "CDN缓存处理完成 ✅"
             
         # 阶段6: 同步到GitHub
         - name: sync-to-github
@@ -140,10 +100,6 @@ EOD
             
             echo "✅ GitHub同步完成！"
             echo "🚀 Cloudflare Pages将自动检测变更并构建"
-            echo "📊 同步信息:"
-            echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
-            echo "   - 分支: $CNB_GIT_REF"
-            echo "   - 同步时间: $(date)"
 
 # develop分支构建配置（仅构建测试，不部署）
 develop:
