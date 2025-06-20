@@ -1,0 +1,195 @@
+# 腾讯云 CNB (Cloud Native Builder) 构建配置文件
+# L-Souljourney 博客双线部署配置
+
+# 构建配置
+build:
+  # 构建环境
+  runtime: nodejs18
+  
+  # 工作目录
+  workdir: /workspace
+  
+  # 构建阶段
+  stages:
+    # 环境准备阶段
+    - name: setup
+      commands:
+        - echo "🚀 开始构建 L-Souljourney 博客..."
+        - echo "📦 安装 pnpm 包管理器..."
+        - npm install -g pnpm@latest
+        - node --version
+        - npm --version
+        - pnpm --version
+        
+    # 依赖安装阶段
+    - name: install
+      commands:
+        - echo "📚 安装项目依赖..."
+        - pnpm install --frozen-lockfile
+        - echo "✅ 依赖安装完成"
+        
+    # 构建阶段
+    - name: build
+      commands:
+        - echo "🔨 开始构建 Astro 项目..."
+        - pnpm build
+        - echo "📊 构建产物信息:"
+        - ls -la dist/
+        - du -sh dist/
+        - find dist -type f | wc -l | xargs echo "文件数量:"
+        - echo "✅ 构建完成"
+
+# 部署配置
+deploy:
+  # 部署到腾讯云 COS
+  cos:
+    # COS 存储桶配置
+    bucket: "souljourney-1251969283"
+    region: "ap-shanghai"
+    
+    # 上传配置
+    upload:
+      # 本地构建产物路径
+      source: "./dist/"
+      # COS 目标路径
+      target: "/"
+      # 同步模式：删除远程多余文件
+      sync: true
+      # 忽略的文件
+      exclude:
+        - "*.map"
+        - "*.log"
+        - ".DS_Store"
+        
+    # 文件类型配置
+    headers:
+      # HTML 文件
+      "*.html":
+        content-type: "text/html; charset=utf-8"
+        cache-control: "public, max-age=3600"
+      # CSS 文件
+      "*.css":
+        content-type: "text/css; charset=utf-8"
+        cache-control: "public, max-age=31536000"
+      # JS 文件
+      "*.js":
+        content-type: "application/javascript; charset=utf-8"
+        cache-control: "public, max-age=31536000"
+      # 图片文件
+      "*.{jpg,jpeg,png,gif,webp,svg,ico}":
+        cache-control: "public, max-age=31536000"
+      # 字体文件
+      "*.{woff,woff2,ttf,eot}":
+        cache-control: "public, max-age=31536000"
+        
+  # CDN 刷新配置
+  cdn:
+    # 是否自动刷新 CDN
+    refresh: true
+    # 刷新路径
+    paths:
+      - "/*"
+    # 刷新类型：flush(刷新) 或 prefetch(预热)
+    type: "flush"
+
+# 环境变量
+environment:
+  # Node.js 环境
+  NODE_ENV: "production"
+  NODE_OPTIONS: "--max_old_space_size=4096"
+  # 构建优化
+  ASTRO_TELEMETRY_DISABLED: "1"
+  # 时区设置
+  TZ: "Asia/Shanghai"
+
+# 构建后脚本
+post_build:
+  commands:
+    - echo "🔄 开始同步到 GitHub..."
+    # 配置 Git
+    - git config --global user.email "cnb-deploy@l-souljourney.cn"
+    - git config --global user.name "CNB Auto Deploy"
+    - git config --global init.defaultBranch main
+    
+    # 检查环境变量
+    - |
+      if [ -z "$GITHUB_TOKEN" ]; then
+        echo "⚠️  GITHUB_TOKEN 环境变量未设置，跳过同步到 GitHub"
+        exit 0
+      fi
+      
+    # 同步到 GitHub（触发 Cloudflare Pages）
+    - |
+      echo "📤 推送到 GitHub 仓库..."
+      git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git || true
+      git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+      git push github main --force
+      
+    - echo "✅ 同步到 GitHub 完成"
+    
+    # 部署成功通知
+    - echo "🎉 博客部署成功！"
+    - echo "🌐 国内访问: https://blog.l-souljourney.cn"
+    - echo "🌍 海外访问: 等待 Cloudflare Pages 构建完成"
+    - echo "📊 本次部署统计:"
+    - echo "   - 构建时间: $(date)"
+    - echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
+    - echo "   - 分支: $CNB_GIT_REF"
+
+# 触发条件
+triggers:
+  # Git 推送触发
+  git:
+    # 监听的分支
+    branches:
+      - main
+    # 忽略的路径（这些文件变更不触发构建）
+    ignore_paths:
+      - "README.md"
+      - "*.md"
+      - ".gitignore"
+      - "LICENSE"
+      - ".github/**"
+    # 只有这些路径变更才触发构建
+    include_paths:
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "astro.config.mjs"
+      - "tsconfig.json"
+
+# 缓存配置
+cache:
+  # 缓存路径
+  paths:
+    - "node_modules"
+    - ".pnpm-store"
+    - "dist"
+  # 缓存键
+  key: "pnpm-cache-{{ checksum 'pnpm-lock.yaml' }}"
+
+# 构建资源限制
+resources:
+  # CPU 限制 (核数)
+  cpu: 2
+  # 内存限制 (MB)
+  memory: 4096
+  # 构建超时 (分钟)
+  timeout: 30
+
+# 通知配置 (可选)
+notifications:
+  # 构建成功通知
+  success:
+    - type: webhook
+      url: "$WEBHOOK_SUCCESS_URL"  # 从环境变量读取
+  # 构建失败通知  
+  failure:
+    - type: webhook
+      url: "$WEBHOOK_FAILURE_URL"  # 从环境变量读取
+
+# 日志配置
+logging:
+  level: info
+  format: json 
