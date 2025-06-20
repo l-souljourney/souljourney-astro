@@ -1,93 +1,169 @@
-version: '1.0'
-name: "Astro博客双线部署"
-description: "构建部署到腾讯云COS，同步到GitHub触发Cloudflare Pages"
+# 腾讯云 CNB (Cloud Native Builder) 构建配置文件
+# L-Souljourney 博客 - 双线部署方案
 
-# 构建环境配置
-build:
-  environment:
-    image: "node:18"
-    
-  env:
-    - NODE_ENV=production
-    - ASTRO_TELEMETRY_DISABLED=1
-    
-  cache:
-    paths:
-      - "node_modules"
-      - ".pnpm-store"
+# 主分支构建配置
+main:
+  push:
+    - # 从密钥仓库导入环境变量
+      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+      env:
+        TZ: Asia/Shanghai
       
-  steps:
-    - name: "🔧 环境准备"
-      script: |
-        echo "=== 环境信息 ==="
-        node --version
-        npm --version
-        echo "开始安装pnpm..."
-        npm install -g pnpm
-        pnpm --version
-        echo "环境准备完成 ✅"
-        
-    - name: "📦 安装依赖"
-      script: |
-        echo "=== 安装项目依赖 ==="
-        pnpm config set registry https://registry.npmmirror.com
-        pnpm install --frozen-lockfile --store-dir .pnpm-store
-        echo "依赖安装完成 ✅"
-        
-    - name: "🏗️ 构建项目"
-      script: |
-        echo "=== 开始构建Astro项目 ==="
-        pnpm build
-        echo "=== 构建产物检查 ==="
-        ls -la dist/
-        echo "文件总数: $(find dist -type f | wc -l)"
-        echo "构建目录大小: $(du -sh dist/)"
-        echo "项目构建完成 ✅"
-        
-    - name: "🚀 部署到腾讯云COS"
-      script: |
-        echo "=== 开始部署到腾讯云COS ==="
-        echo "COS部署完成 ✅"
-        
-    - name: "📤 同步到GitHub"
-      script: |
-        echo "=== 同步到GitHub仓库 ==="
-        git config user.name "CNB Auto Deploy"
-        git config user.email "deploy@cnb.cool"
-        git push https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git HEAD:main --force
-        echo "GitHub同步完成 ✅"
+      stages:
+        # 阶段1: 环境准备
+        - name: setup-environment
+          script: |
+            echo "🔧 === 环境准备 ==="
+            node --version
+            npm --version
+            echo "开始安装pnpm..."
+            npm install -g pnpm
+            pnpm --version
+            echo "环境准备完成 ✅"
+            
+        # 阶段2: 安装依赖
+        - name: install-dependencies
+          script: |
+            echo "📦 === 安装项目依赖 ==="
+            pnpm config set registry https://registry.npmmirror.com
+            pnpm install --frozen-lockfile
+            echo "依赖安装完成 ✅"
+            
+        # 阶段3: 构建项目
+        - name: build-project
+          script: |
+            echo "🏗️ === 开始构建Astro项目 ==="
+            pnpm build
+            echo "=== 构建产物检查 ==="
+            ls -la dist/
+            echo "文件总数: $(find dist -type f | wc -l)"
+            echo "构建目录大小: $(du -sh dist/)"
+            echo "项目构建完成 ✅"
+            
+        # 阶段4: 部署到腾讯云COS
+        - name: deploy-to-cos
+          script: |
+            echo "🚀 === 开始部署到腾讯云COS ==="
+            
+            # 检查必要的环境变量
+            if [ -z "$COS_SECRET_ID" ] || [ -z "$COS_SECRET_KEY" ] || [ -z "$COS_BUCKET" ]; then
+              echo "❌ 缺少必要的COS环境变量"
+              echo "请确保在密钥仓库中配置:"
+              echo "- COS_SECRET_ID"
+              echo "- COS_SECRET_KEY" 
+              echo "- COS_BUCKET"
+              exit 1
+            fi
+            
+            # 安装腾讯云CLI工具
+            pip3 install coscmd
+            
+            # 配置COS
+            coscmd config -a $COS_SECRET_ID -s $COS_SECRET_KEY -b $COS_BUCKET -r ap-guangzhou
+            
+            # 同步文件到COS (删除远程多余文件)
+            coscmd upload -r -s --delete ./dist/ /
+            
+            echo "COS部署完成 ✅"
+            
+        # 阶段5: 刷新CDN缓存
+        - name: refresh-cdn
+          script: |
+            echo "🔄 === 刷新CDN缓存 ==="
+            
+            # 安装腾讯云CLI
+            pip3 install tencentcloud-sdk-python
+            
+            # 创建CDN刷新脚本
+            cat > refresh_cdn.py << 'EOD'
+import os
+import json
+from tencentcloud.common import credential
+from tencentcloud.common.profile.client_profile import ClientProfile
+from tencentcloud.common.profile.http_profile import HttpProfile
+from tencentcloud.cdn.v20180606 import cdn_client, models
 
-# 部署配置
-deploy:
-  cos:
-    bucket: "${COS_BUCKET}"
-    region: "ap-guangzhou"
-    local_path: "./dist"
-    remote_path: "/"
-    clean: true
+try:
+    # 实例化一个认证对象
+    cred = credential.Credential(os.environ.get("COS_SECRET_ID"), os.environ.get("COS_SECRET_KEY"))
     
-  cdn:
-    domains:
-      - "blog.l-souljourney.cn"
-    paths:
-      - "/*"
+    # 实例化要请求产品的client对象
+    httpProfile = HttpProfile()
+    httpProfile.endpoint = "cdn.tencentcloudapi.com"
+    clientProfile = ClientProfile()
+    clientProfile.httpProfile = httpProfile
+    client = cdn_client.CdnClient(cred, "", clientProfile)
+    
+    # 实例化一个请求对象
+    req = models.PurgePathCacheRequest()
+    params = {
+        "Paths": ["https://blog.l-souljourney.cn/*"],
+        "FlushType": "flush"
+    }
+    req.from_json_string(json.dumps(params))
+    
+    # 返回的resp是一个PurgePathCacheResponse的实例
+    resp = client.PurgePathCache(req)
+    print("CDN刷新请求已提交:", resp.to_json_string())
+    
+except Exception as err:
+    print("CDN刷新失败:", err)
+EOD
+            
+            python3 refresh_cdn.py
+            echo "CDN缓存刷新完成 ✅"
+            
+        # 阶段6: 同步到GitHub
+        - name: sync-to-github
+          script: |
+            echo "📤 === 同步到GitHub仓库 ==="
+            
+            # 检查GitHub Token
+            if [ -z "$GITHUB_TOKEN" ]; then
+              echo "⚠️ 未配置GITHUB_TOKEN，跳过GitHub同步"
+              echo "💡 请在CNB密钥仓库中配置GITHUB_TOKEN环境变量"
+              exit 0
+            fi
+            
+            # 配置Git用户信息
+            git config --global user.email "cnb-deploy@l-souljourney.cn"
+            git config --global user.name "CNB Auto Deploy"
+            
+            # 添加GitHub远程仓库
+            echo "📡 配置GitHub远程仓库..."
+            git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
+            git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
+            
+            # 推送到GitHub
+            echo "📤 推送到GitHub仓库..."
+            git push github main --force
+            
+            echo "✅ GitHub同步完成！"
+            echo "🚀 Cloudflare Pages将自动检测变更并构建"
+            echo "📊 同步信息:"
+            echo "   - Git 提交: $CNB_GIT_COMMIT_SHA"
+            echo "   - 分支: $CNB_GIT_REF"
+            echo "   - 同步时间: $(date)"
 
-# 触发条件
-triggers:
-  - type: "push"
-    branches:
-      - "main"
-  - type: "manual"
-
-# 通知配置
-notifications:
-  success:
-    message: |
-      🎉 博客部署成功！
-      🌐 国内访问: https://blog.l-souljourney.cn
-      🌍 海外访问: Cloudflare Pages (自动构建中)
+# develop分支构建配置（仅构建测试，不部署）
+develop:
+  push:
+    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+      env:
+        TZ: Asia/Shanghai
       
-  failure:
-    message: |
-      ❌ 博客部署失败
-      🔍 请检查构建日志
+      stages:
+        - name: test-build
+          script: |
+            echo "🧪 === 开发分支构建测试 ==="
+            
+            # 安装依赖
+            npm install -g pnpm
+            pnpm config set registry https://registry.npmmirror.com
+            pnpm install --frozen-lockfile
+            
+            # 构建测试
+            pnpm build
+            
+            echo "✅ 开发分支构建测试通过"
+            echo "💡 合并到main分支后将自动部署"

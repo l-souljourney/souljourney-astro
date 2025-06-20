@@ -1,188 +1,158 @@
- # 腾讯云 CNB 配置说明
+# 🔧 CNB 配置指南
 
-## 📄 配置文件
+## 📋 问题诊断
 
-项目中包含两个 CNB 配置文件：
+### 为什么CNB构建没有触发？
 
-1. **`.cnb.yml`** - 完整功能版本（推荐）
-2. **`.cnb-simple.yml`** - 简化版本（备用）
+1. **配置格式错误**：之前的 `.cnb.yml` 使用了错误的格式
+2. **环境变量缺失**：需要在CNB密钥仓库中配置必要的环境变量
+3. **权限问题**：腾讯云密钥权限不足
 
-## 🔧 CNB 控制台配置步骤
+## 🛠️ 修复方案
 
-### 1. 创建构建项目
+### 1. 正确的CNB配置格式
 
-1. 登录 [腾讯云 CNB 控制台](https://console.cloud.tencent.com/cnb)
-2. 点击"创建构建项目"
-3. 选择代码源：
-   - **仓库类型**：Git
-   - **仓库地址**：`https://cnb.cool/l-souljourney/souljourney-astro.git`
-   - **分支**：`main`
+CNB使用特定的YAML格式，需要按分支配置：
 
-### 2. 构建配置
-
-#### 基础配置
-```
-项目名称: l-souljourney-blog
-构建环境: Node.js 18
-构建超时: 30分钟
+```yaml
+# 主分支配置
+main:
+  push:
+    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+      stages:
+        - name: 阶段名称
+          script: |
+            # 构建脚本
 ```
 
-#### 构建命令
-```bash
-npm install -g pnpm
-pnpm install --frozen-lockfile
-pnpm build
+### 2. 环境变量配置
+
+在CNB密钥仓库 `https://cnb.cool/l-souljourney/env` 的 `env.yml` 文件中配置：
+
+#### 必需变量：
+```yaml
+# 腾讯云COS配置
+COS_SECRET_ID: "AKIDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+COS_SECRET_KEY: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+COS_BUCKET: "你的存储桶名称"
+
+# GitHub同步配置
+GITHUB_TOKEN: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-#### 构建产物
-```
-构建产物路径: dist/
-```
-
-### 3. 部署配置
-
-#### COS 部署
-```
-存储桶: souljourney-1251969283
-地域: ap-shanghai (华东-上海)
-上传路径: /
-同步删除: 是
+#### 可选变量：
+```yaml
+COS_REGION: "ap-guangzhou"
+CDN_DOMAIN: "blog.l-souljourney.cn"
 ```
 
-#### CDN 刷新
-```
-自动刷新: 是
-刷新路径: /*
-```
+## 🔑 获取密钥步骤
 
-## 🔑 环境变量配置
+### 腾讯云 API 密钥
 
-在 CNB 控制台的"环境变量"页面添加：
+1. **登录腾讯云控制台**
+   - 访问：https://console.cloud.tencent.com/cam/capi
 
-### 必需变量
-```bash
-NODE_ENV=production
-ASTRO_TELEMETRY_DISABLED=1
-TZ=Asia/Shanghai
-```
+2. **创建或查看密钥**
+   - 点击"新建密钥"或查看现有密钥
+   - 记录 `SecretId` 和 `SecretKey`
 
-### 可选变量（用于 GitHub 同步）
-```bash
-GITHUB_TOKEN=your_github_personal_access_token
-WEBHOOK_SUCCESS_URL=your_success_webhook_url
-WEBHOOK_FAILURE_URL=your_failure_webhook_url
-```
+3. **设置权限**
+   确保密钥具有以下权限：
+   - `COS全读写权限`
+   - `CDN刷新权限`
+   - 或者创建自定义策略包含这些权限
 
-## 📋 触发配置
+### GitHub Personal Access Token
 
-### Git 触发器
-```
-分支: main
-触发条件: 代码推送
-忽略路径: 
-  - README.md
-  - *.md
-  - .github/**
-```
+1. **登录GitHub**
+   - 访问：Settings > Developer settings > Personal access tokens
 
-### 手动触发
-- 支持手动触发构建
-- 可指定特定提交进行构建
+2. **创建Token**
+   - 选择权限：`repo` (完整仓库权限)
+   - 选择权限：`workflow` (GitHub Actions权限)
+   - 生成token并保存
 
-## 🔄 工作流程
+### COS存储桶名称
 
-```
-本地推送到 main 分支
-        ↓
-CNB 检测到代码变更
-        ↓
-自动拉取最新代码
-        ↓
-执行构建脚本
-        ↓
-上传到 COS 存储桶
-        ↓
-刷新 CDN 缓存
-        ↓
-同步到 GitHub (可选)
-        ↓
-触发 Cloudflare Pages 构建
-```
+1. **登录COS控制台**
+   - 访问：https://console.cloud.tencent.com/cos
 
-## 🚨 常见问题
+2. **查看存储桶**
+   - 找到你的博客存储桶
+   - 复制完整的存储桶名称（格式：name-appid）
 
-### 构建失败排查
+## 🚀 部署流程
 
-1. **依赖安装失败**
-   ```bash
-   # 检查 pnpm-lock.yaml 是否存在
-   # 尝试删除 node_modules 重新安装
+### 构建阶段：
+1. **环境准备** - 安装Node.js和pnpm
+2. **安装依赖** - 使用国内镜像加速
+3. **构建项目** - 生成静态文件
+4. **部署COS** - 上传到腾讯云对象存储
+5. **刷新CDN** - 清理CDN缓存
+6. **同步GitHub** - 推送代码触发Cloudflare Pages
+
+### 触发条件：
+- 推送到 `main` 分支：完整构建和部署
+- 推送到 `develop` 分支：仅构建测试
+
+## 🔍 故障排查
+
+### 构建失败常见原因：
+
+1. **环境变量未配置**
    ```
-
-2. **内存不足**
-   ```bash
-   # 在环境变量中添加
-   NODE_OPTIONS=--max_old_space_size=4096
+   ❌ 缺少必要的COS环境变量
    ```
+   **解决**：检查密钥仓库环境变量配置
 
-3. **构建超时**
-   ```bash
-   # 增加构建超时时间到 30 分钟
-   # 优化构建脚本，移除不必要的步骤
+2. **权限不足**
    ```
+   Access Denied
+   ```
+   **解决**：检查腾讯云密钥权限
 
-### 部署失败排查
+3. **GitHub同步失败**
+   ```
+   ⚠️ 未配置GITHUB_TOKEN
+   ```
+   **解决**：配置GitHub Personal Access Token
 
-1. **COS 权限问题**
-   - 检查 CNB 服务角色是否有 COS 写入权限
-   - 确认存储桶名称和地域正确
+4. **网络问题**
+   ```
+   connection timeout
+   ```
+   **解决**：使用国内镜像，检查网络配置
 
-2. **CDN 刷新失败**
-   - 检查 CDN 服务是否正常
-   - 确认刷新路径配置正确
+### 检查方法：
 
-## 📊 监控和日志
+1. **查看CNB构建日志**
+   - 登录CNB控制台查看详细错误信息
 
-### 构建日志
-- 在 CNB 控制台查看详细构建日志
-- 支持实时查看构建进度
+2. **验证环境变量**
+   - 确保所有必需变量都已配置
+   - 检查变量值的正确性
 
-### 部署状态
-- 监控 COS 上传状态
-- 检查 CDN 刷新结果
+3. **测试权限**
+   - 在腾讯云控制台测试COS访问
+   - 在GitHub测试token权限
 
-### 告警配置
-- 配置构建失败告警
-- 设置部署异常通知
+## ✅ 验证清单
 
-## 🔧 配置优化建议
+部署成功后，检查以下项目：
 
-1. **启用构建缓存**
-   - 缓存 `node_modules`
-   - 缓存 `pnpm` store
+- [ ] CNB构建日志显示成功
+- [ ] 腾讯云COS中有最新文件
+- [ ] CDN缓存已刷新
+- [ ] GitHub仓库代码已同步
+- [ ] Cloudflare Pages开始构建
+- [ ] 网站可正常访问
 
-2. **优化构建时间**
-   - 使用 `--frozen-lockfile` 避免重新解析依赖
-   - 并行构建和压缩
+## 📞 技术支持
 
-3. **资源配置**
-   - 根据项目大小调整 CPU 和内存
-   - 设置合理的构建超时时间
+如果遇到问题：
 
-## 🆘 紧急处理
-
-### 回滚操作
-```bash
-# 如果部署出现问题，可以：
-1. 在 CNB 控制台手动触发上一个成功版本的构建
-2. 或者在本地回滚代码后推送：
-   git reset --hard HEAD~1
-   git push cnb main --force
-```
-
-### 临时禁用
-```bash
-# 临时禁用自动构建：
-1. 在 CNB 控制台暂停项目
-2. 或者删除 .cnb.yml 文件
-```
+1. 首先检查CNB构建日志
+2. 验证环境变量配置
+3. 检查腾讯云密钥权限
+4. 查看GitHub token权限
