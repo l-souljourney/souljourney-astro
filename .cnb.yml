@@ -7,7 +7,7 @@ main:
     - name: sync-to-github
       image: alpine/git
       # 从密钥仓库导入GitHub Token
-      # imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
         TZ: Asia/Shanghai
       
@@ -46,7 +46,7 @@ develop:
   push:
     - name: sync-develop-to-github
       image: alpine/git
-      # imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+      imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
       env:
         TZ: Asia/Shanghai
       
