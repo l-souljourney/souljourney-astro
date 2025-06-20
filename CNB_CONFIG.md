@@ -1,4 +1,97 @@
-# 🔧 CNB 配置指南
+# CNB (云原生构建) 配置指南
+
+## 配置文件说明
+
+项目使用 `.cnb.yml` 文件进行CNB构建配置，支持以下分支策略：
+
+### 分支配置
+
+- **main分支**: 完整构建+部署+CDN刷新+GitHub同步
+- **develop分支**: 仅构建测试，不部署
+- **所有分支PR**: 构建检查
+
+### 构建环境
+
+使用 `node:18-alpine` 镜像，包含：
+- Node.js 18.x
+- npm 包管理器
+- Alpine Linux 轻量级系统
+
+## 必需的环境变量
+
+在CNB密钥仓库中配置以下环境变量：
+
+### 腾讯云COS配置 (必需)
+```
+COS_SECRET_ID=你的腾讯云SecretId
+COS_SECRET_KEY=你的腾讯云SecretKey  
+COS_BUCKET=你的COS存储桶名称
+COS_REGION=ap-guangzhou
+```
+
+### 腾讯云CDN配置 (可选)
+```
+CDN_DOMAIN=blog.l-souljourney.cn
+```
+
+### GitHub同步配置 (可选)
+```
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+## 插件说明
+
+### cnbcool/tencent-cos
+- 自动部署到腾讯云COS
+- 支持增量同步
+- 自动清理过期文件
+
+### cnbcool/tencent-cdn
+- 自动刷新CDN缓存
+- 支持目录和URL刷新
+
+## 构建流程
+
+### 主分支 (main)
+1. **环境准备**: 安装pnpm等工具
+2. **安装依赖**: 使用pnpm安装项目依赖
+3. **构建项目**: 执行`pnpm build`生成静态文件
+4. **部署到COS**: 使用插件部署到腾讯云COS
+5. **刷新CDN**: 自动刷新CDN缓存
+6. **同步GitHub**: 推送到GitHub仓库 (如果配置了Token)
+
+### 开发分支 (develop)
+1. **构建测试**: 验证代码能正常构建
+
+### PR检查
+1. **PR检查**: 验证PR代码能正常构建
+
+## 注意事项
+
+1. **镜像选择**: 使用`node:18-alpine`确保有Node.js环境
+2. **插件使用**: COS和CDN部署使用专用插件
+3. **环境变量**: 在CNB控制台的密钥仓库中配置
+4. **GitHub同步**: 可选功能，需要配置`GITHUB_TOKEN`
+
+## 故障排查
+
+### 常见问题
+
+1. **node: command not found**
+   - 确保使用包含Node.js的镜像 (如`node:18-alpine`)
+
+2. **COS部署失败**
+   - 检查COS相关环境变量是否正确配置
+   - 确认COS存储桶权限
+
+3. **GitHub同步失败**  
+   - 检查`GITHUB_TOKEN`是否有效
+   - 确认Token有推送权限
+
+### 查看日志
+在CNB控制台可以查看详细的构建日志，包括每个阶段的执行情况。
+
+## 🔧 CNB 配置指南
 
 ## 📋 问题诊断
 

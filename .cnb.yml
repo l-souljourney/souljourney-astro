@@ -1,125 +1,96 @@
 # 腾讯云 CNB 构建配置文件
-# L-Souljourney 博客 - 双线部署方案
+# L-Souljourney 博客项目
 
-# 主分支构建配置
 main:
   push:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      env:
-        TZ: Asia/Shanghai
-      
-      stages:
-        # 阶段1: 环境准备
-        - name: setup-environment
-          script: |
-            echo "🔧 === 环境准备 ==="
-            node --version
-            npm --version
-            echo "开始安装pnpm..."
-            npm install -g pnpm
-            pnpm --version
-            echo "环境准备完成 ✅"
-            
-        # 阶段2: 安装依赖
-        - name: install-dependencies
-          script: |
-            echo "📦 === 安装项目依赖 ==="
-            pnpm config set registry https://registry.npmmirror.com
-            pnpm install --frozen-lockfile
-            echo "依赖安装完成 ✅"
-            
-        # 阶段3: 构建项目
-        - name: build-project
-          script: |
-            echo "🏗️ === 开始构建Astro项目 ==="
-            pnpm build
-            echo "=== 构建产物检查 ==="
-            ls -la dist/
-            echo "文件总数: $(find dist -type f | wc -l)"
-            echo "构建目录大小: $(du -sh dist/)"
-            echo "项目构建完成 ✅"
-            
-        # 阶段4: 部署到腾讯云COS
-        - name: deploy-to-cos
-          script: |
-            echo "🚀 === 开始部署到腾讯云COS ==="
-            
-            # 检查必要的环境变量
-            if [ -z "$COS_SECRET_ID" ] || [ -z "$COS_SECRET_KEY" ] || [ -z "$COS_BUCKET" ]; then
-              echo "❌ 缺少必要的COS环境变量"
-              echo "请确保在密钥仓库中配置:"
-              echo "- COS_SECRET_ID"
-              echo "- COS_SECRET_KEY" 
-              echo "- COS_BUCKET"
-              exit 1
-            fi
-            
-            # 安装腾讯云CLI工具
-            pip3 install coscmd
-            
-            # 配置COS
-            coscmd config -a $COS_SECRET_ID -s $COS_SECRET_KEY -b $COS_BUCKET -r ap-guangzhou
-            
-            # 同步文件到COS (删除远程多余文件)
-            coscmd upload -r -s --delete ./dist/ /
-            
-            echo "COS部署完成 ✅"
-            
-        # 阶段5: 刷新CDN缓存
-        - name: refresh-cdn
-          script: |
-            echo "🔄 === 刷新CDN缓存 ==="
-            echo "💡 CDN缓存将在几分钟内自动更新"
-            echo "如需立即刷新，请手动在腾讯云CDN控制台操作"
-            echo "CDN缓存处理完成 ✅"
-            
-        # 阶段6: 同步到GitHub
-        - name: sync-to-github
-          script: |
-            echo "📤 === 同步到GitHub仓库 ==="
-            
-            # 检查GitHub Token
-            if [ -z "$GITHUB_TOKEN" ]; then
-              echo "⚠️ 未配置GITHUB_TOKEN，跳过GitHub同步"
-              echo "💡 请在CNB密钥仓库中配置GITHUB_TOKEN环境变量"
-              exit 0
-            fi
-            
-            # 配置Git用户信息
-            git config --global user.email "cnb-deploy@l-souljourney.cn"
-            git config --global user.name "CNB Auto Deploy"
-            
-            # 添加GitHub远程仓库
-            echo "📡 配置GitHub远程仓库..."
+    name: 主分支部署流水线
+    env:
+      TZ: Asia/Shanghai
+    image: node:18-alpine
+    stages:
+      - name: 环境准备
+        script: |
+          echo "🔧 === 环境准备 ==="
+          node --version
+          npm --version
+          echo "安装pnpm..."
+          npm install -g pnpm
+          pnpm --version
+          echo "环境准备完成 ✅"
+          
+      - name: 安装依赖
+        script: |
+          echo "📦 === 安装项目依赖 ==="
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm install --frozen-lockfile
+          echo "依赖安装完成 ✅"
+          
+      - name: 构建项目
+        script: |
+          echo "🏗️ === 构建Astro项目 ==="
+          pnpm build
+          echo "=== 构建产物检查 ==="
+          ls -la dist/
+          echo "文件总数: $(find dist -type f | wc -l)"
+          echo "构建完成 ✅"
+          
+      - name: 部署到COS
+        image: cnbcool/tencent-cos
+        script: |
+          echo "🚀 === 部署到腾讯云COS ==="
+          plugin-deploy
+          echo "COS部署完成 ✅"
+          
+      - name: 刷新CDN
+        image: cnbcool/tencent-cdn
+        script: |
+          echo "🔄 === 刷新CDN缓存 ==="
+          plugin-refresh
+          echo "CDN刷新完成 ✅"
+          
+      - name: 同步GitHub
+        script: |
+          echo "📤 === 同步到GitHub ==="
+          if [ -n "$GITHUB_TOKEN" ]; then
+            apk add --no-cache git
+            git config --global user.email "cnb@l-souljourney.cn"
+            git config --global user.name "CNB Deploy"
             git remote add github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git 2>/dev/null || true
             git remote set-url github https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git
-            
-            # 推送到GitHub
-            echo "📤 推送到GitHub仓库..."
             git push github main --force
-            
-            echo "✅ GitHub同步完成！"
-            echo "🚀 Cloudflare Pages将自动检测变更并构建"
+            echo "GitHub同步完成 ✅"
+          else
+            echo "⚠️ 未配置GITHUB_TOKEN，跳过同步"
+          fi
 
-# develop分支构建配置（仅构建测试，不部署）
 develop:
   push:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      env:
-        TZ: Asia/Shanghai
-      
-      stages:
-        - name: test-build
-          script: |
-            echo "🧪 === 开发分支构建测试 ==="
-            
-            # 安装依赖
-            npm install -g pnpm
-            pnpm config set registry https://registry.npmmirror.com
-            pnpm install --frozen-lockfile
-            
-            # 构建测试
-            pnpm build
-            
-            echo "✅ 开发分支构建测试通过"
-            echo "💡 合并到main分支后将自动部署"
+    name: 开发分支测试流水线
+    env:
+      TZ: Asia/Shanghai
+    image: node:18-alpine
+    stages:
+      - name: 构建测试
+        script: |
+          echo "🧪 === 开发分支构建测试 ==="
+          npm install -g pnpm
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm install --frozen-lockfile
+          pnpm build
+          echo "✅ 构建测试通过"
+
+'**':
+  pull_request:
+    name: PR构建检查
+    env:
+      TZ: Asia/Shanghai
+    image: node:18-alpine
+    stages:
+      - name: PR检查
+        script: |
+          echo "🔍 === PR构建检查 ==="
+          npm install -g pnpm
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm install --frozen-lockfile
+          pnpm build
+          echo "✅ PR检查通过"
