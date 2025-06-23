@@ -42,6 +42,33 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx
 
 ## 配置变更历史
 
+### 2025-06-23 - 生产环境优化版本
+
+**重大优化：**
+1. **环境变量导入成功**：确认CNB环境变量导入功能正常工作
+   - GitHub Token和COS环境变量均能正确获取
+   - 修复了之前环境变量无法传递的问题
+
+2. **配置大幅精简**：
+   - 从267行优化到168行，减少99行（37%减少）
+   - 移除所有调试代码和重复逻辑
+   - 整合多个stage为单一高效stage
+
+3. **构建流程优化**：
+   - **main分支**：构建 → GitHub推送 → COS部署（三阶段流水线）
+   - **develop分支**：仅构建测试，包含环境变量导入
+   - **pull_request分支**：快速构建检查，无环境变量导入
+
+4. **镜像使用优化**：
+   - 构建阶段：`node:18-alpine`
+   - GitHub推送：`alpine/git:latest` (轻量化Git镜像)
+   - COS部署：`tencentcom/coscli:latest` (官方COS CLI)
+
+5. **错误处理增强**：
+   - 优雅处理GitHub Token缺失（跳过而非失败）
+   - 完整的COS环境变量验证
+   - 构建产物存在性检查
+
 ### 2025-06-20 - pnpm性能优化版本
 
 **性能优化：**
@@ -109,16 +136,23 @@ GITHUB_TOKEN: ghp_xxxxxxxxxxxx
 
 ```mermaid
 graph TD
-    A[Git Push] --> B[CNB 触发构建]
-    B --> C[导入环境变量 env.yml]
-    C --> D[Node.js 环境准备]
-    D --> E[pnpm 依赖安装]
-    E --> F[Astro 项目构建]
-    F --> G[生成 dist/ 静态文件]
-    G --> H[部署到腾讯云COS]
-    H --> I[CDN缓存刷新]
-    I --> J[同步到GitHub]
-    J --> K[部署完成]
+    A[Git Push to main] --> B[CNB 触发构建]
+    B --> C[导入密钥仓库 env.yml]
+    C --> D[Stage 1: 项目构建]
+    D --> E[安装 pnpm + 依赖]
+    E --> F[Astro 构建生成 dist/]
+    F --> G[Stage 2: GitHub 推送]
+    G --> H[验证 GitHub Token]
+    H --> I[推送代码到 GitHub]
+    I --> J[Stage 3: COS 部署]
+    J --> K[验证 COS 环境变量]
+    K --> L[配置 coscli 认证]
+    L --> M[同步 dist/ 到 COS]
+    M --> N[部署完成]
+    
+    style D fill:#e1f5fe
+    style G fill:#f3e5f5
+    style J fill:#e8f5e8
 ```
 
 ## 环境变量配置
