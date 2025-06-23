@@ -1,10 +1,10 @@
 # CNB 构建配置文件 - 使用官方COS插件
 # 采用CNB官方腾讯云COSCMD插件
 
-# 环境变量导入
+# 环境变量导入 - 使用CNB标准格式
 env:
   imports:
-    - https://cnb.cool/l-souljourney/env/-/raw/main/env.yml
+    - l-souljourney/env@main:env.yml
 
 # 主分支：生产环境构建+部署
 main:
@@ -41,6 +41,10 @@ main:
         - name: deploy to cos
           # 使用官方腾讯云coscli插件 - 参考demo正确语法
           image: tencentcom/coscli
+          # 确保环境变量在此阶段可用
+          env:
+            imports:
+              - l-souljourney/env@main:env.yml
           script: |
             echo "🚀 开始部署到腾讯云COS..."
             
