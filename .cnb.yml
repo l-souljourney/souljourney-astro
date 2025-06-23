@@ -38,6 +38,59 @@ main:
             ls -la dist/
             echo "✅ 项目构建完成"
             
+        - name: test github push
+          script: |
+            echo "🧪 开始GitHub推送测试 - 验证环境变量导入是否正常"
+            
+            echo "=== 检查GitHub相关环境变量 ==="
+            echo "GITHUB_TOKEN检查:"
+            if [ -n "${GITHUB_TOKEN}" ]; then
+              echo "  ✅ GITHUB_TOKEN 已设置，长度: ${#GITHUB_TOKEN}"
+              echo "  前缀: ${GITHUB_TOKEN:0:10}..."
+            else
+              echo "  ❌ GITHUB_TOKEN 未设置或为空"
+            fi
+            
+            echo "=== 检查COS环境变量 ==="
+            echo "COS_SECRET_ID: ${COS_SECRET_ID:+已设置}"
+            echo "COS_SECRET_KEY: ${COS_SECRET_KEY:+已设置}"
+            echo "COS_BUCKET: ${COS_BUCKET:-未设置}"
+            echo "COS_REGION: ${COS_REGION:-未设置}"
+            
+            echo "=== 配置GitHub远程仓库 ==="
+            git remote -v
+            
+            # 检查是否已有GitHub远程仓库
+            if git remote get-url github 2>/dev/null; then
+              echo "GitHub远程仓库已存在"
+            else
+              echo "添加GitHub远程仓库"
+              git remote add github https://github.com/l-souljourney/souljourney-astro.git
+            fi
+            
+            echo "=== 尝试推送到GitHub ==="
+            if [ -n "${GITHUB_TOKEN}" ]; then
+              echo "使用GitHub Token推送..."
+              
+              # 设置Git认证
+              git config --global user.name "CNB Auto Deploy"
+              git config --global user.email "cnb@l-souljourney.cn"
+              
+              # 使用Token推送
+              echo "推送当前分支到GitHub main分支..."
+              git push https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git HEAD:main || {
+                echo "❌ GitHub推送失败"
+                echo "检查Token权限和仓库访问权限"
+                exit 1
+              }
+              
+              echo "✅ GitHub推送成功！环境变量导入正常工作"
+            else
+              echo "❌ GITHUB_TOKEN未设置，无法进行推送测试"
+              echo "这证明环境变量导入存在问题"
+              exit 1
+            fi
+            
         - name: debug environment variables
           script: |
             echo "🔍 开始环境变量调试..."
@@ -52,53 +105,15 @@ main:
             echo "CNB_BUILD_ID: ${CNB_BUILD_ID:-未设置}"
             echo "CNB_REPO_SLUG: ${CNB_REPO_SLUG:-未设置}"
             
-            echo "=== 目标COS环境变量详细检查 ==="
-            echo "检查COS_SECRET_ID:"
-            if [ -n "${COS_SECRET_ID}" ]; then
-              echo "  ✅ COS_SECRET_ID 已设置，长度: ${#COS_SECRET_ID}"
-              echo "  值: ${COS_SECRET_ID:0:10}..."
-            else
-              echo "  ❌ COS_SECRET_ID 未设置或为空"
-            fi
-            
-            echo "检查COS_SECRET_KEY:"
-            if [ -n "${COS_SECRET_KEY}" ]; then
-              echo "  ✅ COS_SECRET_KEY 已设置，长度: ${#COS_SECRET_KEY}"
-              echo "  值: ${COS_SECRET_KEY:0:5}..."
-            else
-              echo "  ❌ COS_SECRET_KEY 未设置或为空"
-            fi
-            
-            echo "检查COS_BUCKET:"
-            if [ -n "${COS_BUCKET}" ]; then
-              echo "  ✅ COS_BUCKET 已设置: ${COS_BUCKET}"
-            else
-              echo "  ❌ COS_BUCKET 未设置或为空"
-              echo "  原始值检查: '${COS_BUCKET}'"
-              echo "  变量类型: $(declare -p COS_BUCKET 2>/dev/null || echo '变量未声明')"
-            fi
-            
-            echo "检查COS_REGION:"
-            if [ -n "${COS_REGION}" ]; then
-              echo "  ✅ COS_REGION 已设置: ${COS_REGION}"
-            else
-              echo "  ❌ COS_REGION 未设置或为空"
-              echo "  原始值检查: '${COS_REGION}'"
-              echo "  变量类型: $(declare -p COS_REGION 2>/dev/null || echo '变量未声明')"
-            fi
-            
             echo "=== 所有环境变量扫描 ==="
+            echo "包含GITHUB的环境变量:"
+            env | grep -i github | sed 's/=.*/=***/' || echo "未找到包含GITHUB的环境变量"
+            
             echo "包含COS的环境变量:"
             env | grep -i cos || echo "未找到包含COS的环境变量"
             
             echo "包含SECRET的环境变量:"
             env | grep -i secret | sed 's/=.*/=***/' || echo "未找到包含SECRET的环境变量"
-            
-            echo "=== 环境变量文件检查 ==="
-            echo "检查可能的配置文件:"
-            ls -la /etc/environment 2>/dev/null || echo "/etc/environment 不存在"
-            ls -la ~/.bashrc 2>/dev/null || echo "~/.bashrc 不存在"
-            ls -la ~/.profile 2>/dev/null || echo "~/.profile 不存在"
             
             echo "🔍 环境变量调试完成"
             
