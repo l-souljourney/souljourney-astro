@@ -99,7 +99,7 @@ main:
             echo "源目录: dist/"
             echo "目标: cos://${COS_BUCKET}/"
             
-            coscli sync dist/ "cos://${COS_BUCKET}/" --delete --skipMd5
+            coscli sync dist/ "cos://${COS_BUCKET}/" --delete --disable-crc64
             
             echo "✅ COS部署完成！"
             
