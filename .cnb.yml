@@ -1,0 +1,95 @@
+# CNB 构建配置文件 - 简化版本
+# 使用官方推荐的 volumes 缓存方案
+
+# 环境变量导入
+env:
+  imports:
+    - https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
+
+# 主分支：生产环境构建+部署
+main:
+  push:
+    - docker:
+        image: node:18-alpine
+        volumes:
+          - node_modules:copy-on-write
+          - /root/.local/share/pnpm:copy-on-write
+          - /root/.cache/pnpm:copy-on-write
+      stages:
+        - name: setup environment
+          script: |
+            echo "🚀 开始环境准备..."
+            npm install -g pnpm@latest
+            pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+            pnpm config set prefer-offline true
+            echo "✅ 环境准备完成"
+            
+        - name: install dependencies
+          script: |
+            echo "📦 开始安装依赖..."
+            time pnpm install --frozen-lockfile
+            echo "✅ 依赖安装完成"
+            
+        - name: build project
+          script: |
+            echo "🏗️ 开始构建项目..."
+            time pnpm run build
+            echo "✅ 项目构建完成"
+            ls -la dist/
+            
+        - name: deploy to cos
+          type: cos
+          options:
+            secretId: ${COS_SECRET_ID}
+            secretKey: ${COS_SECRET_KEY}
+            bucket: ${COS_BUCKET}
+            region: ${COS_REGION}
+            localPath: dist/
+            remotePath: /
+
+# 开发分支：仅构建测试
+develop:
+  push:
+    - docker:
+        image: node:18-alpine
+        volumes:
+          - node_modules:copy-on-write
+          - /root/.local/share/pnpm:copy-on-write
+          - /root/.cache/pnpm:copy-on-write
+      stages:
+        - name: setup environment
+          script: |
+            echo "🚀 开始环境准备..."
+            npm install -g pnpm@latest
+            pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+            pnpm config set prefer-offline true
+            echo "✅ 环境准备完成"
+            
+        - name: install dependencies
+          script: |
+            echo "📦 开始安装依赖..."
+            time pnpm install --frozen-lockfile
+            echo "✅ 依赖安装完成"
+            
+        - name: build test
+          script: |
+            echo "🏗️ 开始构建测试..."
+            time pnpm run build
+            echo "✅ 构建测试完成"
+            ls -la dist/
+
+# Pull Request：快速构建检查
+pull_request:
+  - docker:
+      image: node:18-alpine
+      volumes:
+        - node_modules:copy-on-write
+        - /root/.local/share/pnpm:copy-on-write
+    stages:
+      - name: quick check
+        script: |
+          echo "⚡ 开始快速检查..."
+          npm install -g pnpm@latest
+          pnpm install --frozen-lockfile
+          pnpm run build
+          echo "✅ 快速检查完成" 
