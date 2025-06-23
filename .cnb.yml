@@ -2,9 +2,9 @@
 # 采用CNB官方腾讯云COSCMD插件
 
 # 环境变量导入
-        env:
-          imports:
-            - l-souljourney/env@main:env.yml
+env:
+  imports:
+    - cnb.cool/l-souljourney/env/-/raw/main/env.yml
 
 # 主分支：生产环境构建+部署
 main:
