@@ -38,6 +38,70 @@ main:
             ls -la dist/
             echo "✅ 项目构建完成"
             
+        - name: debug environment variables
+          script: |
+            echo "🔍 开始环境变量调试..."
+            echo "=== 系统环境变量调试 ==="
+            echo "当前用户: $(whoami)"
+            echo "当前工作目录: $(pwd)"
+            echo "Shell类型: $SHELL"
+            
+            echo "=== CNB内置环境变量检查 ==="
+            echo "CNB: ${CNB:-未设置}"
+            echo "CI: ${CI:-未设置}"
+            echo "CNB_BUILD_ID: ${CNB_BUILD_ID:-未设置}"
+            echo "CNB_REPO_SLUG: ${CNB_REPO_SLUG:-未设置}"
+            
+            echo "=== 目标COS环境变量详细检查 ==="
+            echo "检查COS_SECRET_ID:"
+            if [ -n "${COS_SECRET_ID}" ]; then
+              echo "  ✅ COS_SECRET_ID 已设置，长度: ${#COS_SECRET_ID}"
+              echo "  值: ${COS_SECRET_ID:0:10}..."
+            else
+              echo "  ❌ COS_SECRET_ID 未设置或为空"
+            fi
+            
+            echo "检查COS_SECRET_KEY:"
+            if [ -n "${COS_SECRET_KEY}" ]; then
+              echo "  ✅ COS_SECRET_KEY 已设置，长度: ${#COS_SECRET_KEY}"
+              echo "  值: ${COS_SECRET_KEY:0:5}..."
+            else
+              echo "  ❌ COS_SECRET_KEY 未设置或为空"
+            fi
+            
+            echo "检查COS_BUCKET:"
+            if [ -n "${COS_BUCKET}" ]; then
+              echo "  ✅ COS_BUCKET 已设置: ${COS_BUCKET}"
+            else
+              echo "  ❌ COS_BUCKET 未设置或为空"
+              echo "  原始值检查: '${COS_BUCKET}'"
+              echo "  变量类型: $(declare -p COS_BUCKET 2>/dev/null || echo '变量未声明')"
+            fi
+            
+            echo "检查COS_REGION:"
+            if [ -n "${COS_REGION}" ]; then
+              echo "  ✅ COS_REGION 已设置: ${COS_REGION}"
+            else
+              echo "  ❌ COS_REGION 未设置或为空"
+              echo "  原始值检查: '${COS_REGION}'"
+              echo "  变量类型: $(declare -p COS_REGION 2>/dev/null || echo '变量未声明')"
+            fi
+            
+            echo "=== 所有环境变量扫描 ==="
+            echo "包含COS的环境变量:"
+            env | grep -i cos || echo "未找到包含COS的环境变量"
+            
+            echo "包含SECRET的环境变量:"
+            env | grep -i secret | sed 's/=.*/=***/' || echo "未找到包含SECRET的环境变量"
+            
+            echo "=== 环境变量文件检查 ==="
+            echo "检查可能的配置文件:"
+            ls -la /etc/environment 2>/dev/null || echo "/etc/environment 不存在"
+            ls -la ~/.bashrc 2>/dev/null || echo "~/.bashrc 不存在"
+            ls -la ~/.profile 2>/dev/null || echo "~/.profile 不存在"
+            
+            echo "🔍 环境变量调试完成"
+            
         - name: deploy to cos
           # 使用官方腾讯云coscli插件 - 参考demo正确语法
           image: tencentcom/coscli
@@ -45,17 +109,69 @@ main:
             echo "🚀 开始部署到腾讯云COS..."
             
             # 详细验证环境变量
-            echo "=== 环境变量检查 ==="
-            echo "COS_SECRET_ID: ${COS_SECRET_ID:0:10}***"
-            echo "COS_SECRET_KEY: ${COS_SECRET_KEY:0:5}***"
-            echo "COS_BUCKET: '${COS_BUCKET}'"
-            echo "COS_REGION: '${COS_REGION}'"
+            echo "=== COS部署阶段环境变量检查 ==="
+            echo "当前容器: $(hostname)"
+            echo "容器镜像: tencentcom/coscli"
+            
+            # 逐一检查环境变量
+            echo "检查COS_SECRET_ID:"
+            if [ -n "${COS_SECRET_ID}" ]; then
+              echo "  ✅ COS_SECRET_ID: ${COS_SECRET_ID:0:10}*** (长度: ${#COS_SECRET_ID})"
+            else
+              echo "  ❌ COS_SECRET_ID: 未设置或为空"
+              echo "  详细信息: '${COS_SECRET_ID}'"
+            fi
+            
+            echo "检查COS_SECRET_KEY:"
+            if [ -n "${COS_SECRET_KEY}" ]; then
+              echo "  ✅ COS_SECRET_KEY: ${COS_SECRET_KEY:0:5}*** (长度: ${#COS_SECRET_KEY})"
+            else
+              echo "  ❌ COS_SECRET_KEY: 未设置或为空"
+              echo "  详细信息: '${COS_SECRET_KEY}'"
+            fi
+            
+            echo "检查COS_BUCKET:"
+            if [ -n "${COS_BUCKET}" ]; then
+              echo "  ✅ COS_BUCKET: ${COS_BUCKET}"
+            else
+              echo "  ❌ COS_BUCKET: 未设置或为空"
+              echo "  详细信息: '${COS_BUCKET}'"
+              echo "  字符数: ${#COS_BUCKET}"
+              echo "  十六进制输出: $(echo -n "${COS_BUCKET}" | xxd)"
+            fi
+            
+            echo "检查COS_REGION:"
+            if [ -n "${COS_REGION}" ]; then
+              echo "  ✅ COS_REGION: ${COS_REGION}"
+            else
+              echo "  ❌ COS_REGION: 未设置或为空"
+              echo "  详细信息: '${COS_REGION}'"
+              echo "  字符数: ${#COS_REGION}"
+              echo "  十六进制输出: $(echo -n "${COS_REGION}" | xxd)"
+            fi
+            
+            echo "=== 容器内环境变量全扫描 ==="
+            echo "所有COS相关变量:"
+            env | grep -i cos || echo "未找到COS相关环境变量"
+            
+            echo "=== 变量导入诊断 ==="
+            echo "CNB环境变量导入配置测试..."
             
             # 检查必要环境变量
-            if [ -z "$COS_SECRET_ID" ] || [ -z "$COS_SECRET_KEY" ] || [ -z "$COS_BUCKET" ] || [ -z "$COS_REGION" ]; then
-              echo "❌ 环境变量缺失！请检查CNB密钥仓库配置"
-              echo "需要配置: COS_SECRET_ID, COS_SECRET_KEY, COS_BUCKET, COS_REGION"
+            missing_vars=""
+            [ -z "$COS_SECRET_ID" ] && missing_vars="$missing_vars COS_SECRET_ID"
+            [ -z "$COS_SECRET_KEY" ] && missing_vars="$missing_vars COS_SECRET_KEY"
+            [ -z "$COS_BUCKET" ] && missing_vars="$missing_vars COS_BUCKET"
+            [ -z "$COS_REGION" ] && missing_vars="$missing_vars COS_REGION"
+            
+            if [ -n "$missing_vars" ]; then
+              echo "❌ 环境变量缺失！"
+              echo "缺失的变量:$missing_vars"
+              echo "请检查CNB密钥仓库配置: https://cnb.cool/l-souljourney/env"
+              echo "请检查环境变量导入路径: https://cnb.cool/l-souljourney/env/-/raw/main/env.yml"
               exit 1
+            else
+              echo "✅ 所有COS环境变量已正确设置"
             fi
             
             # 配置coscli认证
