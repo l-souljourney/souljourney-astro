@@ -1,10 +1,10 @@
 # CNB 构建配置文件 - 使用官方COS插件
 # 采用CNB官方腾讯云COSCMD插件
 
-# 环境变量导入 - 使用完整路径
+# 环境变量导入 - 尝试使用仓库引用格式
 env:
   imports:
-    - https://cnb.cool/l-souljourney/env/-/raw/main/env.yml
+    - l-souljourney/env@main:env.yml
 
 # 主分支：生产环境构建+部署
 main:
