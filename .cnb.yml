@@ -39,21 +39,32 @@ main:
             echo "✅ 项目构建完成"
             
         - name: deploy to cos
-          # 使用CNB官方腾讯云COSCMD插件
-          uses: public/open-source/tencentyun/coscmd@latest
-          with:
-            # 使用环境变量中的认证信息
-            secret_id: ${{ COS_SECRET_ID }}
-            secret_key: ${{ COS_SECRET_KEY }}
-            bucket: ${{ COS_BUCKET }}
-            region: ${{ COS_REGION }}
-            # 上传整个dist目录到COS根目录
-            local_path: dist/
-            remote_path: /
-            # 删除远程多余文件，保持同步
-            delete: true
-            # 忽略文件
-            ignore: "*.log,.git/*"
+          # 使用官方腾讯云coscli插件 - 参考demo正确语法
+          image: tencentcom/coscli
+          script: |
+            echo "🚀 开始部署到腾讯云COS..."
+            
+            # 验证环境变量
+            echo "验证COS配置环境变量..."
+            echo "COS_SECRET_ID: ${COS_SECRET_ID:0:10}***"
+            echo "COS_BUCKET: ${COS_BUCKET}"
+            echo "COS_REGION: ${COS_REGION}"
+            
+            # 配置coscli认证
+            coscli config set --secret_id $COS_SECRET_ID --secret_key $COS_SECRET_KEY 
+            coscli config add --init-skip=true -b $COS_BUCKET -r $COS_REGION
+            
+            # 显示构建产物
+            echo "构建产物目录内容："
+            ls -la dist/
+            du -sh dist/
+            
+            # 上传到COS（清理旧文件并上传新文件）
+            echo "开始上传文件到COS..."
+            coscli cp dist/ cos://$COS_BUCKET/ -r --exclude "./.git/*"
+            
+            echo "✅ COS部署完成"
+            echo "🌐 网站已更新到生产环境"
 
 # 开发分支：仅构建测试
 develop:
