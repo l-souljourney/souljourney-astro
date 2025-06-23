@@ -1,5 +1,5 @@
-# CNB 构建配置文件 - 简化版本
-# 使用官方推荐的 volumes 缓存方案
+# CNB 构建配置文件 - 使用官方COS插件
+# 采用CNB官方腾讯云COSCMD插件
 
 # 环境变量导入
 env:
@@ -21,7 +21,6 @@ main:
             echo "🚀 开始环境准备..."
             npm install -g pnpm@latest
             pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-            pnpm config set prefer-offline true
             echo "✅ 环境准备完成"
             
         - name: install dependencies
@@ -34,37 +33,27 @@ main:
           script: |
             echo "🏗️ 开始构建项目..."
             time pnpm run build
-            echo "✅ 项目构建完成"
+            echo "📊 构建产物大小:"
+            du -sh dist/
             ls -la dist/
+            echo "✅ 项目构建完成"
             
         - name: deploy to cos
-          script: |
-            echo "🚀 开始部署到腾讯云COS..."
-            
-            # 安装Python和coscmd工具
-            apk add --no-cache python3 py3-pip
-            pip3 install coscmd
-            
-            # 验证环境变量
-            echo "验证COS配置环境变量..."
-            echo "COS_SECRET_ID: ${COS_SECRET_ID:0:10}***"
-            echo "COS_BUCKET: ${COS_BUCKET}"
-            echo "COS_REGION: ${COS_REGION}"
-            
-            # 配置coscmd
-            coscmd config -a ${COS_SECRET_ID} -s ${COS_SECRET_KEY} -b ${COS_BUCKET} -r ${COS_REGION}
-            
-            # 显示当前构建产物
-            echo "构建产物目录内容："
-            ls -la dist/
-            du -sh dist/
-            
-            # 上传到COS（清理旧文件并上传新文件）
-            echo "开始上传文件到COS..."
-            coscmd upload -r dist/ / --delete --ignore ".git/*,*.log"
-            
-            echo "✅ COS部署完成"
-            echo "🌐 网站已更新到生产环境"
+          # 使用CNB官方腾讯云COSCMD插件
+          uses: public/open-source/tencentyun/coscmd@latest
+          with:
+            # 使用环境变量中的认证信息
+            secret_id: ${{ COS_SECRET_ID }}
+            secret_key: ${{ COS_SECRET_KEY }}
+            bucket: ${{ COS_BUCKET }}
+            region: ${{ COS_REGION }}
+            # 上传整个dist目录到COS根目录
+            local_path: dist/
+            remote_path: /
+            # 删除远程多余文件，保持同步
+            delete: true
+            # 忽略文件
+            ignore: "*.log,.git/*"
 
 # 开发分支：仅构建测试
 develop:
@@ -81,7 +70,6 @@ develop:
             echo "🚀 开始环境准备..."
             npm install -g pnpm@latest
             pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-            pnpm config set prefer-offline true
             echo "✅ 环境准备完成"
             
         - name: install dependencies
@@ -94,8 +82,10 @@ develop:
           script: |
             echo "🏗️ 开始构建测试..."
             time pnpm run build
+            echo "📊 构建产物大小:"
+            du -sh dist/
+            ls -la dist/ | head -10
             echo "✅ 构建测试完成"
-            ls -la dist/
 
 # Pull Request：快速构建检查
 pull_request:
@@ -104,11 +94,13 @@ pull_request:
       volumes:
         - node_modules:copy-on-write
         - /root/.local/share/pnpm:copy-on-write
+        - /root/.cache/pnpm:copy-on-write
     stages:
       - name: quick check
         script: |
           echo "⚡ 开始快速检查..."
           npm install -g pnpm@latest
-          pnpm install --frozen-lockfile
-          pnpm run build
+          pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+          time pnpm install --frozen-lockfile
+          time pnpm run build
           echo "✅ 快速检查完成" 
