@@ -85,19 +85,14 @@ export default {
     // 是否展示推荐文章
     recommendArticleShow: true
   },
-  // DNS预解析地址 - 建议修改为你实际使用的服务
+  // DNS预解析地址 - 清理无用域名，仅保留必要服务
   DNSOptimization: [
-    'https://i0.wp.com',
-    'https://cn.cravatar.com',
-    // 如果不使用这些服务，建议删除
-    // 'https://analytics.vvhan.com',
-    // 'https://vh-api.4ce.cn',
-    'https://registry.npmmirror.com',
-    'https://pagead2.googlesyndication.com'
+    'https://registry.npmmirror.com', // npm镜像（必要）
+    'https://cn.cravatar.com' // 头像服务（如果使用）
   ],
-  // 博客音乐组件解析接口 - 如果不使用音乐功能，可以留空或删除
-  vhMusicApi: '', // 'https://vh-api.4ce.cn/blog/meting',
-  // 评论组件（只允许同时开启一个）
+  // 博客音乐组件解析接口 - 完全禁用音乐功能
+  vhMusicApi: '',
+  // 评论组件 - 完全禁用，使用公众号引流
   Comment: {
     // Twikoo 评论
     Twikoo: {
@@ -112,8 +107,9 @@ export default {
   },
   // Han Analytics 统计 - 建议禁用或替换为你自己的统计服务
   HanAnalytics: { enable: false, server: '', siteId: '' },
-  // 如果要使用其他统计服务如Google Analytics，可以在这里配置
-  // Google 广告
+  // Google Analytics 配置（推荐）
+  // GoogleAnalytics: { enable: false, measurementId: '' }, // 可以后续添加
+  // Google 广告 - 暂不启用
   GoogleAds: {
     ad_Client: '', //ca-pub-xxxxxx
     // 侧边栏广告(不填不开启)
@@ -121,14 +117,16 @@ export default {
     // 文章页广告(不填不开启)
     articleAD_Slot: `<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxxxx" data-ad-slot="xxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>`
   },
-  // 文章内赞赏码
-  Reward: {
-    // 支付宝收款码
-    AliPay: '/assets/images/alipay.webp',
-    // 微信收款码
-    WeChat: '/assets/images/wechat.webp'
+  // 文章内公众号引流 - 替换原有打赏功能
+  WeChat: {
+    // 微信公众号二维码
+    QRCode: '/assets/images/wechat-qrcode.webp',
+    // 公众号名称
+    Name: 'L-Souljourney',
+    // 引流文案
+    Description: '扫码关注公众号，获取更多技术分享和深度思考'
   },
-  // 访问网页 自动推送到搜索引擎
+  // 访问网页 自动推送到搜索引擎 - 后续可配置
   SeoPush: {
     enable: false,
     serverApi: '',

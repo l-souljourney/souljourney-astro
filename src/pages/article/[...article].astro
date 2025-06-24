@@ -26,9 +26,6 @@ import Layout from "@/layouts/Layout/Layout.astro";
 import Copyright from "@/components/Copyright/Copyright.astro";
 // Reward 组件
 import Reward from "@/components/Reward/Reward.astro";
-// 评论组件
-import { checkComment } from "@/scripts/Comment";
-import Comment from "@/components/Comment/Comment.astro";
 // Google 广告组件
 import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 // 文章页面样式
@@ -37,22 +34,16 @@ import "@/styles/Article.less";
 import "@/styles/ArticleBase.less";
 ---
 
-<Layout title={post.data.title} keywords={post.data.tags} description={description} pagecover={ARTICLE_COVER}>
-	<article class="vh-article-main vh-animation vh-animation-init">
-		<header>
+<Layout title={post.data.title || Title} description={description} cover={ARTICLE_COVER} activeNav="archives">
+	<article class="vh-article vh-animation vh-animation-init">
+		<header class="vh-article-header">
 			<h1>{post.data.title}</h1>
-			<div class="article-meta">
-				<span class="article-meta-item">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 12h3.5"></path><path d="M12 7v5"></path></svg>
-					<time>{fmtTime(post.data.date, "YYYY-MM-DD A")}</time>
-					<span class="count"><strong>{article_word_count || "一点"}</strong>字</span>
-					<span class="time"><strong>{parseFloat((Number(reading_time) || 0).toFixed(1).replace(/\.0+$/, ""))}</strong>分钟</span>
-				</span>
-				<a class="article-meta-item" href={`/categories/${post.data.categories}`}>
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 6h16"></path><path d="M7 12h13"></path><path d="M10 18h10"></path></svg>
-					<span>{post.data.categories}</span>
-				</a>
-			</div>
+			<section class="vh-article-meta">
+				<span>发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}</span>
+				<span>分类于 <a href={`/categories/${post.data.categories}`}>{post.data.categories || "未分类"}</a></span>
+				<span>字数统计 {article_word_count} 字</span>
+				<span>阅读时长 ≈ {Math.ceil(reading_time)} 分钟</span>
+			</section>
 		</header>
 		<main>
 			<Content />
@@ -72,13 +63,12 @@ import "@/styles/ArticleBase.less";
 			</section>
 		</main>
 		<footer>
-			<!-- 打赏组件 -->
+			<!-- 公众号引流组件 -->
 			<Reward />
 			<!-- 版权©️信息 -->
 			<Copyright site={Site} id={post.data.id} title={post.data.title} sitename={Title} time={fmtTime(post.data.date, "YYYY-MM-DD A")} auther={Author} />
 			<!-- 底部谷歌广告 -->
 			{GoogleAds.ad_Client && GoogleAds.articleAD_Slot && <GoogleAd className="vh-article-ad" slotID={GoogleAds.articleAD_Slot} />}
 		</footer>
-		{checkComment() && <Comment />}
 	</article>
 </Layout>

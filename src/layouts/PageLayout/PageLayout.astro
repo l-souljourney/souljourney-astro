@@ -5,9 +5,6 @@ import SITE_CONFIG from "@/config";
 const { Description, Title } = SITE_CONFIG;
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
-// 评论组件
-import { checkComment } from "@/scripts/Comment";
-import Comment from "@/components/Comment/Comment.astro";
 // 关于样式
 import "@/styles/About.less";
 // 文章内容基础样式
@@ -23,6 +20,5 @@ import "./PageLayout.less";
 			<p>{frontmatter.desc}</p>
 		</header>
 		<main><slot /></main>
-		{checkComment() && frontmatter.comment != false && <Comment />}
 	</section>
 </Layout>
