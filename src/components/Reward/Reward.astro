@@ -3,7 +3,10 @@ import SITE_INFO from "@/config";
 import "./Reward.less";
 ---
 
-<section class="vh-reward">
-	<p>喜欢这篇文章嘛，觉得文章不错的话，奖励奖励我！</p>
-	<div class="reward-list"><span class="alipay"><img src={SITE_INFO.Reward.AliPay} alt="支付宝打赏" />支付宝</span><span class="wechat"><img src={SITE_INFO.Reward.WeChat} alt="微信打赏" /> 微信</span></div>
+<section class="vh-reward vh-wechat-follow">
+	<p>{SITE_INFO.WeChat.Description}</p>
+	<div class="wechat-qr">
+		<img src={SITE_INFO.WeChat.QRCode} alt={`关注公众号 ${SITE_INFO.WeChat.Name}`} />
+		<span>{SITE_INFO.WeChat.Name}</span>
+	</div>
 </section>
