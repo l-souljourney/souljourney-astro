@@ -5,8 +5,6 @@ declare const ViewImage: any;
 const ViewImgList: string[] = [
   // 文章内图片
   "article.vh-article-main img.vh-article-img",
-  // 动态页面图片
-  "main.talking-main>article>.main img",
   // Twikoo 评论区图片
   ".vh-comment>.twikoo>.tk-comments img:not(.tk-avatar-img,.OwO-item img,.tk-owo-emotion)",
   // Waline 评论区图片
