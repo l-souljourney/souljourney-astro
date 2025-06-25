@@ -2,8 +2,8 @@
   "name": "l-souljourney-blog",
   "type": "module",
   "version": "1.0.0",
-  "description": "L-Souljourney的个人博客，基于Astro构建",
-  "author": "L-Souljourney",
+  "description": "L-忠程的个人博客，记录投资感悟、AI探索、商业思考与人生哲学",
+  "author": "执笔忠程",
   "license": "MIT",
   "scripts": {
     "dev": "astro dev",

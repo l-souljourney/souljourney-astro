@@ -1,31 +1,40 @@
 export default {
-  // 网站标题
-  Title: 'L-Souljourney',
+  // 网站标题 - 符合ICP备案要求
+  Title: 'L-忠程丨生死看淡不服就淦 - 天问星曦',
   // 网站地址
   Site: 'https://blog.l-souljourney.cn',
   // 网站副标题
   Subtitle: '生死看淡 不服就淦',
   // 网站描述
-  Description: 'L-Souljourney个人博客，专注于技术分享、生活感悟和个人成长。记录学习过程中的点点滴滴，分享编程技术、工具使用心得以及人生感悟。',
+  Description: '执笔忠程的个人博客，记录投资感悟、AI探索、商业思考与人生哲学。从浙商精神到人生感悟，从技术梦想到中年思考，分享阅读心得与音乐情怀，探讨如何在变化的世界中活下来、活下去。',
   // 网站作者
-  Author: 'L-Souljourney',
-  // 作者头像 - 建议替换为你自己的头像
+  Author: '执笔忠程',
+  // 作者头像 - 待用户提供后替换
   Avatar: 'https://q1.qlogo.cn/g?b=qq&nk=1655466387&s=640',
   // 网站座右铭
   Motto: '生死看淡 不服就淦',
   // Cover 网站缩略图
   Cover: '/assets/images/banner/072c12ec85d2d3b5.webp',
-  // 网站侧边栏公告 (不填写即不开启)
-  Tips: '<p>欢迎来到我的个人博客 🎉</p><p>这里记录我的技术学习历程和生活感悟，希望能与你产生共鸣 💖</p>',
+  // 网站侧边栏公告
+  Tips: '<p>欢迎来到L-忠程的思想花园 🌸</p><p>这里记录投资路上的思考、AI时代的探索、商业哲学的感悟以及人生路上的点点滴滴。所有文章同步发布于微信公众号，欢迎关注交流 💖</p>',
   // 首页打字机文案列表
   TypeWriteList: [
     '生死看淡 不服就淦',
-    "Life and death are indifferent, fight if you don't accept it.",
-    '技术改变生活，学习成就未来',
-    '记录成长，分享所得'
+    '漫漫投资路，执笔写忠程',
+    'AI让梦想成真，智慧引领未来',
+    '浙商之哲商，传承创新精神',
+    '人到中年终是一场戏，阅读是一种幸福',
+    '音乐没有辜负80后，活下来活下去'
   ],
-  // 网站创建时间 - 建议修改为你博客的实际创建时间
+  // 网站创建时间
   CreateTime: '2025-01-01',
+  // ICP备案信息
+  ICP: {
+    enable: true,
+    number: '浙ICP备2025152080号-1',
+    link: 'https://beian.miit.gov.cn/',
+    siteName: 'L-忠程丨生死看淡不服就淦 - 天问星曦'
+  },
   // 顶部 Banner 配置
   HomeBanner: {
     enable: true,
@@ -39,10 +48,10 @@ export default {
   // 博客主题配置
   Theme: {
     // 颜色请用 16 进制颜色码
-    // 主题颜色
-    "--vh-main-color": "#01C4B6",
+    // 主题颜色 - 选择更沉稳的颜色搭配您的内容风格
+    "--vh-main-color": "#2c5aa0",
     // 字体颜色
-    "--vh-font-color": "#34495e",
+    "--vh-font-color": "#34495e", 
     // 侧边栏宽度
     "--vh-aside-width": "318px",
     // 全局圆角
@@ -50,29 +59,21 @@ export default {
     // 主体内容宽度
     "--vh-main-max-width": "1458px",
   },
-  // 导航栏 (新窗口打开 newWindow: true)
+  // 导航栏
   Navs: [
-    // 仅支持 SVG 且 SVG 需放在 public/assets/images/svg/ 目录下，填入文件名即可 <不需要文件后缀名>（封装了 SVG 组件 为了极致压缩 SVG）
-    // 建议使用 https://tabler.io/icons 直接下载 SVG
     { text: '朋友', link: '/links', icon: 'Nav_friends' },
     { text: '圈子', link: '/friends', icon: 'Nav_rss' },
     { text: '动态', link: '/talking', icon: 'Nav_talking' },
     { text: '昔日', link: '/archives', icon: 'Nav_archives' },
     { text: '留言', link: '/message', icon: 'Nav_message' },
     { text: '关于', link: '/about', icon: 'Nav_about' },
-    // 建议修改为你自己的API或其他链接
-    { text: 'GitHub', link: 'https://github.com/your-username', target: true, icon: 'Nav_link' },
+    { text: '公众号', link: '#wechat-qr', target: false, icon: 'Nav_link' },
   ],
-  // 侧边栏个人网站 - 建议修改为你自己的网站和项目
+  // 侧边栏个人网站
   WebSites: [
-    // 仅支持 SVG 且 SVG 需放在 public/assets/images/svg/ 目录下，填入文件名即可 <不需要文件后缀名>（封装了 SVG 组件 为了极致压缩 SVG）
-    // 建议使用 https://tabler.io/icons 直接下载 SVG
-    { text: 'GitHub', link: 'https://github.com/your-username', icon: 'WebSite_github' },
-    { text: '个人项目', link: 'https://your-project.com', icon: 'WebSite_api' },
-    // 如果没有这些服务，可以注释掉或删除
-    // { text: '每日热榜', link: 'https://hot.vvhan.com', icon: 'WebSite_hot' },
-    // { text: '骤雨重山图床', link: 'https://wp-cdn.4ce.cn', icon: 'WebSite_img' },
-    // { text: 'HanAnalytics', link: 'https://analytics.vvhan.com', icon: 'WebSite_analytics' },
+    { text: '微信公众号', link: '#wechat-qr', icon: 'WebSite_github' },
+    { text: '投资笔记', link: '#', icon: 'WebSite_api' },
+    { text: 'AI工具箱', link: '#', icon: 'WebSite_hot' },
   ],
   // 侧边栏展示
   AsideShow: {
@@ -85,14 +86,13 @@ export default {
     // 是否展示推荐文章
     recommendArticleShow: true
   },
-  // DNS预解析地址 - 清理无用域名，仅保留必要服务
+  // DNS预解析地址
   DNSOptimization: [
-    'https://registry.npmmirror.com', // npm镜像（必要）
-    'https://cn.cravatar.com' // 头像服务（如果使用）
+    'https://registry.npmmirror.com'
   ],
-  // 博客音乐组件解析接口 - 完全禁用音乐功能
+  // 博客音乐组件解析接口 - 保留音乐功能，符合80后情怀
   vhMusicApi: '',
-  // 评论组件 - 完全禁用，使用公众号引流
+  // 评论组件 - 引导到公众号交流
   Comment: {
     // Twikoo 评论
     Twikoo: {
@@ -105,28 +105,24 @@ export default {
       serverURL: ''
     }
   },
-  // Han Analytics 统计 - 建议禁用或替换为你自己的统计服务
+  // 统计分析
   HanAnalytics: { enable: false, server: '', siteId: '' },
-  // Google Analytics 配置（推荐）
-  // GoogleAnalytics: { enable: false, measurementId: '' }, // 可以后续添加
-  // Google 广告 - 暂不启用
+  // Google 广告
   GoogleAds: {
-    ad_Client: '', //ca-pub-xxxxxx
-    // 侧边栏广告(不填不开启)
-    asideAD_Slot: `<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxxxx" data-ad-slot="xxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>`,
-    // 文章页广告(不填不开启)
-    articleAD_Slot: `<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxxxx" data-ad-slot="xxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>`
+    ad_Client: '',
+    asideAD_Slot: '',
+    articleAD_Slot: ''
   },
-  // 文章内公众号引流 - 替换原有打赏功能
+  // 微信公众号引流配置
   WeChat: {
     // 微信公众号二维码
-    QRCode: '/assets/images/wechat-qrcode.webp',
+    QRCode: '/assets/images/wechat-qr.webp',
     // 公众号名称
-    Name: 'L-Souljourney',
+    Name: 'L-忠程丨生死看淡不服就淦',
     // 引流文案
-    Description: '扫码关注公众号，获取更多技术分享和深度思考'
+    Description: '扫码关注公众号「L-忠程丨生死看淡不服就淦」，获取更多投资思考、AI探索、商业哲学与人生感悟。所有文章同步更新，深度交流欢迎私信。'
   },
-  // 访问网页 自动推送到搜索引擎 - 后续可配置
+  // SEO推送
   SeoPush: {
     enable: false,
     serverApi: '',
