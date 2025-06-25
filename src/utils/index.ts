@@ -10,31 +10,13 @@ dayjs.locale('zh-cn');
 const getDescription = (post: any, num: number = 150) => (post.rendered ? post.rendered.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "") : post.body.replace(/\n/g, "").replace(/#/g, "")).slice(0, num) || '暂无简介'
 //处理时间
 const fmtTime = (time: any, fmt: string = 'MMMM D, YYYY') => dayjs(time).utc().format(fmt)
-// 处理日期
+// 处理日期 - 只显示总天数
 const fmtDate = (time: string | Date, hours_status = true) => {
   const now = dayjs();
   const past = dayjs(time);
-  // 计算各时间单位，逐步扣除已计算的部分
-  const years = now.diff(past, 'year');
-  const adjustedPastYears = past.add(years, 'year');
-  const months = now.diff(adjustedPastYears, 'month');
-  const adjustedPastMonths = adjustedPastYears.add(months, 'month');
-  const days = now.diff(adjustedPastMonths, 'day');
-  const adjustedPastDays = adjustedPastMonths.add(days, 'day');
-  const hours = now.diff(adjustedPastDays, 'hour');
-  const adjustedPastHours = adjustedPastDays.add(hours, 'hour');
-  const minutes = now.diff(adjustedPastHours, 'minute');
-  const adjustedPastMinutes = adjustedPastHours.add(minutes, 'minute');
-  const seconds = now.diff(adjustedPastMinutes, 'second');
-  // 构建时间差描述，仅在没有更大单位时显示较小单位
-  return [
-    years && `${years}年`,
-    months && `${months}月`,
-    days && `${days}天`,
-    (hours_status || days === 0) ? hours && !years && !months && `${hours}小时` : 0,
-    hours_status ? minutes && !years && !months && !days && `${minutes}分` : '',
-    hours_status ? seconds && !years && !months && !days && !hours && `${seconds}秒` : ''
-  ].filter(Boolean).join('');
+  // 计算总天数差
+  const totalDays = now.diff(past, 'day');
+  return `${totalDays}天`;
 };
 
 // 处理页码展示

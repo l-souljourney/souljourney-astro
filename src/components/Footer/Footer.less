@@ -20,48 +20,49 @@
     max-width: var(--vh-main-max-width);
     height: max-content;
 
-    &>p {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.618rem;
-      line-height: 1;
+          &>p {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.618rem;
+        min-height: 1.25rem;
+        line-height: 1;
 
       &>a {
         line-height: 1;
       }
 
-      &>span {
-        box-sizing: border-box;
-        padding-left: 0.28rem;
-        display: flex;
-        align-items: center;
-        width: max-content;
-        height: 1.25rem;
-        background-color: #25C2A0;
-        font-size: 0.68rem;
-        border-radius: 0.18rem;
-        overflow: hidden;
-
-        &>cite,
-        &>em {
+              &>span {
           box-sizing: border-box;
-          padding: 0 0.618rem;
+          padding-left: 0.28rem;
+          display: flex;
+          align-items: center;
           width: max-content;
-          height: 100%;
-          line-height: 1.25rem;
-          color: var(--vh-white-color);
-          font-style: normal;
-        }
+          height: 1.25rem;
+          background-color: #555;
+          font-size: 0.68rem;
+          border-radius: 0.18rem;
+          overflow: hidden;
+
+                  &>cite,
+          &>em {
+            box-sizing: border-box;
+            padding: 0 0.618rem;
+            width: max-content;
+            height: 100%;
+            line-height: 1.25rem;
+            color: var(--vh-white-color);
+            font-style: normal;
+          }
 
         &>cite {
           padding-left: 0.28rem;
         }
 
-        &>em {
-          background-color: #5D5D5D;
-        }
+                  &>em {
+            background-color: #007ec6;
+          }
 
         &>svg {
           width: 0.88rem;
@@ -69,11 +70,11 @@
         }
       }
 
-      img {
-        height: 100%;
-        width: auto;
-        object-fit: contain;
-      }
+              img {
+          height: 1.25rem;
+          width: auto;
+          object-fit: contain;
+        }
     }
   }
 
