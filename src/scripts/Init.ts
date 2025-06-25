@@ -1,8 +1,8 @@
 import { inRouter, outRouter } from "@/utils/updateRouter";
 // Banner 打字效果
 import TypeWriteInit from "@/scripts/TypeWrite";
-// 泡泡🫧效果
-import PaoPaoInit from "@/scripts/PaoPao";
+// 泡泡🫧效果 - 已禁用
+// import PaoPaoInit from "@/scripts/PaoPao";
 // 初始化文章代码块
 import codeInit from "@/scripts/Code";
 // 初始化视频播放器
@@ -19,12 +19,7 @@ import vhLzImgInit from "@/scripts/vhLazyImg";
 import ViewImage from "@/scripts/ViewImage";
 // 底部网站运行时间
 import initWebSiteTime from "@/scripts/Footer";
-// 友情链接初始化
-import initLinks from "@/scripts/Links";
-// 朋友圈 RSS 初始化
-import initFriends from "@/scripts/Friends";
-// 动态说说初始化
-import initTalking from "@/scripts/Talking";
+// 已删除：友情链接、朋友圈RSS、动态说说功能
 // 移动端侧边栏初始化
 import initMobileSidebar from "@/scripts/MobileSidebar";
 // Google 广告
@@ -45,8 +40,8 @@ const indexInit = async (isReady: boolean = true) => {
   // 如果不需要初始化则直接返回
   if (!isReady) return;
   try {
-    // 泡泡效果 - 保留
-    PaoPaoInit();
+    // 泡泡效果 - 已禁用
+    // PaoPaoInit();
     // 代码块处理
     codeInit();
     // 初始化视频播放器
@@ -65,12 +60,7 @@ const indexInit = async (isReady: boolean = true) => {
     initWebSiteTime();
     // 搜索快捷键
     searchFn("");
-    // 友情链接页初始化
-    initLinks();
-    // 朋友圈 RSS 页初始化
-    initFriends();
-    // 动态说说页初始化
-    initTalking();
+    // 已删除：友情链接、朋友圈RSS、动态说说页面初始化
     // 移动端侧边栏
     initMobileSidebar();
     // Google 广告
@@ -92,7 +82,7 @@ export default () => {
   // 首次初始化
   indexInit();
   // 进入页面时触发
-  inRouter(() => indexInit(false));
+  inRouter(() => indexInit(true));
   // 离开当前页面时触发
   outRouter(() => {
     // 销毁播放器
