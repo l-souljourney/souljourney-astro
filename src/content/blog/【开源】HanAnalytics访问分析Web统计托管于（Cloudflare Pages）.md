@@ -1,7 +1,7 @@
 ---
 title: 【开源】HanAnalytics访问分析Web统计托管于（Cloudflare Pages）
 date: 2024-09-22 20:20:13
-categories: Code
+categories: 浙商
 tags:
   - HanAnalytics
   - Cloudflare Pages

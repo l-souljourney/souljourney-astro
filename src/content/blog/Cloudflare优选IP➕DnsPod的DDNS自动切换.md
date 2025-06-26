@@ -1,7 +1,7 @@
 ---
 title: 【开源】Cloudflare优选IP➕DnsPod的DDNS自动切换
 date: 2024-08-27 15:24:10
-categories: Code
+categories: 浙商
 tags:
   - Cloudflare
   - 优选IP

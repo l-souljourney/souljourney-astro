@@ -1,6 +1,6 @@
 ---
 title: 【开源】Web Watermark 图片添加水印在线小助手
-categories: Daily
+categories: 活着
 tags:
   - 开源
   - 水印
