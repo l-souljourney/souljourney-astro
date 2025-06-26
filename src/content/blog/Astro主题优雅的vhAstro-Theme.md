@@ -1,6 +1,6 @@
 ---
 title: "Astro主题-优雅的vhAstro-Theme【使用文档】"
-categories: Code
+categories: 投资路
 tags: ["Astro", "主题", "博客", "vhAstro", "vhAstro-Theme"]
 id: "astro-theme-vhastro-theme"
 date: 2025-03-02 18:18:18

@@ -178,32 +178,49 @@ aside.vh-aside {
       }
     }
 
-    // 公告
-    &.tips {
-      align-items: flex-start;
-
-      &>span {
+    // 微信公众号二维码
+    &.wechat-qr {
+      &>.wechat-qr-content {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        gap: 0.288rem;
-        font-size: 1rem;
+        gap: 0.8rem;
+        width: 100%;
 
-        &>svg {
-          margin-bottom: 0.188rem;
-          color: var(--vh-main-color);
-          width: 1.18rem;
-          height: 1.18rem;
-          object-fit: contain;
-          animation: talking-tag-active 0.18s ease-in-out infinite;
+        &>.qr-image {
+          width: 120px;
+          height: 120px;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          &>img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
-      }
 
-      &>.tips-content {
-        font-size: 0.88rem;
+        &>.qr-title {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--vh-font-color);
+          text-align: center;
+          margin: 0;
+        }
 
-        p {
-          padding: 0.28rem 0;
+        &>.qr-desc {
+          font-size: 0.75rem;
+          color: var(--vh-font-66);
+          text-align: center;
+          line-height: 1.4;
+          margin: 0;
+          padding: 0 0.5rem;
         }
       }
     }

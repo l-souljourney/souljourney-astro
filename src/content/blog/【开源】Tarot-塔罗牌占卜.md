@@ -1,6 +1,6 @@
 ---
 title: 【开源】Tarot-塔罗牌占卜
-categories: Code
+categories: 天问
 tags:
   - 开源
   - Tarot

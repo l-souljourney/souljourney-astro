@@ -17,6 +17,6 @@ import Layout from "@/layouts/Layout/Layout.astro";
 import Archive from "@/components/Archive/Archive.astro";
 ---
 
-<Layout title={`分类 ${categories} 下的文章`} description={Description} activeNav="categories">
+<Layout title={`分类 ${categories} 下的文章`} description={Description} activeNav={categories}>
 	<Archive articleList={articleList} />
 </Layout>

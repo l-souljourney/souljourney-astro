@@ -1,6 +1,6 @@
 export default {
   // 网站标题 - 符合ICP备案要求
-  Title: 'L-忠程丨生死看淡不服就淦 - 天问星曦',
+  Title: 'L-忠程丨生死看淡不服就淦',
   // 网站地址
   Site: 'https://blog.l-souljourney.cn',
   // 网站副标题
@@ -15,8 +15,8 @@ export default {
   Motto: '生死看淡 不服就淦',
   // Cover 网站缩略图
   Cover: '/assets/images/banner/072c12ec85d2d3b5.webp',
-  // 网站侧边栏公告
-  Tips: '<p>欢迎来到L-忠程的思想花园 🌸</p><p>这里记录投资路上的思考、AI时代的探索、商业哲学的感悟以及人生路上的点点滴滴。所有文章同步发布于微信公众号，欢迎关注交流 💖</p>',
+  // 网站侧边栏公告 - 已改为微信公众号二维码块
+  Tips: '',
   // 首页打字机文案列表 - 已禁用动态滚动更新
   TypeWriteList: [],
   // 网站创建时间
@@ -26,7 +26,7 @@ export default {
     enable: true,
     number: '浙ICP备2025152080号-1',
     link: 'https://beian.miit.gov.cn/',
-    siteName: 'L-忠程丨生死看淡不服就淦 - 天问星曦'
+    siteName: 'L-忠程丨生死看淡不服就淦'
   },
   // 顶部 Banner 配置
   HomeBanner: {
@@ -52,16 +52,21 @@ export default {
     // 主体内容宽度
     "--vh-main-max-width": "1458px",
   },
-  // 导航栏
+  // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
+    { text: '投资路', link: '/categories/投资路', icon: 'Nav_investment' },
+    { text: 'AI时代', link: '/categories/AI时代', icon: 'Nav_ai' },
+    { text: '浙商', link: '/categories/浙商', icon: 'Nav_business' },
+    { text: '天问', link: '/categories/天问', icon: 'Nav_philosophy' },
+    { text: '活着', link: '/categories/活着', icon: 'Nav_life' },
     { text: '昔日', link: '/archives', icon: 'Nav_archives' },
     { text: '关于', link: '/about', icon: 'Nav_about' },
   ],
   // 侧边栏个人网站
   WebSites: [
-    { text: '微信公众号', link: '#wechat-qr', icon: 'WebSite_github' },
-    { text: '投资笔记', link: '#', icon: 'WebSite_api' },
-    { text: 'AI工具箱', link: '#', icon: 'WebSite_hot' },
+    { text: 'GitHub', link: 'https://github.com/l-souljourney/souljourney-astro', icon: 'WebSite_github' },
+    { text: '投资笔记', link: 'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzk1NzY4ODU4NA==&action=getalbum&album_id=3776069041266311168#wechat_redirect', icon: 'WebSite_investment' },
+    { text: '关于我', link: '/about', icon: 'WebSite_hot' },
   ],
   // 侧边栏展示
   AsideShow: {

@@ -21,7 +21,7 @@ import "./Header.less";
 		<nav>
 			{
 				Navs.map(i => (
-					<a class={`nav-link vh-hover${i.link.includes(activeNav) ? " active" : ""}`} href={i.link} target={i.target ? "_blank" : "_self"}>
+					<a class={`nav-link vh-hover${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? " active" : ""}`} href={i.link} target={i.target ? "_blank" : "_self"}>
 						{i.text}
 						<Svg src={i.icon} />
 					</a>

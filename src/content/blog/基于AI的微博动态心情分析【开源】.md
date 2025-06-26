@@ -1,7 +1,7 @@
 ---
 title: 基于AI的微博动态心情分析【开源】
 date: 2024-09-04 15:59:05
-categories: Daily
+categories: AI时代
 tags:
   - 微博动态
   - 心情分析

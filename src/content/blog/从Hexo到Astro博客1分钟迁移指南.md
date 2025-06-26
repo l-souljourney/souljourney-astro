@@ -1,6 +1,6 @@
 ---
 title: "从Hexo到Astro博客1分钟迁移指南"
-categories: Share
+categories: 投资路
 tags: ["Hexo", "Astro", "静态博客", "迁移"]
 id: "hexo-to-astro-1-minute-migration-guide"
 date: 2025-04-07 17:20:46
