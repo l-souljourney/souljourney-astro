@@ -5,6 +5,7 @@ import SITE_CONFIG from "@/config";
 const { Description, Title } = SITE_CONFIG;
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
+// Reward 组件已移除，公众号信息在Markdown中显示
 // 关于样式
 import "@/styles/About.less";
 // 文章内容基础样式
@@ -19,6 +20,8 @@ import "./PageLayout.less";
 			<h1>{frontmatter.h1}</h1>
 			<p>{frontmatter.desc}</p>
 		</header>
-		<main><slot /></main>
+		<main>
+			<slot />
+		</main>
 	</section>
 </Layout>
