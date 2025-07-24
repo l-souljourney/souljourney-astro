@@ -216,9 +216,10 @@ article.vh-article-main {
 
         &>svg {
           height: 0.8rem;
-          width: auto;
+          width: 0.8rem;  // 明确设置宽度，而不是auto
           object-fit: contain;
           transform: rotate(90deg);
+          flex-shrink: 0;  // 防止在flex容器中被压缩
         }
       }
     }
