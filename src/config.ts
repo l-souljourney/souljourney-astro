@@ -54,11 +54,11 @@ export default {
   },
   // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
-    { text: '投资路', link: '/categories/投资路', icon: 'Nav_investment' },
-    { text: 'AI时代', link: '/categories/AI时代', icon: 'Nav_ai' },
-    { text: '浙商', link: '/categories/浙商', icon: 'Nav_business' },
-    { text: '天问', link: '/categories/天问', icon: 'Nav_philosophy' },
-    { text: '活着', link: '/categories/活着', icon: 'Nav_life' },
+    { text: '投资路', link: '/categories/investment', icon: 'Nav_investment' },
+    { text: 'AI时代', link: '/categories/ai-era', icon: 'Nav_ai' },
+    { text: '浙商', link: '/categories/zhejiang-business', icon: 'Nav_business' },
+    { text: '天问', link: '/categories/philosophy', icon: 'Nav_philosophy' },
+    { text: '活着', link: '/categories/life', icon: 'Nav_life' },
     { text: '昔日', link: '/archives', icon: 'Nav_archives' },
     { text: '关于', link: '/about', icon: 'Nav_about' },
   ],

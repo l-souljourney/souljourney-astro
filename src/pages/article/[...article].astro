@@ -1,5 +1,7 @@
 ---
 import { getDescription, fmtTime } from "@/utils/index";
+// 分类映射功能
+import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
 export async function getStaticPaths() {
@@ -40,7 +42,7 @@ import "@/styles/ArticleBase.less";
 			<h1>{post.data.title}</h1>
 			<section class="vh-article-meta">
 				<span>发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}</span>
-				<span>分类于 <a href={`/categories/${post.data.categories}`}>{post.data.categories || "未分类"}</a></span>
+				<span>分类于 <a href={`/categories/${post.data.categories}`}>{getCategoryDisplayName(post.data.categories) || "未分类"}</a></span>
 				<span>字数统计 {article_word_count} 字</span>
 				<span>阅读时长 ≈ {Math.ceil(reading_time)} 分钟</span>
 			</section>
