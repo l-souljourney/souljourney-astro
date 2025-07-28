@@ -4,6 +4,8 @@
 import Svg from "@/components/Svg/Svg.astro";
 // 时间处理
 import { fmtTime } from "@/utils/index";
+// 分类映射功能
+import { getCategoryDisplayName } from "@/utils/categoryMapping";
 // 获取用户配置数据
 import SITE_CONFIG from "@/config";
 const { Avatar, Author, Motto, WebSites, GoogleAds, AsideShow } = SITE_CONFIG;
@@ -83,7 +85,7 @@ import "./Aside.less";
 						.sort((a: any, b: any) => b.count - a.count)
 						.map(i => (
 							<a href={`/categories/${i.title}`}>
-								<span>{i.title}</span>
+								<span>{getCategoryDisplayName(i.title)}</span>
 								<i>{i.count}</i>
 							</a>
 						))}
