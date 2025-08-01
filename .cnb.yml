@@ -53,6 +53,27 @@ main:
             if [ -n "${CDN_DOMAIN}" ]; then
               echo "🌐 访问: https://${CDN_DOMAIN}"
             fi
+            
+        - name: sync to develop
+          image: alpine/git:latest
+          script: |
+            # 配置Git用户信息
+            git config --global user.name "CNB Auto Sync"
+            git config --global user.email "auto-sync@l-souljourney.cn"
+            
+            # 获取最新的远程分支信息
+            git fetch origin develop
+            
+            # 切换到develop分支
+            git checkout develop
+            
+            # 合并main分支的更改到develop分支
+            git merge origin/main --no-edit -m "Auto sync: merge main branch changes to develop"
+            
+            # 推送更新后的develop分支到CNB仓库
+            git push origin develop
+            
+            echo "✅ develop分支已自动同步main分支的最新更改"
 
 # 开发分支：构建测试
 develop:
@@ -95,4 +116,4 @@ pull_request:
             pnpm config set registry https://mirrors.cloud.tencent.com/npm/
             pnpm install --frozen-lockfile
             pnpm run build
-            echo "✅ PR构建检查通过" 
+            echo "✅ PR构建检查通过"
