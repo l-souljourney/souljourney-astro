@@ -78,28 +78,6 @@ main:
             
             echo "✅ develop分支已自动同步main分支的最新更改"
 
-# 开发分支：构建测试
-develop:
-  push:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      env:
-        TZ: Asia/Shanghai
-      
-      docker:
-        image: node:18-alpine
-        volumes:
-          - node_modules:copy-on-write
-          - /root/.local/share/pnpm:copy-on-write
-          - /root/.cache/pnpm:copy-on-write
-      stages:
-        - name: build test
-          script: |
-            npm install -g pnpm@latest
-            pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-            pnpm install --frozen-lockfile
-            pnpm run build
-            echo "✅ 开发构建完成: $(du -sh dist/ | cut -f1)"
-
 # Pull Request：快速检查
 pull_request:
   push:
