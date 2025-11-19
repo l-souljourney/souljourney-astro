@@ -1,5 +1,5 @@
 ---
-const { title, keywords, description, pagecover, activeNav, Home } = Astro.props;
+const { title, keywords, description, pagecover, activeNav, Home, headings } = Astro.props;
 // 网站配置
 import SITE_INFO from "@/config";
 const { GoogleAds, Theme, HomeBanner } = SITE_INFO;
@@ -18,6 +18,8 @@ import Footer from "@/components/Footer/Footer.astro";
 import BackTop from "@/components/BackTop/BackTop.astro";
 // 手机端侧边栏
 import MobileSidebar from "@/components/MobileSidebar/MobileSidebar.astro";
+// TOC 组件
+import TOC from "@/components/TOC/TOC.astro";
 // A Modern CSS Reset
 import "@/styles/Reset.less";
 // 全局基础样式
@@ -45,6 +47,7 @@ import "./Layout.less";
 		<main class="main">
 			{HomeBanner.enable && <MainHeader />}
 			<section class="main-inner" style={`padding-top:${HomeBanner.enable ? "0.88rem" : "calc(66px + 0.68rem)"}`}>
+				{headings && headings.length > 0 && <TOC headings={headings} />}
 				<section class="main-inner-content">
 					<slot />
 				</section>
