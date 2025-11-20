@@ -1,0 +1,164 @@
+---
+// 主题切换图标组件
+// 使用官方推荐的实现方式,支持系统偏好检测和 localStorage 持久化
+---
+
+<button id="themeToggle" aria-label="切换主题" title="切换亮色/暗黑模式">
+	<svg aria-hidden="true" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<!-- 太阳图标 (亮色模式) -->
+		<path class="sun" fill-rule="evenodd" d="M12 17.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 1.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm12-7a.8.8 0 0 1-.8.8h-2.4a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8zM4 12a.8.8 0 0 1-.8.8H.8a.8.8 0 0 1 0-1.6h2.5a.8.8 0 0 1 .8.8zm16.5-8.5a.8.8 0 0 1 0 1l-1.8 1.8a.8.8 0 0 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM6.3 17.7a.8.8 0 0 1 0 1l-1.7 1.8a.8.8 0 1 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM12 0a.8.8 0 0 1 .8.8v2.5a.8.8 0 0 1-1.6 0V.8A.8.8 0 0 1 12 0zm0 20a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-1.6 0v-2.4a.8.8 0 0 1 .8-.8zM3.5 3.5a.8.8 0 0 1 1 0l1.8 1.8a.8.8 0 1 1-1 1L3.5 4.6a.8.8 0 0 1 0-1zm14.2 14.2a.8.8 0 0 1 1 0l1.8 1.7a.8.8 0 0 1-1 1l-1.8-1.7a.8.8 0 0 1 0-1z"/>
+		<!-- 月亮图标 (暗黑模式) -->
+		<path class="moon" fill-rule="evenodd" d="M16.5 6A10.5 10.5 0 0 1 4.7 16.4 8.5 8.5 0 1 0 16.4 4.7l.1 1.3zm-1.7-2a9 9 0 0 1 .2 2 9 9 0 0 1-11 8.8 9.4 9.4 0 0 1-.8-.3c-.4 0-.8.3-.7.7a10 10 0 0 0 .3.8 10 10 0 0 0 9.2 6 10 10 0 0 0 4-19.2 9.7 9.7 0 0 0-.9-.3c-.3-.1-.7.3-.6.7a9 9 0 0 1 .3.8z"/>
+	</svg>
+</button>
+
+<style>
+	#themeToggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		transition: all 0.18s ease-in-out;
+	}
+
+	#themeToggle:hover {
+		background-color: var(--vh-main-color-16);
+	}
+
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+
+	/* 亮色模式: 显示太阳,隐藏月亮 */
+	.sun {
+		fill: var(--vh-font-color);
+		transition: fill 0.18s ease-in-out;
+	}
+	
+	.moon {
+		fill: transparent;
+		transition: fill 0.18s ease-in-out;
+	}
+
+	/* 暗黑模式: 隐藏太阳,显示月亮 */
+	:global(html.dark) .sun {
+		fill: transparent;
+	}
+	
+	:global(html.dark) .moon {
+		fill: var(--vh-font-color);
+	}
+</style>
+
+<script is:inline>
+	// 主题初始化和切换逻辑
+	// 修复 Swup 页面切换后事件监听器丢失的问题
+	
+	// 1. 获取初始主题
+	if (!window.getInitialTheme) {
+		window.getInitialTheme = () => {
+			const localStorageTheme = localStorage?.getItem("theme") ?? '';
+			if (['dark', 'light'].includes(localStorageTheme)) {
+				return localStorageTheme;
+			}
+			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				return 'dark';
+			}
+			return 'light';
+		};
+	}
+
+	// 2. 应用主题
+	if (!window.applyTheme) {
+		window.applyTheme = (theme) => {
+			if (theme === 'light') {
+				document.documentElement.classList.remove('dark');
+			} else {
+				document.documentElement.classList.add('dark');
+			}
+			localStorage.setItem('theme', theme);
+		};
+	}
+
+	// 3. 切换按钮点击事件处理函数
+	if (!window.handleToggleClick) {
+		window.handleToggleClick = () => {
+			const element = document.documentElement;
+			element.classList.toggle("dark");
+			const isDark = element.classList.contains("dark");
+			localStorage.setItem("theme", isDark ? "dark" : "light");
+		};
+	}
+
+	// 4. 绑定事件监听器
+	// 关键修复:每次都先移除旧的监听器,再添加新的,避免重复绑定
+	if (!window.bindThemeToggle) {
+		window.bindThemeToggle = () => {
+			const toggleBtn = document.getElementById("themeToggle");
+			if (toggleBtn) {
+				toggleBtn.removeEventListener("click", window.handleToggleClick);
+				toggleBtn.addEventListener("click", window.handleToggleClick);
+			}
+		};
+	}
+
+	// 5. 初始化主题(只执行一次)
+	if (!window.__themeInitialized) {
+		window.__themeInitialized = true;
+		const theme = window.getInitialTheme();
+		window.applyTheme(theme);
+	}
+
+	// 6. 绑定事件监听器(首次加载)
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', window.bindThemeToggle);
+	} else {
+		window.bindThemeToggle();
+	}
+
+	// 7. 监听 Swup 和 Astro 页面切换事件
+	// 关键修复:监听多个事件,确保在所有页面切换场景下都能重新绑定
+	if (!window.__swupThemeListenerAdded) {
+		window.__swupThemeListenerAdded = true;
+		
+		// 监听 Swup 内容替换事件
+		document.addEventListener('swup:contentReplaced', () => {
+			window.bindThemeToggle();
+		});
+
+		// 监听模拟的 Astro 事件 (增强兼容性)
+		document.addEventListener('astro:after-swap', () => {
+			window.bindThemeToggle();
+		});
+
+		// 兼容新版 Swup API (最可靠)
+		const setupSwupHook = () => {
+			if (window.swup && window.swup.hooks) {
+				window.swup.hooks.on('page:view', () => {
+					window.bindThemeToggle();
+				});
+				
+				// 监听 content:replace 钩子
+				window.swup.hooks.on('content:replace', () => {
+					window.bindThemeToggle();
+				});
+			}
+		};
+
+		// 立即尝试设置 Swup hooks
+		setupSwupHook();
+		
+		// 如果 Swup 还未初始化,在 DOMContentLoaded 后再试
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', setupSwupHook);
+		}
+		
+		// 监听 swup:enable 事件,确保在 Swup 初始化后绑定
+		document.addEventListener('swup:enable', setupSwupHook);
+	}
+</script>

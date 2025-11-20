@@ -44,6 +44,46 @@
 	--vh-import-hover: #B984DF18;
 }
 
+// ===================================================================== 暗黑模式
+// 使用官方推荐的 class="dark" 方式,结合现有 CSS 变量系统
+// 优化配色方案:参考主流暗黑模式设计,提升层次感和专业度
+html.dark {
+	// 基础颜色 - 优化后的暗黑模式配色
+	--vh-main-color: #4a7bc8; // 主题色稍微提亮
+	--vh-font-color: #e8e8e8; // 文字改为中性灰白,提高可读性
+	--vh-body-bg: #1a1a1a; // 背景改为更深的统一黑色
+	--vh-white-color: #252525; // 容器改为深灰,增强层次感
+
+	// 阴影加深,增强立体感
+	--vh-box-shadow: 0 3px 8px 6px rgba(0, 0, 0, 0.6);
+
+	// 透明度颜色会自动继承新的基础颜色
+	// 无需重新定义 --vh-font-88 等,因为使用了 rgb(from var(...))
+
+	// 状态颜色调整(暗黑模式下稍微提亮)
+	--vh-default: #d0d4d9;
+	--vh-info: #5a7fd4;
+	--vh-success: #1ad4c6;
+	--vh-warning: #ed9646;
+	--vh-error: #ee4c4d;
+	--vh-import: #c994ef;
+
+	// 背景网格调整为深色(更微弱)
+	body::before {
+		background: #1a1a1a url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='8' height='8' fill='none' stroke='rgb(255 255 255 / 0.03)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e") !important;
+	}
+
+	// 图片亮度调整(避免过亮)
+	img:not(.no-dark-filter) {
+		filter: brightness(0.85);
+	}
+
+	// 代码块背景调整
+	pre {
+		background-color: #1e1e1e !important;
+	}
+}
+
 * {
 	// IOS 点击阴影
 	-webkit-tap-highlight-color: transparent;

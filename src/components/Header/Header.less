@@ -113,3 +113,43 @@ header.vh-header {
     }
   }
 }
+
+// ===================================================================== 暗黑模式优化
+// 为导航栏添加特殊的暗黑模式样式,增强层次感
+html.dark {
+  header.vh-header {
+    // 导航栏使用比主背景稍亮的颜色,营造层次感
+    background-color: rgba(34, 34, 34, 0.8);
+    // 添加底部边框,增强分隔效果
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    section {
+      nav {
+        .nav-link {
+
+          // 悬停效果优化
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 888px) {
+  header.vh-header {
+    &>section {
+      &>nav {
+        &>a.nav-link {
+          display: none;
+        }
+
+        &>.menu-btn.nav-link {
+          display: flex;
+        }
+      }
+    }
+  }
+}
