@@ -4,6 +4,7 @@ import { getDescription, fmtTime } from "@/utils/index";
 import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
+import getReadingTime from 'reading-time';
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
 	return posts.map((post: any) => ({ params: { article: post.data.id }, props: post }));
@@ -20,8 +21,10 @@ const { Site, Title, Author, GoogleAds } = SITE_CONFIG;
 // 处理文章内容
 const description = getDescription(post);
 const { Content, remarkPluginFrontmatter, headings } = await render(post);
-// 文章字数和阅读时间
-const { reading_time, article_word_count } = remarkPluginFrontmatter;
+// 文章字数和阅读时间 - 直接从 post.body 计算
+const readingTime = getReadingTime(post.body);
+const article_word_count = readingTime.words;
+const reading_time = readingTime.minutes;
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
 // Copyright 组件

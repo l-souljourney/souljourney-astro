@@ -5,7 +5,13 @@ import { toString } from 'mdast-util-to-string';
 
 // 处理标签
 const remarkNote = () => {
-  return (tree: any, { data: astroData }: any) => {
+  return (tree: any, file: any) => {
+    // 文章字数统计
+    const textOnPage = toString(tree);
+    const readingTime = getReadingTime(textOnPage);
+    file.data.astro.frontmatter.reading_time = readingTime.minutes
+    file.data.astro.frontmatter.article_word_count = readingTime.words
+
     visit(tree, (node) => {
       const { type, name, attributes } = node;
       // 处理组件
@@ -27,11 +33,6 @@ const remarkNote = () => {
         }
         // 设置 class
         hProperties.class = `vh-node vh-${name}${attributes.type ? ` ${name}-${attributes.type}` : ''}`;
-        // 文章字数统计
-        const textOnPage = toString(tree);
-        const readingTime = getReadingTime(textOnPage);
-        astroData.astro.frontmatter.reading_time = readingTime.minutes
-        astroData.astro.frontmatter.article_word_count = readingTime.words
       }
     });
   };
