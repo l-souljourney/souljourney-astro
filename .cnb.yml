@@ -53,30 +53,6 @@ main:
             if [ -n "${CDN_DOMAIN}" ]; then
               echo "🌐 访问: https://${CDN_DOMAIN}"
             fi
-            
-        - name: sync to develop
-          image: alpine/git:latest
-          script: |
-            # 配置Git用户信息
-            git config --global user.name "CNB Auto Sync"
-            git config --global user.email "auto-sync@l-souljourney.cn"
-            
-            # 重置远程仓库地址为CNB仓库（避免被前面的GitHub推送步骤影响）
-            git remote set-url origin https://cnb.cool/l-souljourney/souljourney-astro.git
-            
-            # 获取最新的远程分支信息
-            git fetch origin
-            
-            # 切换到develop分支（如果不存在则从main创建）
-            git checkout -B develop origin/develop 2>/dev/null || git checkout -b develop origin/main
-            
-            # 合并main分支的更改到develop分支
-            git merge origin/main --no-edit -m "Auto sync: merge main branch changes to develop"
-            
-            # 推送更新后的develop分支到CNB仓库
-            git push origin develop
-            
-            echo "✅ develop分支已自动同步main分支的最新更改"
 
 # Pull Request：快速检查
 pull_request:
