@@ -18,6 +18,9 @@ import swup from '@swup/astro';
 export default defineConfig({
 	site: SITE_INFO.Site,
 	build: { assets: 'vh_static' },
+	experimental: {
+		svgo: true,
+	},
 	integrations: [swup({
 		theme: false,
 		animationClass: "vh-animation-",
