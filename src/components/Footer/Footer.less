@@ -10,6 +10,7 @@
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: saturate(100%) blur(2px);
   user-select: none;
+  transition: background-color 0.3s;
 
   &>main {
     box-sizing: border-box;
@@ -52,7 +53,7 @@
             width: max-content;
             height: 100%;
             line-height: 1.25rem;
-            color: var(--vh-white-color);
+            color: #fff;
             font-style: normal;
           }
 
@@ -120,4 +121,28 @@
     }
   }
 
+}
+
+// 暗黑模式适配
+html.dark {
+  .vh-footer {
+    background-color: rgba(34, 34, 34, 0.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    
+    &>main {
+      &>p {
+        &>span {
+          background-color: #333;
+          
+          &>cite, &>em {
+            color: rgba(255, 255, 255, 0.9);
+          }
+          
+          &>em {
+            background-color: var(--vh-main-color);
+          }
+        }
+      }
+    }
+  }
 }

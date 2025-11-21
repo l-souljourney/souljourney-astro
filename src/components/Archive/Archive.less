@@ -128,6 +128,35 @@ section.vh-archive-main {
   }
 }
 
+html.dark {
+  section.vh-archive-main {
+    background-color: rgba(34, 34, 34, 0.6);
+
+    &>.archive-list {
+      &>.archive-list-item {
+
+        &>p,
+        a {
+          &:not(.title) {
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            &>span {
+              color: var(--vh-font-color);
+            }
+          }
+
+          &>i::before {
+            background-color: #333;
+            border-color: rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
+}
+
 
 
 @media screen and (max-width: 1198px) {

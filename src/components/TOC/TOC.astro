@@ -29,7 +29,9 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
   .toc-container {
     // 悬浮跟随效果
     position: sticky;
-    top: calc(66px + 1rem);
+    top: 91px;
+    z-index: 10;
+    transition: top 0.3s;
     
     // 固定宽度
     flex-shrink: 0;
