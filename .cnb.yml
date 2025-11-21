@@ -34,7 +34,8 @@ main:
             git config --global user.name "CNB Auto Deploy"
             git config --global user.email "cnb@l-souljourney.cn"
             git remote set-url origin "https://${GITHUB_TOKEN}@github.com/l-souljourney/souljourney-astro.git"
-            git push origin HEAD:main
+            git push --force origin HEAD:main
+            git push --force --tags origin
             echo "✅ GitHub推送完成"
             
         - name: deploy to cos
