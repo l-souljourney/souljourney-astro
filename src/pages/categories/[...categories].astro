@@ -1,10 +1,20 @@
 ---
 import { getCategoriesList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
-import { getCategoryDisplayName } from "@/utils/categoryMapping";
+import { getCategoryDisplayName, getAllCategoryPaths } from "@/utils/categoryMapping";
 export async function getStaticPaths(): Promise<any> {
 	const posts = await getCollection("blog");
-	return posts.map((post: any) => ({ params: { categories: post.data.categories }, props: post }));
+	// 获取所有文章使用的分类
+	const usedCategories = new Set(posts.map((post: any) => post.data.categories));
+	// 获取所有配置的分类
+	const allCategories = getAllCategoryPaths();
+	// 合并：文章分类 + 配置的分类（确保所有导航中的分类都有页面）
+	const allPaths = new Set([...usedCategories, ...allCategories]);
+	// 生成所有分类的页面路径
+	return Array.from(allPaths).map((category: string) => ({ 
+		params: { categories: category }, 
+		props: { category } 
+	}));
 }
 // 获取分类列表
 const { categories } = Astro.params;
