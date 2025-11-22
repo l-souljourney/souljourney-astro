@@ -6,12 +6,15 @@ declare global {
 }
 type EventHandler = (event: Event) => void;
 
-//  进入页面时触发
+//  进入页面时触发 (适配 Astro View Transitions)
+// astro:page-load 在首次加载和后续导航都会触发
 const inRouter = (handler: EventHandler) => {
-  const setup = () => window.swup.hooks.on("page:view", handler);
-  window.swup ? setup() : document.addEventListener("swup:enable", setup);
+  document.addEventListener("astro:page-load", handler);
 };
+
 // 离开当前页面时触发
-const outRouter = (handler: EventHandler) => window.swup ? window.swup.hooks.on("visit:start", handler) : document.addEventListener("swup:enable", () => outRouter(handler));
+const outRouter = (handler: EventHandler) => {
+  document.addEventListener("astro:before-swap", handler);
+};
 
 export { inRouter, outRouter };

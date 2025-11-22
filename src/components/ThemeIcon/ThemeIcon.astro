@@ -107,58 +107,23 @@
 		};
 	}
 
-	// 5. 初始化主题(只执行一次)
-	if (!window.__themeInitialized) {
-		window.__themeInitialized = true;
+	// 5. 初始化主题
+	// View Transitions 模式下，每次页面切换都需要重新应用 class
+	const initTheme = () => {
 		const theme = window.getInitialTheme();
 		window.applyTheme(theme);
-	}
-
-	// 6. 绑定事件监听器(首次加载)
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', window.bindThemeToggle);
-	} else {
 		window.bindThemeToggle();
-	}
+	};
 
-	// 7. 监听 Swup 和 Astro 页面切换事件
-	// 关键修复:监听多个事件,确保在所有页面切换场景下都能重新绑定
-	if (!window.__swupThemeListenerAdded) {
-		window.__swupThemeListenerAdded = true;
-		
-		// 监听 Swup 内容替换事件
-		document.addEventListener('swup:contentReplaced', () => {
-			window.bindThemeToggle();
-		});
-
-		// 监听模拟的 Astro 事件 (增强兼容性)
-		document.addEventListener('astro:after-swap', () => {
-			window.bindThemeToggle();
-		});
-
-		// 兼容新版 Swup API (最可靠)
-		const setupSwupHook = () => {
-			if (window.swup && window.swup.hooks) {
-				window.swup.hooks.on('page:view', () => {
-					window.bindThemeToggle();
-				});
-				
-				// 监听 content:replace 钩子
-				window.swup.hooks.on('content:replace', () => {
-					window.bindThemeToggle();
-				});
-			}
-		};
-
-		// 立即尝试设置 Swup hooks
-		setupSwupHook();
-		
-		// 如果 Swup 还未初始化,在 DOMContentLoaded 后再试
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', setupSwupHook);
-		}
-		
-		// 监听 swup:enable 事件,确保在 Swup 初始化后绑定
-		document.addEventListener('swup:enable', setupSwupHook);
-	}
+	// 6. 监听 Astro 页面加载事件
+	// astro:page-load 在首次加载和后续导航完成后都会触发
+	// 这是最可靠的重新应用主题的时机
+	document.addEventListener('astro:page-load', initTheme);
+	
+	// 7. 监听 astro:after-swap 以防止闪烁
+	// 在新内容被交换进 DOM 后立即应用主题，防止页面短暂变白
+	document.addEventListener('astro:after-swap', () => {
+		const theme = window.getInitialTheme();
+		window.applyTheme(theme);
+	});
 </script>

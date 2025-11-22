@@ -79,10 +79,12 @@ const indexInit = async (isReady: boolean = true) => {
 }
 
 export default () => {
-  // 首次初始化
-  indexInit();
-  // 进入页面时触发
+  // 首次初始化交给 astro:page-load 事件处理，避免重复执行
+  // indexInit(); 
+
+  // 进入页面时触发 (包含首次加载)
   inRouter(() => indexInit(true));
+
   // 离开当前页面时触发
   outRouter(() => {
     // 销毁播放器

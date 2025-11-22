@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.6.1 (2025-11-22)
+
+### 架构升级：Astro View Transitions
+
+本次更新完成了从 Swup 到 Astro 原生 View Transitions 的迁移，并修复了暗黑模式在页面切换时的持久化问题。
+
+#### 变更详情
+
+1.  **移除 Swup 依赖**
+    -   **移除**: 卸载 `@swup/astro` 及相关插件。
+    -   **收益**: 减少第三方依赖，降低维护成本，避免脚本生命周期冲突。
+
+2.  **启用 Astro View Transitions**
+    -   **新增**: 引入 `<ClientRouter />` 组件，启用浏览器原生视图过渡。
+    -   **效果**: 保持了 SPA 般的无刷新页面切换体验，同时利用原生 API 提升性能。
+
+3.  **暗黑模式修复**
+    -   **修复**: 解决了 View Transitions 模式下页面切换导致暗黑模式重置的问题。
+    -   **机制**: 使用 `astro:page-load` 事件确保每次导航后重新应用主题状态。
+
+4.  **代码优化**
+    -   **重构**: 简化 `src/scripts/Init.ts` 和 `src/utils/updateRouter.ts`，统一使用 Astro 生命周期事件。
+
+---
+
 ## v1.6.0 (2025-11-21)
 
 ### Astro 框架升级与 SVG 优化
