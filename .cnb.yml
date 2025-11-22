@@ -73,7 +73,7 @@ main:
             echo "✅ COS CLI配置完成"
             
             echo "🚀 开始同步文件到COS..."
-            coscli sync dist/ "cos://${COS_BUCKET}/" --delete --disable-crc64 --recursive -y || {
+            coscli sync dist/ "cos://${COS_BUCKET}/" --delete --disable-crc64 --recursive || {
               echo "❌ COS文件同步失败"
               exit 1
             }
