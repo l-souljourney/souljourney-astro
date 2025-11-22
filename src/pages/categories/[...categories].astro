@@ -1,6 +1,7 @@
 ---
 import { getCategoriesList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
+import { getCategoryDisplayName } from "@/utils/categoryMapping";
 export async function getStaticPaths(): Promise<any> {
 	const posts = await getCollection("blog");
 	return posts.map((post: any) => ({ params: { categories: post.data.categories }, props: post }));
@@ -15,8 +16,10 @@ const { Description } = SITE_CONFIG;
 import Layout from "@/layouts/Layout/Layout.astro";
 // 文章列表组件
 import Archive from "@/components/Archive/Archive.astro";
+// 获取分类中文显示名称
+const categoryDisplayName = getCategoryDisplayName(categories);
 ---
 
-<Layout title={`分类 ${categories} 下的文章`} description={Description} activeNav={categories}>
+<Layout title={`分类 ${categoryDisplayName} 下的文章`} description={Description} activeNav={categories}>
 	<Archive articleList={articleList} />
 </Layout>
