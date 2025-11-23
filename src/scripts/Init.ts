@@ -42,30 +42,6 @@ const indexInit = async (isReady: boolean = true) => {
   try {
     // 泡泡效果 - 已禁用
     // PaoPaoInit();
-    // 代码块处理
-    codeInit();
-    // 初始化视频播放器
-    videoInit(videoList);
-    // 初始化 LivePhoto
-    livePhotoInit();
-    // 初始化搜索
-    vhSearchInit();
-    // 图片懒加载
-    vhLzImgInit();
-    // 图片灯箱
-    ViewImage();
-    // BackTop
-    BackTopInitFn();
-    // 网站时间
-    initWebSiteTime();
-    // 搜索快捷键
-    searchFn("");
-    // 已删除：友情链接、朋友圈RSS、动态说说页面初始化
-    // 移动端侧边栏
-    initMobileSidebar();
-    // Google 广告
-    GoogleAdInit();
-    // Han Analytics 统计
     HanAnalyticsInit();
     // SEO 推送
     SeoPushInit();

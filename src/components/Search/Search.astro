@@ -1,14 +1,120 @@
 ---
-// 搜索样式
+import Search from "astro-pagefind/components/Search";
 import "./Search.less";
 ---
 
 <section class="vh-search">
 	<main>
-		<div class="search-input">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#B4B4B4" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"></path></svg>
-			<input type="text" placeholder="搜索文章" />
-		</div>
-		<section class="vh-search-list"><em></em></section>
+        <div class="pagefind-wrapper">
+		    <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
+        </div>
 	</main>
 </section>
+
+<script>
+    // Simple toggle logic for the search modal
+    const initSearchModal = () => {
+        const searchBtn = document.querySelector(".search-btn");
+        const searchModal = document.querySelector(".vh-search");
+        const searchMain = document.querySelector(".vh-search > main");
+
+        if (!searchBtn || !searchModal || !searchMain) return;
+
+        const openModal = () => {
+            searchModal.classList.add("active");
+            // Focus the input if possible, though pagefind might render it async
+            setTimeout(() => {
+                const input = searchModal.querySelector("input");
+                if (input) input.focus();
+            }, 100);
+        };
+
+        const closeModal = () => {
+            searchModal.classList.remove("active");
+        };
+
+        searchBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openModal();
+        });
+
+        searchModal.addEventListener("click", (e) => {
+            closeModal();
+        });
+
+        searchMain.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+        
+        // Close on escape key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && searchModal.classList.contains("active")) {
+                closeModal();
+            }
+        });
+    };
+
+    // Run on initial load
+    initSearchModal();
+
+    // Run on view transitions navigation
+    document.addEventListener("astro:page-load", initSearchModal);
+</script>
+
+<style is:global>
+    /* Override Pagefind styles to match the modal */
+    .vh-search .pagefind-wrapper {
+        width: 100%;
+    }
+    
+    .vh-search .pagefind-ui {
+        width: 100%;
+    }
+
+    .vh-search .pagefind-ui .pagefind-ui__search-input {
+        background-color: var(--vh-font-6);
+        border: none;
+        border-radius: 0.66rem;
+        padding: 1.2rem 1rem;
+        font-size: 1rem;
+        color: var(--vh-font-color);
+    }
+    
+    .vh-search .pagefind-ui .pagefind-ui__search-clear {
+        background-color: transparent;
+    }
+
+    .vh-search .pagefind-ui .pagefind-ui__drawer {
+        background-color: var(--vh-white-color);
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .vh-search .pagefind-ui .pagefind-ui__result {
+        border-bottom: 1px solid var(--vh-font-6);
+        padding: 1rem 0;
+    }
+
+    .vh-search .pagefind-ui .pagefind-ui__result-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    /* Dark mode overrides */
+    html.dark .vh-search .pagefind-ui__search-input {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+    
+    html.dark .vh-search .pagefind-ui__drawer {
+        background-color: var(--vh-body-bg);
+    }
+    
+    html.dark .vh-search .pagefind-ui__result-title a {
+        color: #eee;
+    }
+    
+    html.dark .vh-search .pagefind-ui__result-excerpt {
+        color: #aaa;
+    }
+</style>

@@ -5,6 +5,7 @@ import Compress from "@playform/compress";
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'url';
 import icon from 'astro-icon';
+import pagefind from "astro-pagefind";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Markdown 配置================
@@ -25,6 +26,7 @@ export default defineConfig({
 	},
 	integrations: [
 		icon(),
+		pagefind(),
 		Compress({ CSS: false, Image: false, Action: { Passed: async () => true } }),
 		sitemap({
 			changefreq: 'weekly', priority: 0.7, lastmod: new Date(),
