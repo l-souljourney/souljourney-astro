@@ -1,6 +1,12 @@
 ---
-const { src } = Astro.props;
-const svgContent = await import(`../../../public/assets/images/svg/${src}.svg?raw`).then(m => m.default);
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  src: string;
+  class?: string;
+}
+
+const { src, class: className } = Astro.props;
 ---
 
-{svgContent && <Fragment set:html={svgContent} />}
+<Icon name={src} class={className} />

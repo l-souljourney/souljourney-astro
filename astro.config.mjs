@@ -4,6 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import Compress from "@playform/compress";
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'url';
+import icon from 'astro-icon';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Markdown 配置================
 import remarkMath from "remark-math";
@@ -22,6 +24,7 @@ export default defineConfig({
 		svgo: true,
 	},
 	integrations: [
+		icon(),
 		Compress({ CSS: false, Image: false, Action: { Passed: async () => true } }),
 		sitemap({
 			changefreq: 'weekly', priority: 0.7, lastmod: new Date(),
