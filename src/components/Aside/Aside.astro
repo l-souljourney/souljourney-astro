@@ -22,40 +22,38 @@ const CountInfo = getCountInfo();
 const recommendArticles = getRecommendArticles();
 // Google 广告组件
 import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
-// 侧边栏样式
-import "./Aside.less";
 ---
 
-<aside class="vh-aside">
+<aside class="flex flex-col gap-4 w-full md:w-[19rem] shrink-0">
 	<!-- 头像块 -->
 	{
 		AsideShow.WebSitesShow && (
-			<section class="vh-aside-item user">
-				<img class="vh-aside-avatar" src={Avatar} alt={Author} />
-				<span class="vh-aside-auther">{Author}</span>
-				<p class="vh-aside-motto">{Motto}</p>
-				<section class="vh-aside-links">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 py-[1.88rem] bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<img class="relative w-[6.36rem] h-[6.36rem] rounded-2xl overflow-hidden" src={Avatar} alt={Author} />
+				<span class="relative text-xl font-bold after:content-[''] after:absolute after:bottom-[-0.16rem] after:left-1/2 after:-translate-x-1/2 after:w-[36%] after:h-[0.26rem] after:rounded-[3px] after:bg-primary/88">{Author}</span>
+				<p class="text-[0.86rem] text-primary/66 leading-normal text-center">{Motto}</p>
+				<section class="flex items-center gap-2">
 					{WebSites.map(item => (
-						<a class="vh-aside-links-item" href={item.link} title={item.text} target="_blank" rel="noopener nofollow">
-							<Svg src={item.icon} />
+						<a class="flex items-center justify-center w-[1.88rem] h-[1.88rem] border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#252525] text-zinc-600 dark:text-zinc-400 rounded-[0.38rem] transition-all duration-180 hover:text-white hover:border-primary hover:bg-primary hover:scale-110" href={item.link} title={item.text} target="_blank" rel="noopener nofollow">
+							<div class="w-auto h-[1.18rem] object-contain stroke-[3px]"><Svg src={item.icon} /></div>
 						</a>
 					))}
 				</section>
-				<section class="vh-aside-info">
-					<div class="art-item count">
-						<span>{CountInfo.ArticleCount}</span>
-						<p>文章数</p>
+				<section class="px-4 grid grid-cols-3 w-full h-max">
+					<div class="py-[0.88rem] pb-[0.66rem] flex flex-col justify-center gap-[0.28rem] text-center bg-white rounded-2xl select-none transition-shadow duration-180 hover:shadow-lg hover:z-10 dark:bg-[#252525]">
+						<span class="text-[1.05rem] text-primary dark:text-[#e8e8e8]">{CountInfo.ArticleCount}</span>
+						<p class="text-[0.8rem] text-primary/56">文章数</p>
 					</div>
-					<div class="cat-item count">
-						<span>{CountInfo.CategoryCount}</span>
-						<p>分类数</p>
+					<div class="py-[0.88rem] pb-[0.66rem] flex flex-col justify-center gap-[0.28rem] text-center bg-white rounded-2xl select-none transition-shadow duration-180 hover:shadow-lg hover:z-10 dark:bg-[#252525]">
+						<span class="text-[1.05rem] text-primary dark:text-[#e8e8e8]">{CountInfo.CategoryCount}</span>
+						<p class="text-[0.8rem] text-primary/56">分类数</p>
 					</div>
-					<div class="tag-item count">
-						<span>{CountInfo.TagCount}</span>
-						<p>标签数</p>
+					<div class="py-[0.88rem] pb-[0.66rem] flex flex-col justify-center gap-[0.28rem] text-center bg-white rounded-2xl select-none transition-shadow duration-180 hover:shadow-lg hover:z-10 dark:bg-[#252525]">
+						<span class="text-[1.05rem] text-primary dark:text-[#e8e8e8]">{CountInfo.TagCount}</span>
+						<p class="text-[0.8rem] text-primary/56">标签数</p>
 					</div>
 				</section>
-				<canvas class="vh-aside-canvas" width="888" height="1888" />
+				<canvas class="absolute left-0 top-0 w-full h-full overflow-hidden z-10 pointer-events-none" width="888" height="1888" />
 			</section>
 		)
 	}
@@ -63,13 +61,13 @@ import "./Aside.less";
 	<!-- 公众号二维码块 -->
 	{
 		SITE_CONFIG.WeChat && (
-			<section class="vh-aside-item wechat-qr">
-				<div class="wechat-qr-content">
-					<div class="qr-image">
-						<img src={SITE_CONFIG.WeChat.QRCode} alt={`关注公众号 ${SITE_CONFIG.WeChat.Name}`} />
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<div class="flex flex-col items-center gap-[0.8rem] w-full">
+					<div class="w-[120px] h-[120px] rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-105">
+						<img src={SITE_CONFIG.WeChat.QRCode} alt={`关注公众号 ${SITE_CONFIG.WeChat.Name}`} class="w-full h-full object-cover" />
 					</div>
-					<p class="qr-title">{SITE_CONFIG.WeChat.Name}</p>
-					<p class="qr-desc">文章交流与作者互动，都在公众号留言区</p>
+					<p class="text-[0.9rem] font-semibold text-primary dark:text-[#e8e8e8] text-center m-0">{SITE_CONFIG.WeChat.Name}</p>
+					<p class="text-[0.75rem] text-primary/66 text-center leading-[1.4] m-0 px-2">文章交流与作者互动，都在公众号留言区</p>
 				</div>
 			</section>
 		)
@@ -78,15 +76,15 @@ import "./Aside.less";
 	<!-- 分类块 -->
 	{
 		AsideShow.CategoriesShow && (
-			<section class="vh-aside-item cat">
-				<h3>分类</h3>
-				<div class="vh-aside-cat">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<h3 class="w-full text-[0.68rem] font-normal text-primary/56">分类</h3>
+				<div class="flex flex-col w-full h-max max-h-[15.56rem] overflow-x-hidden overflow-y-auto">
 					{categories
 						.sort((a: any, b: any) => b.count - a.count)
 						.map(i => (
-							<a href={`/categories/${i.title}`}>
+							<a href={`/categories/${i.title}`} class="shrink-0 flex items-center justify-between w-full h-[2.18rem] text-[0.88rem] rounded-[0.38rem] bg-white transition-all duration-180 overflow-hidden hover:pl-[0.66rem] hover:bg-primary/66 hover:text-white group dark:bg-[#252525]">
 								<span>{getCategoryDisplayName(i.title)}</span>
-								<i>{i.count}</i>
+								<i class="flex items-center justify-center w-[1.68rem] h-[1.28rem] text-white text-[0.66rem] not-italic rounded-[0.38rem] bg-primary/66 transition-colors duration-180 group-hover:bg-transparent">{i.count}</i>
 							</a>
 						))}
 				</div>
@@ -97,13 +95,13 @@ import "./Aside.less";
 	<!-- 标签块 -->
 	{
 		AsideShow.TagsShow && (
-			<section class="vh-aside-item tags">
-				<h3>热门标签</h3>
-				<div class="vh-aside-tags">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<h3 class="w-full text-[0.68rem] font-normal text-primary/56">热门标签</h3>
+				<div class="flex flex-wrap gap-[0.68rem_1rem] w-full h-max max-h-[18.88rem] overflow-x-hidden overflow-y-auto">
 					{tags.map(i => (
-						<a href={`/tag/${i[0]}`}>
-							<span>{i[0]}</span>
-							<em>{i[1]}</em>
+						<a href={`/tag/${i[0]}`} class="flex items-center gap-[0.18rem] w-max h-max group">
+							<span class="w-max text-[0.8rem] leading-normal transition-colors duration-180 overflow-hidden group-hover:text-primary">{i[0]}</span>
+							<em class="text-primary/28 text-[0.688rem] not-italic">{i[1]}</em>
 						</a>
 					))}
 				</div>
@@ -111,20 +109,24 @@ import "./Aside.less";
 		)
 	}
 
-	<section class="sticky-aside">
+	<section class="sticky top-[calc(66px+1rem)] flex flex-col gap-4 w-full">
 		<!-- 最新文章块 -->
 		{
 			recommendArticles.length && AsideShow.recommendArticleShow && (
-				<section class="vh-aside-item articles">
-					<h3>推荐文章</h3>
-					<div class="vh-aside-articles">
+				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">推荐文章</h3>
+					<div class="flex flex-col gap-2 w-full h-max overflow-hidden">
 						{recommendArticles.map((i, idx) => (
-							<a href={`/article/${i.id}`}>
-								<span>
-									{idx < 3 ? <i>{idx + 1}</i> : <em>{idx + 1}.</em>}
-									<cite class="vh-ellipsis">{i.title}</cite>
+							<a href={`/article/${i.id}`} class="flex flex-col justify-between w-full h-[2.68rem] overflow-hidden group">
+								<span class="flex items-center gap-[0.618rem] w-full">
+									{idx < 3 ? (
+										<i class={`shrink-0 w-[0.875rem] h-[0.875rem] rounded-[0.18rem] text-white text-center text-[0.66rem] not-italic ${idx === 0 ? 'bg-success' : idx === 1 ? 'bg-warning' : 'bg-import'}`}>{idx + 1}</i>
+									) : (
+										<em class="shrink-0 w-max not-italic text-[0.8125rem] text-primary/66">{idx + 1}.</em>
+									)}
+									<cite class="w-max max-w-full border-b border-transparent text-[0.8rem] leading-normal not-italic transition-colors duration-288 relative after:content-[''] after:block after:w-0 after:h-px after:bg-primary after:transition-[width] after:duration-588 after:ease-[cubic-bezier(.6,.1,0,1)] group-hover:text-primary group-hover:after:w-full line-clamp-1">{i.title}</cite>
 								</span>
-								<time>{fmtTime(i.date, "YYYY-MM-DD A")}</time>
+								<time class="text-primary/56 text-[0.688rem]">{fmtTime(i.date, "YYYY-MM-DD A")}</time>
 							</a>
 						))}
 					</div>
@@ -135,9 +137,9 @@ import "./Aside.less";
 		<!-- 谷歌广告块 -->
 		{
 			GoogleAds.ad_Client && GoogleAds.asideAD_Slot && (
-				<section class="vh-aside-item ad">
-					<h3>广而告之</h3>
-					<GoogleAd className="vh-aside-ad" slotID={GoogleAds.asideAD_Slot} />
+				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">广而告之</h3>
+					<GoogleAd className="mb-4 p-3 rounded-lg bg-white shadow-sm overflow-hidden relative before:absolute before:left-1/2 before:top-[30%] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['广告加载中...'] before:text-[#e3e4e6] before:-z-10 dark:bg-[#252525]" slotID={GoogleAds.asideAD_Slot} />
 				</section>
 			)
 		}

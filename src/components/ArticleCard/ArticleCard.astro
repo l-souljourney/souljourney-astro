@@ -8,18 +8,64 @@ const description = getDescription(post);
 // 获取封面图
 import getCover from "@/utils/getCover";
 const ARTICLE_COVER: string = await getCover(post.data.cover);
-// 文章Item组件样式
-import "./ArticleCard.less";
+
+// Category Gradient Map
+const categoryGradients: Record<string, string> = {
+  Code: "from-[#f48600] via-[#ffa12e] to-[#ffe9c9]",
+  Daily: "from-[#6270ee] via-[#2b90d9] to-[#37dede]",
+  Software: "from-[#006633] via-[#00cc66] to-[#66ff99]",
+  Share: "from-[rgb(240,45,133)] via-[#f95ba5] to-[#f4bdd0]",
+  default: "from-[#a32cc4] via-[#b65fcf] to-[#e39ff6]"
+};
+const gradient = categoryGradients[post.data.categories] || categoryGradients.default;
 ---
 
-<article class={`vh-article-item vh-animation vh-animation-init vh-article-link${post.data.top ? " active" : ""}`}>
-	<section class="vh-article-banner"><img src="/assets/images/lazy-loading.webp" data-vh-lz-src={ARTICLE_COVER} alt={post.data.title} /></section>
-	<header>
-		<h3><a class={`vh-article-cat vh-cat-${post.data.categories}`} href={`/categories/${post.data.categories}`}>{getCategoryDisplayName(post.data.categories)}</a><time>{fmtTime(post.data.date)}</time></h3>
-		<h1 class="title"><a class="vh-ellipsis" href={`/article/${post.data.id}`}>{post.data.title}</a></h1>
+<article class={`group relative flex flex-col w-full min-h-full border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-white dark:bg-[#252525] overflow-hidden transition-all duration-300 hover:shadow-md ${post.data.top ? "active" : ""}`}>
+	{post.data.top && (
+		<div class="absolute top-[1.6rem] left-[0.66rem] px-4 py-[0.18rem] w-max h-max text-base text-white rounded-[0.66rem] -rotate-45 bg-black/20 shadow-[0_2rem_1rem_rgba(0,0,0,0.1)] z-10 backdrop-blur-md select-none pointer-events-none">
+			置顶
+		</div>
+	)}
+	
+	<section class="relative shrink-0 w-full h-48 overflow-hidden">
+		{post.data.top && <div class="absolute inset-0 bg-black/6 z-10 pointer-events-none"></div>}
+		<img 
+			src="/assets/images/lazy-loading.webp" 
+			data-vh-lz-src={ARTICLE_COVER} 
+			alt={post.data.title} 
+			class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-108"
+		/>
+	</section>
+
+	<header class="p-[0.88rem_1.166rem] flex flex-col gap-[0.66rem] w-full h-max">
+		<h3 class="flex items-center justify-between w-full h-max">
+			<a 
+				class={`shrink-0 w-max text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r ${gradient}`} 
+				href={`/categories/${post.data.categories}`}
+			>
+				{getCategoryDisplayName(post.data.categories)}
+			</a>
+			<time class="mt-auto text-[0.805rem] font-normal text-primary">{fmtTime(post.data.date)}</time>
+		</h3>
+		<h1 class="w-full h-max overflow-hidden">
+			<a class="text-[1.06rem] font-semibold transition-colors duration-180 hover:text-primary line-clamp-1" href={`/article/${post.data.id}`}>
+				{post.data.title}
+			</a>
+		</h1>
 	</header>
-	<h2 class="vh-article-excerpt vh-ellipsis line-2">{description}</h2>
-	<h4 class="vh-article-taglist vh-ellipsis">
-		{post.data.tags.map((tag: string) => <a href={`/tag/${tag}`}>{tag}</a>)}
+
+	<h2 class="px-[1.166rem] w-full h-max text-zinc-500 dark:text-zinc-400 text-[0.805rem] font-normal tracking-[0.88px] leading-[1.28rem] line-clamp-2">
+		{description}
+	</h2>
+
+	<h4 class="mt-auto px-[0.66rem_1.166rem_1rem] w-full h-max overflow-hidden flex flex-wrap">
+		{post.data.tags.map((tag: string) => (
+			<a 
+				href={`/tag/${tag}`} 
+				class="mr-[0.88rem] text-zinc-600 dark:text-zinc-400 text-[0.688rem] font-normal transition-colors duration-180 hover:text-primary last:mr-0 before:content-['#']"
+			>
+				{tag}
+			</a>
+		))}
 	</h4>
 </article>

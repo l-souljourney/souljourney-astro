@@ -3,21 +3,19 @@ import SITE_CONFIG from "@/config";
 const { Navs, Title } = SITE_CONFIG;
 // Svg 组件
 import Svg from "@/components/Svg/Svg.astro";
-// 侧边栏 MobileSidebar 样式
-import "./MobileSidebar.less";
 ---
 
-<nav class="vh-mobilesidebar">
-	<section class="main">
-		<div class="vh-mobilesidebar-list user-panel">
-			<h3>{Title}</h3>
+<nav class="vh-mobilesidebar fixed left-0 top-0 w-screen h-screen bg-black/26 overflow-hidden transition-opacity duration-180 opacity-0 pointer-events-none z-10">
+	<section class="main p-4 flex items-center flex-col gap-4 w-full max-w-[17.6rem] h-full bg-white dark:bg-[#252525] -translate-x-4 transition-transform duration-180 overflow-hidden">
+		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-[var(--vh-body-bg)] dark:bg-[#1a1a1a] overflow-hidden">
+			<h3 class="text-center">{Title}</h3>
 		</div>
 
-		<div class="vh-mobilesidebar-list vh-link-list">
+		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-[var(--vh-body-bg)] dark:bg-[#1a1a1a] overflow-hidden">
 			{
 				Navs.map(i => (
-					<a class={i.link.replace("/", "")} href={i.link} target={i.target ? "_blank" : "_self"}>
-						<Svg src={i.icon} />
+					<a class={`px-2 flex items-center gap-[0.618rem] w-full h-9 text-base text-zinc-600 dark:text-zinc-400 font-semibold rounded-md overflow-hidden transition-all duration-360 hover:text-white hover:bg-primary ${i.link.replace("/", "")}`} href={i.link} target={i.target ? "_blank" : "_self"}>
+						<div class="w-auto h-[0.888rem] object-contain transition-colors duration-180"><Svg src={i.icon} /></div>
 						{i.text}
 					</a>
 				))
@@ -25,3 +23,33 @@ import "./MobileSidebar.less";
 		</div>
 	</section>
 </nav>
+
+<style>
+	.vh-mobilesidebar.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	.vh-mobilesidebar.active > .main {
+		transform: translateX(0);
+	}
+	.vh-mobilesidebar.active > .main a {
+		transform: translateX(0);
+	}
+	.vh-mobilesidebar > .main a {
+		transform: translateX(-1rem);
+	}
+	.vh-mobilesidebar > .main a:nth-of-type(1) {
+		transition: all 0.26s ease-in-out;
+	}
+	.vh-mobilesidebar > .main a:nth-of-type(2) {
+		transition: all 0.3s ease-in-out;
+	}
+	.vh-mobilesidebar > .main a.active {
+		color: white;
+		background-color: var(--vh-main-color);
+	}
+	.vh-mobilesidebar > .main a.active svg,
+	.vh-mobilesidebar > .main a:hover svg {
+		stroke: white;
+	}
+</style>

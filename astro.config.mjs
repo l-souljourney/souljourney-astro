@@ -17,6 +17,8 @@ import { remarkNote, addClassNames } from './src/plugins/markdown.custom'
 // Markdown 配置================
 import SITE_INFO from './src/config';
 
+import tailwind from "@astrojs/tailwind";
+
 // https://astro.build/config
 export default defineConfig({
 	site: SITE_INFO.Site,
@@ -25,6 +27,7 @@ export default defineConfig({
 		svgo: true,
 	},
 	integrations: [
+		tailwind(),
 		icon(),
 		pagefind(),
 		Compress({ CSS: false, Image: false, Action: { Passed: async () => true } }),

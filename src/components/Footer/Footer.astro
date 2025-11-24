@@ -1,29 +1,31 @@
 ---
-// 基础 样式
-import "./Footer.less";
 import config from "@/config";
 ---
 
-<footer class="vh-footer">
-	<main>
-		<p>
-			<span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"> <path fill="#fff" d="M269.4 2.9C265.2 1 260.7 0 256 0s-9.2 1-13.4 2.9L54.3 82.8c-22 9.3-38.4 31-38.3 57.2c.5 99.2 41.3 280.7 213.6 363.2c16.7 8 36.1 8 52.8 0C454.7 420.7 495.5 239.2 496 140c.1-26.2-16.3-47.9-38.3-57.2L269.4 2.9zM144 221.3c0-33.8 27.4-61.3 61.3-61.3c16.2 0 31.8 6.5 43.3 17.9l7.4 7.4 7.4-7.4c11.5-11.5 27.1-17.9 43.3-17.9c33.8 0 61.3 27.4 61.3 61.3c0 16.2-6.5 31.8-17.9 43.3l-82.7 82.7c-6.2 6.2-16.4 6.2-22.6 0l-82.7-82.7c-11.5-11.5-17.9-27.1-17.9-43.3z"></path></svg><cite>网站运行</cite><em class="web_time"></em></span>
-			<a href="/rss.xml" target="_blank" title="RSS 订阅">
-				<img alt="rss" src="/assets/images/footer/rss.svg" />
+<footer class="mt-[1.68rem] py-[2.6rem] flex items-center justify-center w-full h-max bg-white/10 backdrop-blur-[2px] backdrop-saturate-100 select-none transition-colors duration-300 dark:bg-[#222]/80 dark:border-t dark:border-white/5">
+	<main class="flex flex-col gap-[0.618rem] w-full max-w-[var(--vh-main-max-width)] h-max px-4">
+		<p class="flex flex-wrap items-center justify-center gap-[0.618rem] min-h-[1.25rem] leading-none">
+			<span class="pl-[0.28rem] flex items-center w-max h-[1.25rem] bg-[#555] text-[0.68rem] rounded-[0.18rem] overflow-hidden dark:bg-[#333]">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-[0.88rem] h-[0.88rem]"> <path fill="#fff" d="M269.4 2.9C265.2 1 260.7 0 256 0s-9.2 1-13.4 2.9L54.3 82.8c-22 9.3-38.4 31-38.3 57.2c.5 99.2 41.3 280.7 213.6 363.2c16.7 8 36.1 8 52.8 0C454.7 420.7 495.5 239.2 496 140c.1-26.2-16.3-47.9-38.3-57.2L269.4 2.9zM144 221.3c0-33.8 27.4-61.3 61.3-61.3c16.2 0 31.8 6.5 43.3 17.9l7.4 7.4 7.4-7.4c11.5-11.5 27.1-17.9 43.3-17.9c33.8 0 61.3 27.4 61.3 61.3c0 16.2-6.5 31.8-17.9 43.3l-82.7 82.7c-6.2 6.2-16.4 6.2-22.6 0l-82.7-82.7c-11.5-11.5-17.9-27.1-17.9-43.3z"></path></svg>
+				<cite class="px-[0.618rem] pl-[0.28rem] h-full leading-[1.25rem] text-white not-italic dark:text-white/90">网站运行</cite>
+				<em class="web_time px-[0.618rem] h-full leading-[1.25rem] text-white not-italic bg-[#007ec6] dark:bg-primary dark:text-white/90"></em>
+			</span>
+			<a href="/rss.xml" target="_blank" title="RSS 订阅" class="leading-none">
+				<img alt="rss" src="/assets/images/footer/rss.svg" class="h-[1.25rem] w-auto object-contain" />
 			</a>
-			<a href={config.ICP.link} target="_blank" rel="noopener noreferrer" title="ICP备案信息">
-				<img alt="浙ICP备2025152080号-1" src="/assets/images/footer/icp.svg" />
+			<a href={config.ICP.link} target="_blank" rel="noopener noreferrer" title="ICP备案信息" class="leading-none">
+				<img alt="浙ICP备2025152080号-1" src="/assets/images/footer/icp.svg" class="h-[1.25rem] w-auto object-contain" />
 			</a>
 		</p>
-		<p>
-			<a href="https://astro.build/" target="_blank" rel="noopener noreferrer" title="基于 Astro 构建">
-				<img alt="Astro" src="/assets/images/footer/astro.svg" />
+		<p class="flex flex-wrap items-center justify-center gap-[0.618rem] min-h-[1.25rem] leading-none">
+			<a href="https://astro.build/" target="_blank" rel="noopener noreferrer" title="基于 Astro 构建" class="leading-none">
+				<img alt="Astro" src="/assets/images/footer/astro.svg" class="h-[1.25rem] w-auto object-contain" />
 			</a>
-			<a href="https://github.com/uxiaohan/vhAstro-Theme" target="_blank" rel="noopener noreferrer" title="使用 vhAstro 主题">
-				<img alt="vhAstro-Theme" src="/assets/images/footer/theme.svg" />
+			<a href="https://github.com/uxiaohan/vhAstro-Theme" target="_blank" rel="noopener noreferrer" title="使用 vhAstro 主题" class="leading-none">
+				<img alt="vhAstro-Theme" src="/assets/images/footer/theme.svg" class="h-[1.25rem] w-auto object-contain" />
 			</a>
-			<a href="/sitemap-index.xml" target="_blank" title="网站地图">
-				<img alt="sitemap" src="/assets/images/footer/sitemap.svg" />
+			<a href="/sitemap-index.xml" target="_blank" title="网站地图" class="leading-none">
+				<img alt="sitemap" src="/assets/images/footer/sitemap.svg" class="h-[1.25rem] w-auto object-contain" />
 			</a>
 		</p>
 	</main>

@@ -24,12 +24,14 @@
 - **页面转场**: **View Transitions** - 浏览器原生级无刷新页面切换
 - **搜索系统**: **Pagefind** - 静态索引搜索，支持中文分词
 - **图标系统**: **astro-icon** - 基于 SVG 的高性能图标解决方案
-- **样式系统**: Less + CSS Variables - 深度定制的响应式主题
+- **样式系统**: **Tailwind CSS 3.4.18** + Less - 现代化 Utility-first CSS 框架
+- **设计规范**: **Shadcn UI (Zinc)** - 统一的设计系统与组件风格
 - **内容管理**: Markdown/MDX + Content Layer - 类型安全的内容集合
 - **交互体验**: 
     - 图片懒加载与灯箱效果
     - 智能目录 (TOC) 与平滑滚动
     - 完美适配的暗黑模式
+    - 响应式布局与微交互动效
 
 ## 🛠️ 快速开始
 

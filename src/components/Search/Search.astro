@@ -1,10 +1,9 @@
 ---
 import Search from "astro-pagefind/components/Search";
-import "./Search.less";
 ---
 
-<section class="vh-search">
-	<main>
+<section class="vh-search fixed left-0 top-0 w-screen h-screen pt-[3.75rem] px-4 pb-4 flex items-center flex-col bg-black/26 opacity-0 pointer-events-none z-50 transition-opacity duration-180">
+	<main class="p-4 py-3 w-full max-w-[888px] max-h-[88vh] rounded-2xl bg-white dark:bg-[#252525] -translate-y-4 transition-transform duration-180 overflow-hidden">
         <div class="pagefind-wrapper">
 		    <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
         </div>
@@ -60,6 +59,17 @@ import "./Search.less";
     // Run on view transitions navigation
     document.addEventListener("astro:page-load", initSearchModal);
 </script>
+
+<style>
+    /* Active state for search modal */
+    .vh-search.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .vh-search.active > main {
+        transform: translateY(0);
+    }
+</style>
 
 <style is:global>
     /* Override Pagefind styles to match the modal */
@@ -153,7 +163,8 @@ import "./Search.less";
     }
     
     html.dark .vh-search .pagefind-ui__result-title a {
-        color: var(--search-dark-text-primary);
+        color: #ffffff;  /* Changed from var(--search-dark-text-primary) to pure white for better visibility */
+        font-weight: 500;
     }
     
     html.dark .vh-search .pagefind-ui__result-excerpt {

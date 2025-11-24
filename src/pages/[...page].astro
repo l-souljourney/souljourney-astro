@@ -32,12 +32,14 @@ const currentPage = page_data.url.current.replace("/", "");
 ---
 
 <Layout title={currentPage ? `第${currentPage}页文章` : ""} description={Description} Home={true}>
-	<section class="article-list-main">
-		<section class="article-list">
+	<section class="relative w-full h-max pb-[6.88rem]">
+		<section class="relative grid w-full overflow-hidden gap-[1.288rem] grid-cols-1 min-[556px]:grid-cols-2 min-[1150px]:grid-cols-3">
 			<!-- 文章列表 -->
 			{data.map((post, index) => <ArticleCard post={post} index={index} />)}
 			<!-- 分页 -->
 		</section>
-		<Pagination data={page_data.url} />
+		<div class="absolute bottom-0 right-0">
+			<Pagination data={page_data.url} />
+		</div>
 	</section>
 </Layout>

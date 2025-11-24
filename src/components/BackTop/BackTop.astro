@@ -1,9 +1,8 @@
 ---
-import "./BackTop.less";
 ---
 
-<section class="vh-back-top">
-	<svg viewBox="0 0 24 24">
+<section class="vh-back-top fixed right-[var(--vh-back-top)] bottom-8 w-[2.6rem] h-[2.6rem] rounded-full border border-gray-200 bg-white dark:bg-[#252525] dark:border-zinc-700 translate-x-4 cursor-pointer opacity-0 overflow-hidden pointer-events-none transition-all duration-180 z-[9]">
+	<svg viewBox="0 0 24 24" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+1px)] h-[calc(100%+1px)]">
 		<defs>
 			<linearGradient id="Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
 				<stop offset="0%" style="stop-color:blue;stop-opacity:1"></stop>
@@ -13,5 +12,13 @@ import "./BackTop.less";
 		</defs>
 		<circle stroke="url(#Gradient)" cx="12" cy="12" r="10" fill="none" stroke-width="2" stroke-linecap="round" transform="rotate(-90, 12, 12)"></circle>
 	</svg>
-	<svg class="icon" viewBox="0 0 24 24"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 15l6-6l6 6"></path></svg>
+	<svg class="icon absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[66%] h-[66%]" viewBox="0 0 24 24"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 15l6-6l6 6"></path></svg>
 </section>
+
+<style>
+	.vh-back-top.active {
+		transform: translateX(0);
+		opacity: 1;
+		pointer-events: auto;
+	}
+</style>

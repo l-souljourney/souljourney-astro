@@ -273,77 +273,7 @@ html.is-animating {
 	}
 }
 
-// 占位加载
-.vh-space-loading {
-	box-sizing: border-box;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	grid-column: span 3;
-	width: 100%;
-	height: 8.88rem;
-	overflow: hidden;
-
-	&>span {
-		background-color: #000;
-		position: relative;
-		width: 5px;
-		height: 5px;
-		margin: 3px;
-		border-radius: 5px;
-
-		&:nth-of-type(1) {
-			-webkit-animation: scale .8s ease infinite;
-			animation: vh-loading-animation .8s ease infinite
-		}
-
-		&:nth-of-type(2) {
-			-webkit-animation: scale .8s ease .2s infinite;
-			animation: vh-loading-animation .8s ease .2s infinite
-		}
-
-		&:nth-of-type(3) {
-			-webkit-animation: scale .8s ease .4s infinite;
-			animation: vh-loading-animation .8s ease .4s infinite
-		}
-
-	}
-}
-
-// 谷歌广告模块
-.vh-ad {
-	position: relative;
-	display: block;
-	width: 100%;
-	height: max-content;
-	min-height: 5.88rem;
-	overflow: hidden !important;
-	z-index: 1;
-
-	&.vh-article-ad {
-		margin-bottom: 1rem;
-		box-sizing: border-box;
-		padding: 0.75rem;
-		border-radius: 0.5rem;
-		background-color: var(--vh-white-color);
-		box-shadow: var(--vh-box-shadow);
-		overflow: hidden;
-
-		&::before {
-			top: 50%;
-		}
-	}
-
-	&::before {
-		position: absolute;
-		left: 50%;
-		top: 30%;
-		transform: translate(-50%, -50%);
-		content: '广告加载中...';
-		color: #e3e4e6;
-		z-index: -1;
-	}
-}
+// Note: Removed vh-space-loading (comment loading) and vh-ad (Google Ads) classes as they are not used
 
 
 
@@ -359,16 +289,6 @@ html.is-animating {
 	}
 }
 
-@keyframes vh-loading-animation {
-	50% {
-		height: 25px
-	}
-
-	0% {
-		height: 5px
-	}
-}
-
 @-webkit-keyframes vh-init-show {
 	0% {
 		transform: translateY(2rem);
@@ -381,58 +301,4 @@ html.is-animating {
 	}
 }
 
-@-webkit-keyframes vh-loading-animation {
-	50% {
-		height: 25px
-	}
-
-	0% {
-		height: 5px
-	}
-}
-
-
-// 动画效果
-@keyframes talking-tag-active {
-	0% {
-		transform: translateX(0);
-	}
-
-	25% {
-		transform: translateX(-1.66px);
-	}
-
-	50% {
-		transform: translateX(1.66px);
-	}
-
-	75% {
-		transform: translateX(-1.66px);
-	}
-
-	100% {
-		transform: translateX(0);
-	}
-}
-
-@-webkit-keyframes talking-tag-active {
-	0% {
-		transform: translateX(0);
-	}
-
-	25% {
-		transform: translateX(-1.66px);
-	}
-
-	50% {
-		transform: translateX(1.66px);
-	}
-
-	75% {
-		transform: translateX(-1.66px);
-	}
-
-	100% {
-		transform: translateX(0);
-	}
-}
+// Note: Removed vh-loading-animation (unused) and talking-tag-active (unused) animations
