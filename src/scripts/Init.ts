@@ -1,8 +1,6 @@
 import { inRouter, outRouter } from "@/utils/updateRouter";
 // Banner 打字效果
 import TypeWriteInit from "@/scripts/TypeWrite";
-// 泡泡🫧效果 - 已禁用
-// import PaoPaoInit from "@/scripts/PaoPao";
 // 初始化文章代码块
 import codeInit from "@/scripts/Code";
 // 初始化视频播放器
@@ -40,8 +38,6 @@ const indexInit = async (isReady: boolean = true) => {
   // 如果不需要初始化则直接返回
   if (!isReady) return;
   try {
-    // 泡泡效果 - 已禁用
-    // PaoPaoInit();
     // 代码块处理
     codeInit();
     // 初始化视频播放器

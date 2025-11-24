@@ -65,6 +65,6 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
     initTocHighlight();
   }
 
-  // Swup 页面切换后重新初始化
-  document.addEventListener('swup:contentReplaced', initTocHighlight);
+  // Astro View Transitions 会自动重新执行脚本
+  // 无需手动监听页面切换事件
 </script>

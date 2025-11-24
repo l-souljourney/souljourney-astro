@@ -252,28 +252,10 @@ img[data-vh-lz-src] {
 	transition: opacity 0.18s ease-in-out, transform 0.18s ease-in-out;
 }
 
-// swup 动画效果
-html.swup-enabled,
-html.is-changing {
-	.vh-animation {
-		&.vh-animation-init {
-			transform: translateY(0);
-			opacity: 1;
-			animation: none;
-		}
-	}
-}
+// Astro View Transitions 已接管页面动画
+// Swup 相关样式已废弃
 
-html.is-animating {
-	.vh-animation {
-		&.vh-animation-init {
-			transform: translateY(0.88rem);
-			opacity: 0;
-		}
-	}
-}
 
-// Note: Removed vh-space-loading (comment loading) and vh-ad (Google Ads) classes as they are not used
 
 
 

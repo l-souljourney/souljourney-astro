@@ -1,9 +1,4 @@
-// 扩展 Window 接口以包含 swup 属性
-declare global {
-  interface Window {
-    swup: { hooks: { on: (event: string, handler: EventHandler) => void } };
-  }
-}
+// Astro View Transitions 路由工具
 type EventHandler = (event: Event) => void;
 
 //  进入页面时触发 (适配 Astro View Transitions)
