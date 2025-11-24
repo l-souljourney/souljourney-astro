@@ -28,6 +28,7 @@
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
     "@playform/compress": "^0.1.9",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/dplayer": "^1.25.5",
     "@types/nprogress": "^0.2.3",
     "@waline/client": "^3.5.7",

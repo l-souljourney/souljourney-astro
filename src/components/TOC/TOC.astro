@@ -8,13 +8,13 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
 
 {
   toc.length > 0 && (
-    <aside class="toc-container">
-      <h3>文章目录</h3>
-      <nav class="toc">
-        <ul>
+    <aside class="sticky top-[calc(66px+0.68rem)] z-10 flex-shrink-0 w-[19rem] h-fit p-5 flex flex-col gap-3 rounded-2xl bg-white shadow-sm overflow-visible transition-[top] duration-300 max-xl:hidden dark:bg-[#252525]">
+      <h3 class="w-full text-[0.68rem] font-normal text-primary/56 m-0">文章目录</h3>
+      <nav class="h-auto overflow-visible">
+        <ul class="list-none p-0 m-0">
           {toc.map((heading) => (
-            <li class="toc-item">
-              <a href={`#${heading.slug}`}>
+            <li class="mb-[0.4rem] leading-[1.5]">
+              <a href={`#${heading.slug}`} class="block text-primary/66 no-underline transition-colors duration-300 py-1.5 text-[0.9rem] hover:text-primary [&.active]:text-primary [&.active]:font-medium">
                 {heading.text}
               </a>
             </li>
@@ -24,100 +24,6 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
     </aside>
   )
 }
-
-<style lang="less">
-  .toc-container {
-    // 悬浮跟随效果
-    position: sticky;
-    top: 91px;
-    z-index: 10;
-    transition: top 0.3s;
-    
-    // 固定宽度
-    flex-shrink: 0;
-    width: 260px;
-    // 移除固定高度，根据内容自动调整
-    height: fit-content;
-    
-    // 继承侧边栏样式
-    box-sizing: border-box;
-    padding: 1.28rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    border-radius: var(--vh-main-radius);
-    background-color: var(--vh-white-color);
-    box-shadow: var(--vh-box-shadow);
-    overflow: visible;
-    
-    // 左侧间距调整，与 Aside 保持一致
-    margin-left: 0.66rem;
-    // 顶部对齐调整 - 与文章内容对齐
-    margin-top: 0;
-
-    h3 {
-      width: 100%;
-      font-size: 0.68rem;
-      font-weight: 400;
-      color: var(--vh-font-56);
-      margin: 0;
-    }
-
-    .toc {
-      box-sizing: border-box;
-      // 移除固定高度，让内容决定高度
-      height: auto;
-      overflow: visible;
-      
-      // 自定义滚动条
-      &::-webkit-scrollbar {
-        width: 4px;
-      }
-      
-      &::-webkit-scrollbar-thumb {
-        background: var(--vh-main-color-28);
-        border-radius: 2px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .toc-item {
-        margin-bottom: 0.4rem;
-        line-height: 1.5;
-
-        a {
-          display: block;
-          color: var(--vh-font-66);
-          text-decoration: none;
-          transition: color 0.3s;
-          padding: 6px 0;
-          font-size: 0.9rem;
-
-          &:hover {
-            color: var(--vh-main-color);
-          }
-          
-          // 高亮当前章节 - 只改变文字颜色
-          &.active {
-            color: var(--vh-main-color);
-            font-weight: 500;
-          }
-        }
-      }
-    }
-  }
-
-  // 响应式：屏幕宽度小于 1400px 时隐藏 TOC
-  @media screen and (max-width: 1400px) {
-    .toc-container {
-      display: none;
-    }
-  }
-</style>
 
 <script>
   // 滚动高亮功能

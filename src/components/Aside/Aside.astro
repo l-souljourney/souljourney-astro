@@ -82,9 +82,9 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 					{categories
 						.sort((a: any, b: any) => b.count - a.count)
 						.map(i => (
-							<a href={`/categories/${i.title}`} class="shrink-0 flex items-center justify-between w-full h-[2.18rem] text-[0.88rem] rounded-[0.38rem] bg-white transition-all duration-180 overflow-hidden hover:pl-[0.66rem] hover:bg-primary/66 hover:text-white group dark:bg-[#252525]">
-								<span>{getCategoryDisplayName(i.title)}</span>
-								<i class="flex items-center justify-center w-[1.68rem] h-[1.28rem] text-white text-[0.66rem] not-italic rounded-[0.38rem] bg-primary/66 transition-colors duration-180 group-hover:bg-transparent">{i.count}</i>
+							<a href={`/categories/${i.title}`} class="shrink-0 flex items-center justify-between w-full h-[2.18rem] text-[0.88rem] rounded-[0.38rem] bg-white transition-all duration-288 overflow-hidden hover:bg-primary/8 hover:text-primary hover:scale-[1.02] group dark:bg-[#252525] dark:hover:bg-primary/16">
+								<span class="ml-2">{getCategoryDisplayName(i.title)}</span>
+								<i class="flex items-center justify-center w-[1.68rem] h-[1.28rem] text-white text-[0.66rem] not-italic rounded-[0.38rem] bg-primary/66 transition-all duration-288 group-hover:bg-primary group-hover:scale-110">{i.count}</i>
 							</a>
 						))}
 				</div>
@@ -117,18 +117,18 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">推荐文章</h3>
 					<div class="flex flex-col gap-2 w-full h-max overflow-hidden">
 						{recommendArticles.map((i, idx) => (
-							<a href={`/article/${i.id}`} class="flex flex-col justify-between w-full h-[2.68rem] overflow-hidden group">
-								<span class="flex items-center gap-[0.618rem] w-full">
-									{idx < 3 ? (
-										<i class={`shrink-0 w-[0.875rem] h-[0.875rem] rounded-[0.18rem] text-white text-center text-[0.66rem] not-italic ${idx === 0 ? 'bg-success' : idx === 1 ? 'bg-warning' : 'bg-import'}`}>{idx + 1}</i>
-									) : (
-										<em class="shrink-0 w-max not-italic text-[0.8125rem] text-primary/66">{idx + 1}.</em>
-									)}
-									<cite class="w-max max-w-full border-b border-transparent text-[0.8rem] leading-normal not-italic transition-colors duration-288 relative after:content-[''] after:block after:w-0 after:h-px after:bg-primary after:transition-[width] after:duration-588 after:ease-[cubic-bezier(.6,.1,0,1)] group-hover:text-primary group-hover:after:w-full line-clamp-1">{i.title}</cite>
-								</span>
-								<time class="text-primary/56 text-[0.688rem]">{fmtTime(i.date, "YYYY-MM-DD A")}</time>
-							</a>
-						))}
+						<a href={`/article/${i.id}`} class="flex flex-col gap-1 w-full py-2 overflow-hidden group transition-transform duration-200 hover:translate-x-0.5">
+							<span class="flex items-center gap-2.5 w-full">
+								{idx < 3 ? (
+									<i class={`shrink-0 w-5 h-5 flex items-center justify-center rounded text-white text-center text-[0.75rem] font-medium not-italic ${idx === 0 ? 'bg-success' : idx === 1 ? 'bg-warning' : 'bg-import'}`}>{idx + 1}</i>
+								) : (
+									<em class="shrink-0 w-5 text-center not-italic text-sm font-medium text-primary/56">{idx + 1}.</em>
+								)}
+								<cite class="flex-1 min-w-0 text-[0.875rem] leading-normal not-italic transition-colors duration-288 relative after:content-[''] after:block after:w-0 after:h-px after:bg-primary after:transition-[width] after:duration-588 after:ease-[cubic-bezier(.6,.1,0,1)] group-hover:text-primary group-hover:after:w-full line-clamp-1">{i.title}</cite>
+							</span>
+							<time class="text-primary/56 text-[0.688rem] ml-7">{fmtTime(i.date, "YYYY-MM-DD A")}</time>
+						</a>
+					))}
 					</div>
 				</section>
 			)

@@ -33,26 +33,42 @@ import Copyright from "@/components/Copyright/Copyright.astro";
 import Reward from "@/components/Reward/Reward.astro";
 // Google 广告组件
 import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
-// 文章页面样式
+// 文章自定义组件样式 (tag-list, code-copy, etc.)
 import "@/styles/Article.less";
-// 文章内容基础样式
+// 自定义 Markdown 组件样式 (vh-node, vh-btn, etc.)
 import "@/styles/ArticleBase.less";
+
 ---
 
 <Layout title={post.data.title || Title} description={description} cover={ARTICLE_COVER} activeNav={post.data.categories} headings={headings}>
-	<article class="vh-article vh-article-main vh-animation vh-animation-init">
-		<header class="vh-article-header">
-			<h1>{post.data.title}</h1>
-			<section class="vh-article-meta">
+	<article class="
+		w-full
+		bg-white dark:bg-[#252525]
+		rounded-2xl
+		shadow-sm
+		overflow-hidden
+		vh-animation vh-animation-init
+	">
+		<header class="
+			p-8 pb-4
+			bg-white dark:bg-[#252525]
+		">
+			<h1 class="text-2xl md:text-3xl font-bold mb-4">{post.data.title}</h1>
+			<section class="flex flex-wrap items-center gap-4 text-sm text-primary/66">
 				<span>发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}</span>
-				<span>分类于 <a href={`/categories/${post.data.categories}`}>{getCategoryDisplayName(post.data.categories) || "未分类"}</a></span>
+				<span>分类于 <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "未分类"}</a></span>
 				<span>字数统计 {article_word_count} 字</span>
 				<span>阅读时长 ≈ {Math.ceil(reading_time)} 分钟</span>
 			</section>
 		</header>
-		<main>
+		<main class="
+			prose lg:prose-xl
+			dark:prose-invert
+			max-w-none
+			px-8 pb-8
+		">
 			<Content />
-			<section class="tag-list">
+			<section class="tag-list not-prose">
 				{
 					(post.data.tags || []).map((i: any) => (
 						<a href={`/tag/${i}`}>

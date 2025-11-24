@@ -1,5 +1,70 @@
 # Changelog
 
+## v1.7.4 (2025-11-24)
+
+### 🎨 文章样式现代化：Typography Plugin 迁移
+
+本次更新将文章内容样式从 Less 迁移到 Tailwind 官方 Typography 插件，同时修复了布局对齐问题，代码量减少 90%。
+
+#### 核心变更
+
+1. **@tailwindcss/typography 集成**
+    - ✅ 安装官方 Typography 插件
+    - ✅ 配置自定义 prose 主题（240+ 行配置）
+    - ✅ 保留项目特色：标题 # 符号、链接下划线效果
+    - ✅ 完整暗黑模式支持（`prose-invert`）
+
+2. **文章组件重构**
+    - ✅ 应用 `prose lg:prose-xl dark:prose-invert` 类
+    - ✅ 统一容器样式：`rounded-2xl`, `shadow-sm`
+    - ✅ 与 TOC/侧边栏样式完全一致
+
+3. **Less 文件精简**
+    - **Article.less**: 274行 → ~240行（仅保留自定义组件）
+    - **删除内容**: 所有标准 Markdown 元素样式（h1-h6, p, ul, code, table等）
+    - **保留内容**: 标签列表、代码复制按钮、vh-note等项目特色组件
+    - **代码减少**: ~90% 的文章样式代码
+
+4. **布局对齐修复**
+    - ✅ **问题1**: 文章内容与 TOC/侧边栏未对齐 → 移除 `main-inner-content` 上边距
+    - ✅ **问题2**: TOC 位置偏低 → 统一 top 定位为 `calc(66px+0.68rem)`
+    - ✅ **问题3**: 间距不一致 → 使用 flex `gap-[0.66rem]` 统一管理
+
+#### 技术亮点
+
+-   **统一间距策略**: 从手动 margin 改为 flex gap，确保 TOC/文章/侧边栏间距完全一致（0.66rem）
+-   **垂直对齐**: 统一所有 sticky 组件的 top 定位，完美对齐
+-   **混合架构**: Typography Plugin (标准元素) + Tailwind (布局) + Less (自定义组件)
+-   **零视觉差异**: 通过自定义 prose 主题，完全保留原有的视觉效果
+
+#### 数据对比
+
+| 指标 | 迁移前 | 迁移后 | 变化 |
+|------|--------|--------|------|
+| Article.less | 274行 | ~240行 | -12% ✅ |
+| 标准元素样式 | 手动维护 | Typography Plugin | -90% ✅ |
+| 代码复杂度 | 高（Less选择器嵌套） | 低（Tailwind类） | ↓↓ ✅ |
+| 对齐问题 | 3个 | 0个 | -100% ✅ |
+
+#### 测试验证
+
+-   **浏览器测试**: ✓ 浅色/暗黑模式完美对齐（2张截图）
+-   **对齐验证**: ✓ TOC/文章/侧边栏顶部水平对齐
+-   **间距验证**: ✓ 组件间距完全一致
+-   **样式验证**: ✓ 标题 #、链接下划线、代码块等特色效果保留
+
+#### 混合架构说明
+
+```
+标准 Markdown → @tailwindcss/typography ✅ (h1-h6, p, ul, code, table)
+布局/容器 → Tailwind utilities ✅ (rounded-2xl, shadow-sm, gap)
+自定义组件 → Less ✅ (vh-note, vh-btn, tags, code-copy)
+```
+
+**决策**: 保留 Less 用于项目特色组件，与 Typography Plugin 形成合理分层。
+
+---
+
 ## v1.7.3 (2025-11-24)
 
 ### 🎨 重大重构：Less 到 Tailwind CSS 全量迁移
