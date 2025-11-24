@@ -18,6 +18,18 @@ import "@/styles/Base.less";
 
 <head>
 	<meta charset="UTF-8" />
+	
+	<!-- 🔥 防止暗黑模式 FOUC：在任何渲染前立即应用主题 -->
+	<script is:inline>
+		(function() {
+			const theme = localStorage?.getItem('theme') ?? 
+			              (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			}
+		})();
+	</script>
+	
 	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />

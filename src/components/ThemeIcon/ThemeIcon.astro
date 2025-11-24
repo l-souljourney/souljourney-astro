@@ -107,21 +107,20 @@
 		};
 	}
 
-	// 5. 初始化主题
-	// View Transitions 模式下，每次页面切换都需要重新应用 class
-	const initTheme = () => {
-		const theme = window.getInitialTheme();
-		window.applyTheme(theme);
-		window.bindThemeToggle();
-	};
-
-	// 6. 监听 Astro 页面加载事件
-	// astro:page-load 在首次加载和后续导航完成后都会触发
-	// 这是最可靠的重新应用主题的时机
-	document.addEventListener('astro:page-load', initTheme);
+	// 5. 页面加载时绑定按钮事件
+	// 注意：初始主题应用已在 Head.astro 中完成，这里只需绑定事件
+	document.addEventListener('astro:page-load', window.bindThemeToggle);
 	
-	// 7. 监听 astro:after-swap 以防止闪烁
-	// 在新内容被交换进 DOM 后立即应用主题，防止页面短暂变白
+	// 6. View Transitions: 在内容交换前应用主题
+	// 确保新页面内容交换到 DOM 前就有正确的主题类
+	document.addEventListener('astro:before-swap', (e) => {
+		const theme = window.getInitialTheme();
+		if (theme === 'dark') {
+			e.newDocument.documentElement.classList.add('dark');
+		}
+	});
+	
+	// 7. View Transitions: 内容交换后确保主题正确（双保险）
 	document.addEventListener('astro:after-swap', () => {
 		const theme = window.getInitialTheme();
 		window.applyTheme(theme);
