@@ -28,7 +28,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 	<!-- 头像块 -->
 	{
 		AsideShow.WebSitesShow && (
-			<section class="relative flex flex-col items-center gap-3 w-full p-5 py-[1.88rem] bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 py-[1.88rem] bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 				<img class="relative w-[6.36rem] h-[6.36rem] rounded-2xl overflow-hidden" src={Avatar} alt={Author} />
 				<span class="relative text-xl font-bold after:content-[''] after:absolute after:bottom-[-0.16rem] after:left-1/2 after:-translate-x-1/2 after:w-[36%] after:h-[0.26rem] after:rounded-[3px] after:bg-primary/88">{Author}</span>
 				<p class="text-[0.86rem] text-primary/66 leading-normal text-center">{Motto}</p>
@@ -61,7 +61,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 	<!-- 公众号二维码块 -->
 	{
 		SITE_CONFIG.WeChat && (
-			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 				<div class="flex flex-col items-center gap-[0.8rem] w-full">
 					<div class="w-[120px] h-[120px] rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-105">
 						<img src={SITE_CONFIG.WeChat.QRCode} alt={`关注公众号 ${SITE_CONFIG.WeChat.Name}`} class="w-full h-full object-cover" />
@@ -76,7 +76,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 	<!-- 分类块 -->
 	{
 		AsideShow.CategoriesShow && (
-			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 				<h3 class="w-full text-[0.68rem] font-normal text-primary/56">分类</h3>
 				<div class="flex flex-col w-full h-max max-h-[15.56rem] overflow-x-hidden overflow-y-auto">
 					{categories
@@ -95,7 +95,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 	<!-- 标签块 -->
 	{
 		AsideShow.TagsShow && (
-			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+			<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 				<h3 class="w-full text-[0.68rem] font-normal text-primary/56">热门标签</h3>
 				<div class="flex flex-wrap gap-[0.68rem_1rem] w-full h-max max-h-[18.88rem] overflow-x-hidden overflow-y-auto">
 					{tags.map(i => (
@@ -113,7 +113,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 		<!-- 最新文章块 -->
 		{
 			recommendArticles.length && AsideShow.recommendArticleShow && (
-				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">推荐文章</h3>
 					<div class="flex flex-col gap-2 w-full h-max overflow-hidden">
 						{recommendArticles.map((i, idx) => (
@@ -137,7 +137,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 		<!-- 谷歌广告块 -->
 		{
 			GoogleAds.ad_Client && GoogleAds.asideAD_Slot && (
-				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-white rounded-2xl shadow-sm dark:bg-[#252525]">
+				<section class="relative flex flex-col items-center gap-3 w-full p-5 bg-card text-card-foreground rounded-2xl shadow-sm border border-border">
 					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">广而告之</h3>
 					<GoogleAd className="mb-4 p-3 rounded-lg bg-white shadow-sm overflow-hidden relative before:absolute before:left-1/2 before:top-[30%] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['广告加载中...'] before:text-[#e3e4e6] before:-z-10 dark:bg-[#252525]" slotID={GoogleAds.asideAD_Slot} />
 				</section>

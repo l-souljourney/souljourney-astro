@@ -1,5 +1,107 @@
 # Changelog
 
+## v1.8.0 (2025-11-25)
+
+### 🎨 设计系统重构：shadcn Zinc 主题全面迁移
+
+本次更新完成了从自定义 CSS 变量体系到 shadcn/ui Zinc 设计系统的全面迁移，实现了现代化、标准化的 UI 风格。
+
+#### 核心变更
+
+1. **shadcn Zinc 主题引入** ⭐
+    - ✅ 创建 `src/styles/shadcn.css`，定义纯 Zinc 配色方案
+    - ✅ 采用 shadcn 标准化 design tokens（`--background`、`--foreground`、`--card` 等）
+    - ✅ 完整支持明暗模式自动切换
+    - ✅ 配置 `tailwind.config.mjs` 注册所有 shadcn 颜色 token
+
+2. **组件全面迁移** 🔄
+    - ✅ **ArticleCard**: 使用 `bg-card` + `border-border`
+    - ✅ **Aside**: 6 个 section 全部迁移（头像、公众号、分类、标签、推荐文章、广告）
+    - ✅ **Header**: 背景、文字、hover 效果统一使用 shadcn token
+    - ✅ **Footer**: 使用 `bg-muted` 柔和背景
+    - ✅ 所有卡片添加 `border-border` 增强层次感
+
+3. **CSS 变量体系重构** 📝
+    - ✅ 移除 Base.less 中的自定义颜色变量（`--vh-main-color`、`--vh-font-color` 等）
+    - ✅ 统一到 shadcn 语义化命名（`--primary`、`--foreground`、`--muted` 等）
+    - ✅ Base.less 精简至核心功能（字体、重置样式、工具类）
+    - ✅ 代码量减少约 **180 行**
+
+4. **视觉风格统一** 🎭
+    - ✅ 采用 Zinc 纯黑白灰配色，专业简约
+    - ✅ 保留原有大圆角风格（`rounded-2xl`）
+    - ✅ 统一 hover 效果为 `hover:bg-accent`
+    - ✅ 所有组件自动适配明暗模式
+
+#### 技术亮点
+
+**shadcn.css 配置**:
+```css
+:root {
+  --background: 0 0% 100%;        /* 纯白背景 */
+  --foreground: 240 3.8% 5.5%;    /* 深灰文字 */
+  --card: 0 0% 100%;              /* 白色卡片 */
+  --primary: 240 5.9% 10%;        /* Zinc 主题色 */
+  --border: 240 5.9% 90%;         /* 淡灰边框 */
+}
+
+.dark {
+  --background: 240 3.8% 5.5%;    /* 深黑背景 */
+  --foreground: 0 0% 98%;         /* 浅白文字 */
+  --card: 240 5.9% 10%;           /* 深灰卡片 */
+  --primary: 0 0% 98%;            /* 白色强调 */
+}
+```
+
+**组件迁移示例**:
+```diff
+- <article class="bg-white dark:bg-[#252525]">
++ <article class="bg-card text-card-foreground border border-border">
+
+- <header class="bg-white/36 dark:bg-[#222]/80">
++ <header class="bg-background/80 border-b border-border">
+
+- <span class="text-primary dark:text-[#e8e8e8]">
++ <span class="text-foreground">
+```
+
+#### 数据对比
+
+| 指标 | 迁移前 | 迁移后 | 变化 |
+|------|--------|--------|------|
+| CSS 变量体系 | 自定义 `--vh-*` | shadcn 标准 | ✅ 标准化 |
+| Base.less 行数 | 286 行 | ~106 行 | -63% ✅ |
+| 颜色定义 | 硬编码 + dark 类 | token 自动适配 | ✅ 简化 |
+| 组件样式 | 混合命名 | 统一 shadcn | ✅ 一致性 |
+| 边框使用 | 少量使用 | 统一 `border-border` | ✅ 层次感 |
+
+#### 设计理念
+
+**从自定义到标准化**:
+- **迁移前**: 自定义 `--vh-main-color`、`--vh-font-color`，需手动维护明暗模式
+- **迁移后**: shadcn 语义化 token，自动适配明暗模式，行业标准
+
+**Zinc 主题特点**:
+- **极简中性**: 纯黑白灰，无强烈色彩干扰
+- **专业感强**: 适合技术博客、文档类网站
+- **对比度高**: 明暗模式都有清晰的视觉层次
+
+#### 测试验证
+
+- ✅ 浏览器测试：明暗模式完美切换
+- ✅ 组件验证：所有卡片边框、背景正常
+- ✅ Hover 效果：统一 `accent` 颜色
+- ✅ 响应式：移动端布局正常
+- ✅ 构建测试：`npm run dev` 无报错
+
+#### 后续优化
+
+- 保留 Typography 配置（文章样式）待后续优化
+- 保留低优先级组件样式（Search、BackTop 等）
+- Base.less 进一步精简机会
+
+---
+
 ## v1.7.9 (2025-11-25)
 
 ### ✨ 功能优化与个性化
