@@ -89,6 +89,7 @@ import Search from "astro-pagefind/components/Search";
         font-size: 1rem;
         color: var(--vh-font-color);
         box-sizing: border-box;
+        font-weight: normal;
     }
     
     /* Position the search icon */
@@ -96,6 +97,7 @@ import Search from "astro-pagefind/components/Search";
         background-color: transparent;
         top: 50%;
         transform: translateY(-50%);
+        color: var(--vh-font-color);
     }
     
     /* Ensure the form relative positioning for icon */
@@ -111,6 +113,7 @@ import Search from "astro-pagefind/components/Search";
         transform: translateY(-50%);
         pointer-events: none;
         opacity: 0.6;
+        color: var(--vh-font-color);
     }
 
     .vh-search .pagefind-ui .pagefind-ui__drawer {
@@ -129,13 +132,21 @@ import Search from "astro-pagefind/components/Search";
         font-weight: 600;
     }
     
+    .vh-search .pagefind-ui .pagefind-ui__result-link {
+        color: var(--vh-font-color);
+    }
+
+    .vh-search .pagefind-ui .pagefind-ui__result-excerpt {
+        color: var(--vh-font-66);
+    }
+    
     
     /* ========== Dark Mode Overrides ========== */
     html.dark .vh-search {
         /* Color variables for dark mode */
-        --search-dark-bg-input: rgba(255, 255, 255, 0.08);
-        --search-dark-bg-hover: rgba(255, 255, 255, 0.12);
-        --search-dark-border: rgba(255, 255, 255, 0.15);
+        --search-dark-bg-input: #333333;
+        --search-dark-bg-hover: #444444;
+        --search-dark-border: #444444;
         --search-dark-text-primary: #eeeeee;
         --search-dark-text-secondary: #aaaaaa;
         --search-dark-text-tertiary: #888888;
@@ -143,60 +154,63 @@ import Search from "astro-pagefind/components/Search";
     
     /* Input field */
     html.dark .vh-search .pagefind-ui__search-input {
-        background-color: var(--search-dark-bg-input);
-        color: var(--search-dark-text-primary);
+        background-color: var(--search-dark-bg-input) !important;
+        color: var(--search-dark-text-primary) !important;
     }
     
     html.dark .vh-search .pagefind-ui__search-input::placeholder {
-        color: var(--search-dark-text-secondary);
+        color: var(--search-dark-text-secondary) !important;
         opacity: 0.6;
     }
     
     /* Results container */
     html.dark .vh-search .pagefind-ui__drawer {
-        background-color: transparent;
+        background-color: transparent !important;
     }
     
     /* Individual result items */
     html.dark .vh-search .pagefind-ui__result {
-        border-bottom-color: var(--search-dark-border);
+        border-bottom-color: var(--search-dark-border) !important;
     }
     
     html.dark .vh-search .pagefind-ui__result-title a {
-        color: #ffffff;  /* Changed from var(--search-dark-text-primary) to pure white for better visibility */
+        color: var(--search-dark-text-primary) !important;
         font-weight: 500;
     }
     
     html.dark .vh-search .pagefind-ui__result-excerpt {
-        color: var(--search-dark-text-secondary);
+        color: var(--search-dark-text-secondary) !important;
     }
     
     html.dark .vh-search .pagefind-ui__result-link {
-        color: var(--search-dark-text-tertiary);
+        color: var(--search-dark-text-tertiary) !important;
     }
     
     html.dark .vh-search .pagefind-ui__message {
-        color: var(--search-dark-text-secondary);
+        color: var(--search-dark-text-secondary) !important;
     }
     
     /* Buttons */
     html.dark .vh-search .pagefind-ui__button {
-        background-color: var(--search-dark-bg-input);
-        color: var(--search-dark-text-primary);
-        border: 1px solid var(--search-dark-border);
+        background-color: var(--search-dark-bg-input) !important;
+        color: var(--search-dark-text-primary) !important;
+        border: 1px solid var(--search-dark-border) !important;
         transition: background-color 0.18s ease-in-out;
     }
     
     html.dark .vh-search .pagefind-ui__button:hover {
-        background-color: var(--search-dark-bg-hover);
+        background-color: var(--search-dark-bg-hover) !important;
     }
     
     /* Icons */
+    html.dark .vh-search .pagefind-ui__search-icon,
     html.dark .vh-search .pagefind-ui__search-icon svg {
-        fill: var(--search-dark-text-secondary);
+        color: var(--search-dark-text-secondary) !important;
+        fill: var(--search-dark-text-secondary) !important;
     }
     
     html.dark .vh-search .pagefind-ui__search-clear {
-        color: var(--search-dark-text-secondary);
+        color: var(--search-dark-text-secondary) !important;
+        background-color: transparent !important;
     }
 </style>

@@ -77,7 +77,8 @@ export default {
 						p: {
 							fontSize: '0.9375rem',
 							lineHeight: '1.6',
-							padding: '0.618rem 0',
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
 						},
 
 						// 列表
@@ -188,16 +189,22 @@ export default {
 							},
 						},
 
+						// 图片
+						img: {
+							borderRadius: '5px',
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
+						},
+						figure: {
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
+						},
+
 						// 水平分割线
 						hr: {
 							borderColor: 'var(--vh-font-16)',
 							marginTop: '2rem',
 							marginBottom: '2rem',
-						},
-
-						// 图片
-						img: {
-							borderRadius: '5px',
 						},
 
 						// Strong 和 em
@@ -215,6 +222,18 @@ export default {
 				xl: {
 					css: {
 						fontSize: '1.125rem',
+						p: {
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
+						},
+						img: {
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
+						},
+						figure: {
+							marginTop: '0.8em',
+							marginBottom: '0.8em',
+						},
 					},
 				},
 
