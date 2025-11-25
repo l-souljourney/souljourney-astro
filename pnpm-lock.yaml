@@ -26,6 +26,9 @@ importers:
       astro-pagefind:
         specifier: ^1.8.5
         version: 1.8.5(astro@5.16.0(@types/node@24.0.1)(jiti@1.21.7)(less@4.3.0)(lightningcss@1.29.3)(rollup@4.43.0)(terser@5.42.0)(typescript@5.8.3)(yaml@2.8.1))
+      medium-zoom:
+        specifier: ^1.1.0
+        version: 1.1.0
       overlayscrollbars:
         specifier: ^2.11.2
         version: 2.11.4
@@ -1993,6 +1996,9 @@ packages:
 
   mdn-data@2.12.2:
     resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
+
+  medium-zoom@1.1.0:
+    resolution: {integrity: sha512-ewyDsp7k4InCUp3jRmwHBRFGyjBimKps/AJLjRSox+2q/2H4p/PNpQf+pwONWlJiOudkBXtbdmVbFjqyybfTmQ==}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -5296,6 +5302,8 @@ snapshots:
   mdn-data@2.0.30: {}
 
   mdn-data@2.12.2: {}
+
+  medium-zoom@1.1.0: {}
 
   merge2@1.4.1: {}
 

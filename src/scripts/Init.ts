@@ -87,6 +87,7 @@ export default () => {
     videoList.forEach((i: any) => i.destroy());
     videoList.length = 0;
   });
-  console.log("%c🌻 程序：Astro | 主题：vhAstro-Theme | 作者：Han | Github：https://github.com/uxiaohan/vhAstro-Theme 🌻", "color:#fff; background: linear-gradient(270deg, #18d7d3, #68b7dd, #8695e6, #986fee); padding: 8px 15px; border-radius: 8px");
-  console.log("%c\u521D\u59CB\u5316\u5B8C\u6BD5.", "color: #ffffff; background: #000; padding:5px");
+  console.log("%c✨ L-souljourney 博客 | 程序：Astro | 开发：执笔忠程 ✨", "color:#fff; background: linear-gradient(270deg, #18d7d3, #68b7dd, #8695e6, #986fee); padding: 8px 15px; border-radius: 8px");
+  console.log("%c致谢原主题 vhAstro-Theme 及作者 Han", "color: #999; background: transparent; padding: 5px 0; font-style: italic;");
+  console.log("%c初始化完毕", "color: #ffffff; background: #000; padding:5px");
 }

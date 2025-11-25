@@ -1,5 +1,57 @@
 # Changelog
 
+## v1.7.9 (2025-11-25)
+
+### ✨ 功能优化与个性化
+
+本次更新实现了图片放大功能，并更新了开发者标识信息。
+
+#### 核心变更
+
+1. **图片放大功能实现** 🖼️
+    - ✅ 集成业界标准的 `medium-zoom` 库（v1.1.0）
+    - ✅ 替换旧的 `view-image.min.js` 方案
+    - ✅ 支持文章图片点击放大，带半透明遮罩效果
+    - ✅ 自动排除头像、表情等不需要放大的图片
+    - ✅ 完美兼容 Astro View Transitions 页面切换
+    - ✅ 通过动态 CSS 注入解决 Z-Index 层级问题
+
+2. **控制台版权信息更新** 📝
+    - ✅ 更新控制台输出，体现 "L-souljourney 博客" 项目品牌
+    - ✅ 新增开发者标识 "执笔忠程"
+    - ✅ 保留对原主题 vhAstro-Theme 及作者 Han 的致谢
+    - ✅ 移除 GitHub 链接，保持简洁
+
+#### 技术实现
+
+**图片放大功能**:
+- **选择器修复**: 从 `article.vh-article-main img.vh-article-img` 更新为简单的 `article img`，匹配实际 DOM 结构
+- **Z-Index 处理**: 通过动态添加 `<style>` 标签设置 `.medium-zoom-overlay` 和 `.medium-zoom-image--opened` 的 z-index 为 9999
+- **配置优化**: 设置 24px 边距，半透明黑色背景（rgba(0, 0, 0, 0.85)），滚动时自动关闭
+
+**控制台输出**:
+```javascript
+// 之前
+console.log("程序:Astro | 主题:vhAstro-Theme | 作者:Han | Github:...");
+
+// 现在  
+console.log("✨ L-souljourney 博客 | 程序：Astro | 开发：执笔忠程 ✨");
+console.log("致谢原主题 vhAstro-Theme 及作者 Han");
+```
+
+#### 问题修复
+
+- 🐛 **图片选择器不匹配**: 通过浏览器调试发现原选择器返回 0 张图片，已修复为通用选择器
+- 🐛 **TypeScript 类型错误**: medium-zoom 不支持 `zIndex` 配置项，改用 CSS 动态注入方案
+
+#### 测试验证
+
+- ✅ 浏览器功能测试通过
+- ✅ 图片点击放大效果正常
+- ✅ Z-Index 层级正确（图片显示在导航栏上方）
+- ✅ View Transitions 兼容性验证通过
+- ✅ 控制台输出显示正确
+
 ## v1.7.8 (2025-11-25)
 
 ### 💄 样式与 UI 优化
