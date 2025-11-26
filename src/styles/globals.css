@@ -1,6 +1,5 @@
 @import './shadcn.css';
 @import './code-copy.css';
-@import './prose-custom.css';
 
 @tailwind base;
 @tailwind components;

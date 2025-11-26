@@ -48,56 +48,10 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
 			},
-			typography: ({ theme }) => ({
-				DEFAULT: {
-					css: {
-						maxWidth: 'none',
-						'--tw-prose-body': theme('colors.foreground'),
-						'--tw-prose-headings': theme('colors.foreground'),
-						'--tw-prose-lead': theme('colors.muted.foreground'),
-						'--tw-prose-links': theme('colors.muted.foreground'),
-						'--tw-prose-bold': theme('colors.foreground'),
-						'--tw-prose-counters': theme('colors.muted.foreground'),
-						'--tw-prose-bullets': theme('colors.muted.foreground'),
-						'--tw-prose-hr': theme('colors.border'),
-						'--tw-prose-quotes': theme('colors.foreground'),
-						'--tw-prose-quote-borders': theme('colors.border'),
-						'--tw-prose-captions': theme('colors.muted.foreground'),
-						'--tw-prose-code': theme('colors.foreground'),
-						'--tw-prose-pre-code': theme('colors.foreground'),
-						'--tw-prose-pre-bg': theme('colors.muted.DEFAULT'),
-						'--tw-prose-th-borders': theme('colors.border'),
-						'--tw-prose-td-borders': theme('colors.border'),
-						// Table styling
-						'thead': {
-							backgroundColor: theme('colors.muted.DEFAULT'),
-						},
-						'thead th': {
-							backgroundColor: theme('colors.muted.DEFAULT'),
-						},
-					}
-				},
-				invert: {
-					css: {
-						'--tw-prose-body': theme('colors.foreground'),
-						'--tw-prose-headings': theme('colors.foreground'),
-						'--tw-prose-lead': theme('colors.muted.foreground'),
-						'--tw-prose-links': theme('colors.muted.foreground'),
-						'--tw-prose-bold': theme('colors.foreground'),
-						'--tw-prose-counters': theme('colors.muted.foreground'),
-						'--tw-prose-bullets': theme('colors.muted.foreground'),
-						'--tw-prose-hr': theme('colors.border'),
-						'--tw-prose-quotes': theme('colors.foreground'),
-						'--tw-prose-quote-borders': theme('colors.border'),
-						'--tw-prose-captions': theme('colors.muted.foreground'),
-						'--tw-prose-code': theme('colors.foreground'),
-						'--tw-prose-pre-code': theme('colors.foreground'),
-						'--tw-prose-pre-bg': theme('colors.muted.DEFAULT'),
-						'--tw-prose-th-borders': theme('colors.border'),
-						'--tw-prose-td-borders': theme('colors.border'),
-					}
-				}
-			}),
+			typography: {
+				// 使用 prose-zinc 默认配置（极简）
+				// 所有样式由 Tailwind Typography 和 Starlight 组件提供
+			},
 		},
 	},
 	plugins: [

@@ -1,5 +1,92 @@
 # Changelog
 
+## v1.8.4 (2025-11-26)
+
+### 🔥 极简化改造：完全移除自定义 CSS
+
+本次更新采用极简策略，完全移除所有自定义 CSS 样式，建立纯净基线。使用 Tailwind Typography + Starlight 默认方案，为未来自定义做好准备。
+
+#### 核心变更
+
+1.  **完全删除 prose-custom.css** 🗑️
+    -   **删除**: `src/styles/prose-custom.css` (96 行)
+    -   **移除功能**:
+        -   标题 `#` 符号（h2-h6 左侧前缀）
+        -   链接下划线动画（box-shadow 扩展效果）
+        -   引用块自定义样式（蓝色边框+半透明背景）
+        -   表格 hover 效果
+        -   所有项目特色样式
+    -   **收益**: 代码精简 100%，维护成本降至极低
+
+2.  **简化 Typography 配置** 📉
+    -   **变更**: `tailwind.config.mjs` Typography 从 55 行减少到 3 行
+    -   **减少**: **95%** 的配置代码
+    -   **策略**: 使用 prose-zinc 默认配置，完全依赖 Tailwind Typography
+    -   **配置**:
+        ```javascript
+        typography: {
+          // 使用 prose-zinc 默认配置（极简）
+          // 所有样式由 Tailwind Typography 和 Starlight 组件提供
+        },
+        ```
+
+3.  **模板更新为 prose-zinc** ✨
+    -   **更新**: 文章页和 About 页添加 `prose-zinc` class
+    -   **效果**: 使用 Tailwind Typography zinc 色系预设
+    -   **变更文件**:
+        -   `src/pages/article/[...article].astro`
+        -   `src/layouts/PageLayout/PageLayout.astro`
+
+4.  **安装 Starlight 组件** 🎨
+    -   **新增**: `@astrojs/starlight` (0.36.3)
+    -   **用途**: 为未来使用 Aside/Card/Steps 等组件做准备
+    -   **当前状态**: 已安装但未使用（保持极简）
+
+#### UI 变化说明
+
+**失去的功能**:
+-   ❌ 标题 `#` 符号及 hover 变色效果
+-   ❌ 链接 box-shadow 扩展动画
+-   ❌ 引用块蓝色边框和半透明背景
+-   ❌ 表格行 hover 效果
+
+**获得的优势**:
+-   ✅ 极简代码（删除 148 行）
+-   ✅ Tailwind Typography 默认排版（行业标准）
+-   ✅ 为未来扩展铺好基础
+-   ✅ 维护成本降至极低
+
+#### 代码量对比
+
+| 指标 | v1.8.3 | v1.8.4 | 变化 |
+|------|--------|--------|------|
+| prose-custom.css | 96 行 | 0 行 | **-100%** ✅ |
+| Typography 配置 | 55 行 | 3 行 | **-95%** ✅ |
+| 总自定义 CSS | ~150 行 | 0 行 | **-100%** ✅ |
+
+#### 验证测试
+
+-   ✅ **构建测试**: 成功生成 14 个页面
+-   ✅ **模板更新**: 文章页和 About 页正常渲染
+-   ✅ **暗黑模式**: `prose-invert` 完全兼容
+
+#### 架构优势
+
+-   **极简**: 零自定义 CSS，完全依赖 Tailwind 生态
+-   **标准化**: 使用行业标准 Typography 默认样式
+-   **可扩展**: Starlight 组件已安装，随时可用
+-   **可逆**: 可随时添加新的自定义样式
+
+#### 未来扩展
+
+虽然移除了所有自定义样式，但为未来留好了扩展路径：
+
+**选项 1**: 重新创建 `prose-custom.css`（仅添加真正需要的样式）
+**选项 2**: 使用 Starlight 组件（如 `<Aside>` 替代 blockquote）
+**选项 3**: 使用 Tailwind 插件或 MDX 组件
+
+---
+
 ## v1.8.3 (2025-11-26)
 
 ### ⚡ Typography 配置大幅简化：从 250 行到 55 行

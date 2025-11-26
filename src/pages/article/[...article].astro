@@ -57,13 +57,15 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 				<span>阅读时长 ≈ {Math.ceil(reading_time)} 分钟</span>
 			</section>
 		</header>
-		<main class="
+		<article
+			class="
 			prose lg:prose-xl
+			prose-zinc
 			dark:prose-invert
 			max-w-none
 			px-8 pb-8
-		">
-			<Content />
+		"
+		>	<Content />
 			<section class="flex flex-wrap gap-2 mt-6 not-prose">
 				{
 					(post.data.tags || []).map((i: any) => (
