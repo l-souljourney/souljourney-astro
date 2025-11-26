@@ -3,6 +3,11 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		extend: {
+			fontFamily: {
+				// Starlight Design System fonts
+				sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+				mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+			},
 			colors: {
 				// shadcn/ui design tokens
 				border: 'hsl(var(--border))',

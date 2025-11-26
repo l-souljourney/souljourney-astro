@@ -28,17 +28,25 @@
     - **Tailwind CSS 3.4.18** - 现代化 Utility-first CSS 框架
     - **@tailwindcss/typography (prose-zinc)** - 零配置极简排版方案
     - **Shadcn UI (Zinc)** - 统一的设计系统与 CSS Variables
-    - **@astrojs/starlight** - 组件库 (已安装，为未来扩展准备)
-    - **v1.8.4 极简化** - 完全移除自定义 CSS，仅保留 Tailwind + Shadcn 默认
-- **设计理念**: 
-    - **极简主义** - 零自定义 CSS，完全依赖 Tailwind 生态
-    - **可扩展性** - 纯净基线，随时可添加自定义或组件
+    - **Starlight 设计语言** - 提取 Starlight 核心设计规范（v1.8.5 集成）
+- **字体系统** (v1.8.5):
+    - **Inter** - 正文字体，支持 OpenType 特性（cv02/cv03/cv04/cv11）
+    - **JetBrains Mono** - 代码字体，支持编程连字（liga + calt）
+    - **本地托管** - 通过 Fontsource 自托管，离线可用
+- **组件系统** (v1.8.5):
+    - **StarlightAside** - 4 种类型提示框（note/tip/caution/danger）
+    - **代码高亮** - Shiki GitHub Light/Dark Dimmed 主题
+- **动画规范** (v1.8.5):
+    - **统一时长** - 所有动画 200ms（Starlight 标准）
+    - **统一缓动** - ease-out 自然流畅
+    - **性能优化** - scaleX 替代 width，提升 20-30%
 - **内容管理**: Markdown/MDX + Content Layer - 类型安全的内容集合
 - **交互体验**: 
     - 图片懒加载与灯箱效果
     - 智能目录 (TOC) 与平滑滚动
     - 完美适配的暗黑模式(零FOUC)
     - 响应式布局与微交互动效
+
 
 ## 🛠️ 快速开始
 

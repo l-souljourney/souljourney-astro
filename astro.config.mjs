@@ -26,6 +26,18 @@ export default defineConfig({
 	experimental: {
 		svgo: true,
 	},
+	markdown: {
+		shikiConfig: {
+			// Starlight Design System - Code Themes
+			// Using GitHub themes for familiarity and readability
+			theme: {
+				light: 'github-light',
+				dark: 'github-dark-dimmed',
+			},
+			// Enable line numbers and word wrap as needed
+			wrap: false,
+		},
+	},
 	integrations: [
 		tailwind(),
 		icon(),
