@@ -2,31 +2,73 @@
 
 ## v1.8.2 (2025-11-26)
 
-### 🏗️ CSS 架构深度优化：Base.less 移除与配置静态化
+### 🏗️ CSS 架构深度重构：完全移除 Less 依赖
 
-本次更新彻底完成了 CSS 架构的现代化转型，移除了遗留的 Less 预处理器依赖，实现了配置的静态化和标准化。
+本次更新完成了 CSS 架构的最终现代化改造，彻底移除了 Less 预处理器依赖，实现了 100% 基于 Tailwind CSS + Shadcn UI 的纯净架构。
 
-#### 核心变更
+#### 核心成果
 
-1.  **彻底移除 Base.less** 🗑️
-    *   **变更**: 删除了项目核心遗留文件 `src/styles/Base.less`。
-    *   **迁移**: 所有全局样式、重置规则和动画已迁移至 `src/styles/globals.css`。
-    *   **收益**: 统一了 CSS 源码来源，消除了 Less 与 Tailwind 的混用状态。
+1.  **Base.less 完全移除** ✅
+    -   **变更**: 删除 `src/styles/Base.less` 及其在 `Layout.astro` 中的导入。
+    -   **迁移**: 所有全局样式、CSS 变量、重置规则、动画已完整迁移至 `globals.css`。
+    -   **收益**: 消除了 Less 编译依赖，减少构建复杂度。
 
-2.  **配置静态化与清理** ⚡
-    *   **变更**: 移除了 `src/config.ts` 中 `Theme` 配置对象的运行时注入逻辑。
-    *   **迁移**: 将 `--vh-main-max-width` 等动态变量转换为 `shadcn.css` 中的静态变量 `--site-max-width`。
-    *   **清理**: 更新 `tailwind.config.mjs`，移除了对 legacy `--vh-*` 变量的引用，直接映射到 Shadcn 的 HSL 变量。
+2.  **工具类标准化** 🔄
+    -   **替换**: `.vh-ellipsis` → Tailwind 的 `truncate`
+    -   **替换**: `.line-2`, `.line-3` → `line-clamp-2`, `line-clamp-3`
+    -   **删除**: `Base.less` 中约 27 行 mixin 和自定义工具类
 
-3.  **工具类标准化** 🛠️
-    *   **变更**: 废弃了自定义的 `.vh-ellipsis` 和 `.line-2/3` 类。
-    *   **替换**: 全面替换为 Tailwind 原生的 `truncate` 和 `line-clamp-*` 工具类。
+3.  **CSS 变量体系重构** 📐
+    -   **静态化配置**: 移除 `Layout.astro` 中动态注入 `Theme` 配置的逻辑
+    -   **变量迁移**:
+        -   `--vh-main-max-width` → `--site-max-width` (1458px)
+        -   `--vh-main-radius` → `--radius` (0.88rem)
+        -   `--vh-success/warning/import` → Shadcn 的 `--success/--warning/--info`
+    -   **删除**: `config.ts` 中不再使用的 `Theme` 配置对象
+
+4.  **Tailwind 配置优化** ⚙️
+    -   **更新**: `tailwind.config.mjs` 中的 Legacy colors 映射，从 `var(--vh-*)` 改为 `hsl(var(--))` 直接引用 Shadcn 变量
+    -   **简化**: 移除对废弃变量的所有引用
+
+5.  **暗黑模式整合** 🌙
+    -   **统一**: 将分散在 `Base.less` 中的暗黑模式样式（背景网格、图片滤镜、代码块背景）整合到 `globals.css`
+    -   **优化**: 使用 `@layer base` 确保正确的层叠优先级
+
+#### 技术亮点
+
+**变量对比表**:
+
+| 旧变量 (v1.8.1)         | 新变量 (v1.8.2)       | 定义位置         |
+|-------------------------|-----------------------|------------------|
+| `--vh-main-max-width`   | `--site-max-width`    | `shadcn.css`     |
+| `--vh-main-radius`      | `--radius`            | `shadcn.css`     |
+| `--vh-success`          | `--success`           | `shadcn.css`     |
+| `--vh-warning`          | `--warning`           | `shadcn.css`     |
+| `--vh-import`           | `--info`              | `shadcn.css`     |
+
+**代码量对比**:
+
+| 指标                | v1.8.1 | v1.8.2 | 变化      |
+|---------------------|--------|--------|-----------|
+| Less 文件数         | 1      | 0      | -100% ✅  |
+| Base.less 行数      | 158    | 0      | -100% ✅  |
+| globals.css 行数    | 37     | 153    | +313%     |
+| 动态注入逻辑        | 有     | 无     | 移除 ✅   |
+
+#### 架构优势
+
+-   **纯 CSS**: 所有样式现在都是纯 CSS，无需 Less 编译
+-   **静态分析**: Tailwind 可完整静态分析所有 CSS 变量
+-   **维护性**: 单一真理来源 (`globals.css` + `shadcn.css`)
+-   **一致性**: 完全遵循 Shadcn UI 设计规范
 
 #### 验证测试
 
-*   ✅ **构建测试**: 通过。
-*   ✅ **视觉验证**: 首页、文章页布局正常，暗黑模式切换无误。
-*   ✅ **功能验证**: 归档页文本截断正常，侧边栏状态颜色显示正确。
+-   ✅ **构建测试**: `npm run dev` 正常启动
+-   ✅ **首页/文章页**: 布局、宽度、圆角正常
+-   ✅ **暗黑模式**: 背景网格、图片亮度、代码块背景正常
+-   ✅ **文本截断**: 归档页长标题截断正常
+-   ✅ **状态颜色**: 侧边栏推荐文章序号背景色正常
 
 ---
 
