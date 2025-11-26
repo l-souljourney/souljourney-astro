@@ -1,0 +1,96 @@
+/* ===== Custom Prose Styles ===== */
+/* These custom styles are applied to .prose elements to preserve project-specific design features */
+
+@layer components {
+
+    /* Heading # Symbol (h2-h6) */
+    .prose h2,
+    .prose h3,
+    .prose h4,
+    .prose h5,
+    .prose h6 {
+        position: relative;
+        padding-left: 1.5rem;
+        display: inline-block;
+        width: 100%;
+        word-break: break-all;
+    }
+
+    .prose h2::before,
+    .prose h3::before,
+    .prose h4::before,
+    .prose h5::before,
+    .prose h6::before {
+        content: "#";
+        position: absolute;
+        left: 0;
+        padding-right: 0.56rem;
+        color: hsl(var(--muted-foreground));
+        opacity: 0.3;
+        transition: all 0.18s ease-in-out;
+    }
+
+    .prose h2:hover::before,
+    .prose h3:hover::before,
+    .prose h4:hover::before,
+    .prose h5:hover::before,
+    .prose h6:hover::before {
+        color: hsl(var(--primary));
+        opacity: 0.9;
+    }
+
+    /* Link Underline Animation */
+    .prose a {
+        text-decoration: none;
+        box-shadow: inset 0 -0.12rem hsl(var(--primary));
+        transition: box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+    }
+
+    .prose a:hover {
+        box-shadow: inset 0 -1.5rem hsl(var(--primary) / 0.28);
+    }
+
+    /* Blockquote Custom Style */
+    .prose blockquote {
+        border-left-width: 0.288rem;
+        border-left-color: #49b1f5;
+        background-color: rgba(73, 177, 245, 0.1);
+        border-radius: 0.618rem;
+        font-style: normal;
+        quotes: none;
+    }
+
+    .prose blockquote p::before,
+    .prose blockquote p::after {
+        content: none;
+    }
+
+    /* Code Block Styling */
+    .prose code {
+        font-weight: 400;
+    }
+
+    .prose code::before,
+    .prose code::after {
+        content: "";
+    }
+
+    .prose pre {
+        background-color: transparent;
+    }
+
+    .prose pre code {
+        background-color: transparent;
+    }
+
+    /* Table Hover Effect */
+    .prose tbody tr:hover {
+        background-color: #f2f2f266;
+    }
+
+    /* Dark Mode Overrides */
+    .dark .prose blockquote {
+        border-left-color: #49b1f5;
+        background-color: rgba(73, 177, 245, 0.1);
+    }
+}
