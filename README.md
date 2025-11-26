@@ -26,12 +26,13 @@
 - **图标系统**: **astro-icon** - 基于 SVG 的高性能图标解决方案
 - **样式系统**: 
     - **Tailwind CSS 3.4.18** - 现代化 Utility-first CSS 框架
-    - **@tailwindcss/typography** - 官方 Typography Plugin，优雅的文章内容排版
-    - **Less** - 保留用于项目特色组件（vh-note, vh-btn等）
-- **设计规范**: **Shadcn UI (Zinc)** - 统一的设计系统与组件风格
-- **代码质量**: 
-    - **v1.7.6 优化** - 精简170+行冗余代码,移除废弃组件,提升可维护性
-    - **零重复** - CSS变量统一管理,样式单一来源,避免冲突
+    - **@tailwindcss/typography (prose-zinc)** - 零配置极简排版方案
+    - **Shadcn UI (Zinc)** - 统一的设计系统与 CSS Variables
+    - **@astrojs/starlight** - 组件库 (已安装，为未来扩展准备)
+    - **v1.8.4 极简化** - 完全移除自定义 CSS，仅保留 Tailwind + Shadcn 默认
+- **设计理念**: 
+    - **极简主义** - 零自定义 CSS，完全依赖 Tailwind 生态
+    - **可扩展性** - 纯净基线，随时可添加自定义或组件
 - **内容管理**: Markdown/MDX + Content Layer - 类型安全的内容集合
 - **交互体验**: 
     - 图片懒加载与灯箱效果
