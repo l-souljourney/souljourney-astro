@@ -1,0 +1,22 @@
+---
+export interface Props {
+  variant?: 'default' | 'success' | 'info' | 'warning' | 'error';
+  class?: string;
+}
+
+const { variant = 'default', class: className } = Astro.props;
+
+const variantStyles = {
+  default: 'border-l-border bg-muted/50',
+  success: 'border-l-[#01C4B6] bg-[#01C4B6]/10 border-l-4',
+  info: 'border-l-blue-500 bg-blue-500/10 border-l-4',
+  warning: 'border-l-[#DD8636] bg-[#DD8636]/10 border-l-4',
+  error: 'border-l-red-500 bg-red-500/10 border-l-4',
+};
+---
+
+<div class={`rounded-lg border p-4 my-4 ${variantStyles[variant]} ${className || ''}`}>
+  <div class="text-sm leading-relaxed [&>p]:py-0 [&>p]:my-0 [&>p]:leading-relaxed">
+    <slot />
+  </div>
+</div>

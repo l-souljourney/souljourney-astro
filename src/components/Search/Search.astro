@@ -82,12 +82,12 @@ import Search from "astro-pagefind/components/Search";
     }
 
     .vh-search .pagefind-ui .pagefind-ui__search-input {
-        background-color: var(--vh-font-6);
+        background-color: hsl(var(--muted));
         border: none;
         border-radius: 0.66rem;
-        padding: 1rem 1rem 1rem 2.5rem; /* Add left padding for the icon */
+        padding: 1rem 1rem 1rem 2.5rem;
         font-size: 1rem;
-        color: var(--vh-font-color);
+        color: hsl(var(--foreground));
         box-sizing: border-box;
         font-weight: normal;
     }
@@ -97,7 +97,7 @@ import Search from "astro-pagefind/components/Search";
         background-color: transparent;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--vh-font-color);
+        color: hsl(var(--foreground));
     }
     
     /* Ensure the form relative positioning for icon */
@@ -113,17 +113,17 @@ import Search from "astro-pagefind/components/Search";
         transform: translateY(-50%);
         pointer-events: none;
         opacity: 0.6;
-        color: var(--vh-font-color);
+        color: hsl(var(--foreground));
     }
 
     .vh-search .pagefind-ui .pagefind-ui__drawer {
-        background-color: var(--vh-white-color);
+        background-color: hsl(var(--card));
         max-height: 70vh;
         overflow-y: auto;
     }
 
     .vh-search .pagefind-ui .pagefind-ui__result {
-        border-bottom: 1px solid var(--vh-font-6);
+        border-bottom: 1px solid hsl(var(--border));
         padding: 1rem 0;
     }
 
@@ -133,11 +133,11 @@ import Search from "astro-pagefind/components/Search";
     }
     
     .vh-search .pagefind-ui .pagefind-ui__result-link {
-        color: var(--vh-font-color);
+        color: hsl(var(--foreground));
     }
 
     .vh-search .pagefind-ui .pagefind-ui__result-excerpt {
-        color: var(--vh-font-66);
+        color: hsl(var(--muted-foreground));
     }
     
     

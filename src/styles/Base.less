@@ -111,37 +111,7 @@ img[data-vh-lz-src] {
 }
 
 
-// ===================================================================== Other 
-// 悬浮背景 a 标签
-.vh-hover {
-	position: relative;
-	transition: all 0.18s ease-in-out;
-
-	&:hover,
-	&.active {
-		color: var(--vh-white-color) !important;
-
-		&::before {
-			transform: scale(1.2);
-			opacity: 1;
-		}
-	}
-
-	&::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		border-radius: .5rem;
-		background-color: var(--vh-main-color-88);
-		opacity: 0;
-		z-index: -1;
-		transition: all 0.18s ease-in-out;
-	}
-}
-
+// ===================================================================== Utility Classes
 // 超出一行省略
 .vh-ellipsis {
 	overflow: hidden;

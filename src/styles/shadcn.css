@@ -30,9 +30,18 @@
         --border: 240 5.9% 90%;
         --input: 240 5.9% 90%;
         --ring: 240 5.9% 10%;
+
+        /* Status Colors (from Base.less) */
+        --success: 174 100% 39%;
+        /* #01C4B6 */
+        --warning: 28 73% 54%;
+        /* #DD8636 */
+        --info: 260 45% 70%;
+        /* #B984DF */
     }
 
-    .dark {
+    /* Dark mode variables */
+    html.dark {
         /* Zinc Pure Theme - Dark Mode */
         --background: 240 3.8% 5.5%;
         --foreground: 0 0% 98%;

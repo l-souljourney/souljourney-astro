@@ -1,0 +1,28 @@
+---
+export interface Props {
+  href?: string;
+  variant?: 'default' | 'outline' | 'secondary' | 'success' | 'info' | 'warning' | 'error';
+  class?: string;
+}
+
+const { href, variant = 'outline', class: className } = Astro.props;
+
+const variantStyles = {
+  default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  outline: 'border border-border bg-background hover:bg-accent hover:text-accent-foreground',
+  success: 'border border-[#01C4B6] text-[#01C4B6] bg-[#01C4B6]/5 hover:bg-[#01C4B6]/20',
+  info: 'border border-blue-500 text-blue-500 bg-blue-500/5 hover:bg-blue-500/20',
+  warning: 'border border-[#DD8636] text-[#DD8636] bg-[#DD8636]/5 hover:bg-[#DD8636]/20',
+  error: 'border border-red-500 text-red-500 bg-red-500/5 hover:bg-red-500/20',
+};
+
+const Component = href ? 'a' : 'span';
+---
+
+<Component 
+  href={href}
+  class={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-medium transition-all duration-180 ${variantStyles[variant]} ${className || ''}`}
+>
+  <slot />
+</Component>

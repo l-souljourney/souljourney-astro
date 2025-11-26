@@ -53,22 +53,22 @@ export default {
 					css: {
 						// 基础配置
 						maxWidth: 'none',
-						color: 'var(--vh-font-color)',
+						color: theme('colors.foreground'),
 
 						// 链接样式（保留原有的下划线效果）
 						a: {
-							color: 'var(--vh-font-56)',
+							color: theme('colors.muted.foreground'),
 							textDecoration: 'none',
-							boxShadow: 'inset 0 -0.12rem var(--vh-main-color)',
+							boxShadow: `inset 0 -0.12rem ${theme('colors.primary.DEFAULT')}`,
 							transition: 'box-shadow 0.2s ease-in-out, color 0.2s ease-in-out',
 							'&:hover': {
-								boxShadow: 'inset 0 -1.5rem var(--vh-main-color-28)',
+								boxShadow: `inset 0 -1.5rem hsl(var(--primary) / 0.28)`,
 							},
 						},
 
 						// 标题样式 - h1 特殊处理（不显示 # 符号）
 						h1: {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 							fontSize: '1.58rem',
 							fontWeight: '700',
 							marginTop: '0',
@@ -78,7 +78,7 @@ export default {
 
 						// h2-h6 显示 # 符号
 						'h2, h3, h4, h5, h6': {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 							fontWeight: '400',
 							marginTop: '1.666rem',
 							marginBottom: '0.36rem',
@@ -92,11 +92,13 @@ export default {
 								position: 'absolute',
 								left: '0',
 								paddingRight: '0.56rem',
-								color: 'var(--vh-font-28)',
-								transition: 'color 0.18s ease-in-out',
+								color: theme('colors.muted.foreground'),
+								opacity: '0.3',
+								transition: 'all 0.18s ease-in-out',
 							},
 							'&:hover::before': {
-								color: 'var(--vh-main-color-88)',
+								color: theme('colors.primary.DEFAULT'),
+								opacity: '0.9',
 							},
 						},
 						h2: {
@@ -122,7 +124,7 @@ export default {
 							paddingLeft: '1.25rem',
 						},
 						li: {
-							color: 'var(--vh-font-66)',
+							color: theme('colors.muted.foreground'),
 							fontSize: '0.875rem',
 							lineHeight: '1.6',
 							marginTop: '0.5rem',
@@ -155,8 +157,8 @@ export default {
 
 						// 行内代码
 						code: {
-							color: 'var(--vh-font-color)',
-							backgroundColor: 'var(--vh-font-16)',
+							color: theme('colors.foreground'),
+							backgroundColor: theme('colors.muted.DEFAULT'),
 							padding: '0.125rem 0.375rem',
 							fontSize: '0.8125rem',
 							borderRadius: '0.25rem',
@@ -191,25 +193,25 @@ export default {
 							marginBottom: '1rem',
 							borderRadius: '0.38rem',
 							overflow: 'hidden',
-							border: '1px solid var(--vh-font-16)',
+							border: '1px solid ' + theme('colors.border'),
 						},
 						thead: {
-							backgroundColor: 'var(--vh-font-6)',
+							backgroundColor: theme('colors.muted.DEFAULT'),
 						},
 						'thead th': {
-							backgroundColor: 'var(--vh-font-6)',
+							backgroundColor: theme('colors.muted.DEFAULT'),
 							padding: '0.75rem',
 							fontWeight: '500',
-							borderRight: '1px solid var(--vh-font-16)',
-							borderBottom: '1px solid var(--vh-font-16)',
+							borderRight: '1px solid ' + theme('colors.border'),
+							borderBottom: '1px solid ' + theme('colors.border'),
 							'&:last-child': {
 								borderRight: 'none',
 							},
 						},
 						'tbody td': {
 							padding: '0.618rem 0.75rem',
-							borderRight: '1px solid var(--vh-font-16)',
-							borderBottom: '1px solid var(--vh-font-16)',
+							borderRight: '1px solid ' + theme('colors.border'),
+							borderBottom: '1px solid ' + theme('colors.border'),
 							verticalAlign: 'top',
 							'&:last-child': {
 								borderRight: 'none',
@@ -238,18 +240,18 @@ export default {
 
 						// 水平分割线
 						hr: {
-							borderColor: 'var(--vh-font-16)',
+							borderColor: theme('colors.border'),
 							marginTop: '2rem',
 							marginBottom: '2rem',
 						},
 
 						// Strong 和 em
 						strong: {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 							fontWeight: '600',
 						},
 						em: {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 						},
 					},
 				},
@@ -276,19 +278,19 @@ export default {
 				// 暗黑模式配置
 				invert: {
 					css: {
-						color: 'var(--vh-font-color)',
+						color: theme('colors.foreground'),
 						a: {
-							color: 'var(--vh-font-56)',
+							color: theme('colors.muted.foreground'),
 						},
 						'h1, h2, h3, h4, h5, h6': {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 						},
 						strong: {
-							color: 'var(--vh-font-color)',
+							color: theme('colors.foreground'),
 						},
 						code: {
-							color: 'var(--vh-font-color)',
-							backgroundColor: 'var(--vh-font-16)',
+							color: theme('colors.foreground'),
+							backgroundColor: theme('colors.muted.DEFAULT'),
 						},
 						blockquote: {
 							borderLeftColor: '#49b1f5',

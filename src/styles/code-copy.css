@@ -1,0 +1,102 @@
+/* 代码块复制按钮样式 */
+/* 从 ArticleBase.less 迁移（第 508-567 行） */
+
+section.vh-code-box {
+    position: relative;
+    margin: 1.188rem 0;
+}
+
+span.vh-code-copy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 0.66rem;
+    top: 0.6rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    border: solid 1px hsl(var(--border) / 0.2);
+    border-radius: 0.5rem;
+    z-index: 1;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.66;
+    transition: all 0.18s;
+}
+
+span.vh-code-copy:hover {
+    opacity: 1;
+}
+
+span.vh-code-copy::before,
+span.vh-code-copy::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: rgba(125, 125, 125, 0.2) url('data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%20-960%20960%20960%22%3E%3Cpath%20fill%3D%22%23808080%22%20d%3D%22M368.37-237.37q-34.48%200-58.74-24.26-24.26-24.26-24.26-58.74v-474.26q0-34.48%2024.26-58.74%2024.26-24.26%2058.74-24.26h378.26q34.48%200%2058.74%2024.26%2024.26%2024.26%2024.26%2058.74v474.26q0%2034.48-24.26%2058.74-24.26%2024.26-58.74%2024.26H368.37Zm0-83h378.26v-474.26H368.37v474.26Zm-155%20238q-34.48%200-58.74-24.26-24.26-24.26-24.26-58.74v-515.76q0-17.45%2011.96-29.48%2011.97-12.02%2029.33-12.02t29.54%2012.02q12.17%2012.03%2012.17%2029.48v515.76h419.76q17.45%200%2029.48%2011.96%2012.02%2011.97%2012.02%2029.33t-12.02%2029.54q-12.03%2012.17-29.48%2012.17H213.37Zm155-238v-474.26%20474.26Z%22%2F%3E%3C%2Fsvg%3E') no-repeat center center;
+    background-size: 1.16rem 1.16rem;
+    opacity: 0;
+    transition: opacity 0.18s;
+}
+
+span.vh-code-copy::before {
+    opacity: 1;
+}
+
+span.vh-code-copy::after {
+    background: hsl(var(--success)) url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%20-960%20960%20960%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22m389-377.13%20294.7-294.7q12.58-12.67%2029.52-12.67%2016.93%200%2029.61%2012.67%2012.67%2012.68%2012.67%2029.53%200%2016.86-12.28%2029.14L419.07-288.41q-12.59%2012.67-29.52%2012.67-16.94%200-29.62-12.67L217.41-430.93q-12.67-12.68-12.79-29.45-.12-16.77%2012.55-29.45%2012.68-12.67%2029.62-12.67%2016.93%200%2029.28%2012.67L389-377.13Z%22%2F%3E%3C%2Fsvg%3E') no-repeat center center;
+    background-size: 1.16rem 1.16rem;
+}
+
+span.vh-code-copy.success::before {
+    opacity: 0;
+}
+
+span.vh-code-copy.success::after {
+    opacity: 1;
+}
+
+span.vh-code-copy.success {
+    opacity: 1;
+}
+
+/* 代码块 pre 样式 */
+section.vh-code-box>pre.astro-code {
+    box-sizing: border-box;
+    padding: 0.888rem;
+    border-radius: 0.618rem;
+    height: max-content;
+    max-height: 888px;
+    background-color: #F3F4F7 !important;
+}
+
+section.vh-code-box>pre.astro-code code {
+    box-sizing: border-box;
+    counter-reset: line;
+}
+
+section.vh-code-box>pre.astro-code code>span {
+    box-sizing: border-box;
+    font-size: 0.875rem;
+    line-height: 1.66;
+}
+
+section.vh-code-box>pre.astro-code code>span>span {
+    text-decoration: none !important;
+}
+
+/* 行号 */
+section.vh-code-box>pre.astro-code code>span::before {
+    box-sizing: content-box;
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 1rem;
+    padding-right: 0.618rem;
+    margin-right: 0.888rem;
+    border-right: 1px solid #e2e2e3;
+    color: #939296;
+    text-align: center;
+    user-select: none;
+}

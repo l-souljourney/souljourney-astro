@@ -33,10 +33,6 @@ import Copyright from "@/components/Copyright/Copyright.astro";
 import Reward from "@/components/Reward/Reward.astro";
 // Google 广告组件
 import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
-// 文章自定义组件样式 (tag-list, code-copy, etc.)
-import "@/styles/Article.less";
-// 自定义 Markdown 组件样式 (vh-node, vh-btn, etc.)
-import "@/styles/ArticleBase.less";
 
 ---
 
@@ -53,7 +49,7 @@ import "@/styles/ArticleBase.less";
 			p-8 pb-4
 			bg-white dark:bg-[#252525]
 		">
-			<h1 class="text-2xl md:text-3xl font-bold mb-4">{post.data.title}</h1>
+			<h1 class="text-2xl md:text-3xl font-bold mb-4 text-foreground">{post.data.title}</h1>
 			<section class="flex flex-wrap items-center gap-4 text-sm text-primary/66">
 				<span>发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}</span>
 				<span>分类于 <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "未分类"}</a></span>
@@ -68,11 +64,14 @@ import "@/styles/ArticleBase.less";
 			px-8 pb-8
 		">
 			<Content />
-			<section class="tag-list not-prose">
+			<section class="flex flex-wrap gap-2 mt-6 not-prose">
 				{
 					(post.data.tags || []).map((i: any) => (
-						<a href={`/tag/${i}`}>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<a 
+							href={`/tag/${i}`}
+							class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors duration-180"
+						>
+							<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 								<path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
 								<path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />

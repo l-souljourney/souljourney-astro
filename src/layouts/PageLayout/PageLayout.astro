@@ -5,22 +5,15 @@ import SITE_CONFIG from "@/config";
 const { Description, Title } = SITE_CONFIG;
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
-// Reward 组件已移除，公众号信息在Markdown中显示
-// 关于样式
-import "@/styles/About.less";
-// 文章内容基础样式
-import "@/styles/ArticleBase.less";
-// PageLayout 样式
-import "./PageLayout.less";
 ---
 
 <Layout title={frontmatter.title || Title} description={Description} activeNav={frontmatter.type || "-"}>
-	<section class="vh-page vh-about vh-animation vh-animation-init">
-		<header class="vh-page-header">
-			<h1>{frontmatter.h1}</h1>
-			<p>{frontmatter.desc}</p>
+	<section class="w-full bg-white dark:bg-[#252525] rounded-2xl shadow-sm overflow-hidden vh-animation vh-animation-init">
+		<header class="p-8 pb-4 bg-white dark:bg-[#252525]">
+			<h1 class="text-2xl md:text-3xl font-bold mb-2 text-foreground">{frontmatter.h1}</h1>
+			<p class="text-base text-muted-foreground">{frontmatter.desc}</p>
 		</header>
-		<main>
+		<main class="prose lg:prose-xl dark:prose-invert max-w-none px-8 pb-8">
 			<slot />
 		</main>
 	</section>

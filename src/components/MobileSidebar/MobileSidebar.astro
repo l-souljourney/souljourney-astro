@@ -7,11 +7,11 @@ import Svg from "@/components/Svg/Svg.astro";
 
 <nav class="vh-mobilesidebar fixed left-0 top-0 w-screen h-screen bg-black/26 overflow-hidden transition-opacity duration-180 opacity-0 pointer-events-none z-10">
 	<section class="main p-4 flex items-center flex-col gap-4 w-full max-w-[17.6rem] h-full bg-white dark:bg-[#252525] -translate-x-4 transition-transform duration-180 overflow-hidden">
-		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-[var(--vh-body-bg)] dark:bg-[#1a1a1a] overflow-hidden">
+		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-muted/30 dark:bg-muted/20 overflow-hidden">
 			<h3 class="text-center">{Title}</h3>
 		</div>
 
-		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-[var(--vh-body-bg)] dark:bg-[#1a1a1a] overflow-hidden">
+		<div class="p-4 py-[1rem] px-[0.618rem] flex flex-col gap-[0.26rem] w-full h-max rounded-xl bg-muted/30 dark:bg-muted/20 overflow-hidden">
 			{
 				Navs.map(i => (
 					<a class={`px-2 flex items-center gap-[0.618rem] w-full h-9 text-base text-zinc-600 dark:text-zinc-400 font-semibold rounded-md overflow-hidden transition-all duration-360 hover:text-white hover:bg-primary ${i.link.replace("/", "")}`} href={i.link} target={i.target ? "_blank" : "_self"}>
@@ -46,7 +46,7 @@ import Svg from "@/components/Svg/Svg.astro";
 	}
 	.vh-mobilesidebar > .main a.active {
 		color: white;
-		background-color: var(--vh-main-color);
+		background-color: hsl(var(--primary));
 	}
 	.vh-mobilesidebar > .main a.active svg,
 	.vh-mobilesidebar > .main a:hover svg {
