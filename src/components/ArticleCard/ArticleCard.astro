@@ -20,7 +20,7 @@ const categoryGradients: Record<string, string> = {
 const gradient = categoryGradients[post.data.categories] || categoryGradients.default;
 ---
 
-<article class={`group relative flex flex-col w-full min-h-full border border-border rounded-2xl bg-card text-card-foreground overflow-hidden transition-all duration-300 hover:shadow-md ${post.data.top ? "active" : ""}`}>
+<article class={`group relative flex flex-col w-full min-h-full border border-border rounded-2xl bg-card text-card-foreground shadow-sm overflow-hidden transition-all duration-200 ease-out hover:shadow-md hover:border-primary/20 ${post.data.top ? "active" : ""}`}>
 	{post.data.top && (
 		<div class="absolute top-[1.6rem] left-[0.66rem] px-4 py-[0.18rem] w-max h-max text-base text-white rounded-[0.66rem] -rotate-45 bg-black/20 shadow-[0_2rem_1rem_rgba(0,0,0,0.1)] z-10 backdrop-blur-md select-none pointer-events-none">
 			置顶

@@ -33,13 +33,19 @@
     - **Inter** - 正文字体，支持 OpenType 特性（cv02/cv03/cv04/cv11）
     - **JetBrains Mono** - 代码字体，支持编程连字（liga + calt）
     - **本地托管** - 通过 Fontsource 自托管，离线可用
-- **组件系统** (v1.8.5):
-    - **StarlightAside** - 4 种类型提示框（note/tip/caution/danger）
-    - **代码高亮** - Shiki GitHub Light/Dark Dimmed 主题
+- **排版系统** (v1.8.6):
+    - **Starlight Typography** - 100% 对齐 Starlight 文档级排版规范
+    - **精细化调优** - 优化段落间距 (1.25em)、列表缩进与引用块样式
+- **组件系统**:
+    - **代码高亮** - Shiki GitHub Light/Dark Dimmed 主题 (v1.8.5)
+    - **ArticleCard** - 统一 Starlight 设计风格 (v1.8.6)
 - **动画规范** (v1.8.5):
     - **统一时长** - 所有动画 200ms（Starlight 标准）
     - **统一缓动** - ease-out 自然流畅
     - **性能优化** - scaleX 替代 width，提升 20-30%
+- **性能优化** (v1.8.6):
+    - **依赖瘦身** - 移除 @astrojs/starlight 完整依赖 (-10MB)
+    - **构建优化** - 零外部依赖，轻量化构建
 - **内容管理**: Markdown/MDX + Content Layer - 类型安全的内容集合
 - **交互体验**: 
     - 图片懒加载与灯箱效果

@@ -54,8 +54,34 @@ export default {
 				sm: 'calc(var(--radius) - 4px)',
 			},
 			typography: {
-				// 使用 prose-zinc 默认配置（极简）
-				// 所有样式由 Tailwind Typography 和 Starlight 组件提供
+				DEFAULT: {
+					css: {
+						// Paragraph spacing aligned with Starlight
+						'p': {
+							marginTop: '1.25em',
+							marginBottom: '1.25em',
+						},
+						// List styles optimization
+						'ul, ol': {
+							paddingLeft: '1.625em',
+						},
+						'li': {
+							marginTop: '0.5em',
+							marginBottom: '0.5em',
+						},
+						// Blockquote Starlight style
+						'blockquote': {
+							borderLeftWidth: '4px',
+							borderLeftColor: 'hsl(var(--primary))',
+							backgroundColor: 'hsl(var(--muted) / 0.3)',
+							paddingTop: '1em',
+							paddingBottom: '1em',
+							paddingLeft: '1.5em',
+							paddingRight: '1.5em',
+							borderRadius: '0.5rem',
+						},
+					},
+				},
 			},
 		},
 	},
