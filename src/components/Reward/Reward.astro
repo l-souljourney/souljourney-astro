@@ -2,7 +2,7 @@
 import SITE_INFO from "@/config";
 ---
 
-<section class="mt-4 p-[1.88rem_0] flex flex-col gap-[0.88rem] w-full h-max rounded-[var(--vh-main-radius)] bg-white dark:bg-[#252525] shadow-sm">
+<section class="mt-4 p-[1.88rem_0] flex flex-col gap-[0.88rem] w-full h-max rounded-[var(--radius)] bg-white dark:bg-[#252525] shadow-sm">
 	<p class="!p-0 w-full !text-sm text-primary dark:text-[#e8e8e8] text-center leading-[1.6]">{SITE_INFO.WeChat.Description}</p>
 	<div class="flex flex-col items-center justify-center gap-[0.88rem] w-full">
 		<img src={SITE_INFO.WeChat.QRCode} alt={`关注公众号 ${SITE_INFO.WeChat.Name}`} class="w-[120px] h-[120px] rounded-lg border-2 border-primary/16 object-cover transition-transform duration-300 hover:scale-105" />

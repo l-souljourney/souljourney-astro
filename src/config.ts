@@ -39,19 +39,8 @@ export default {
     background: "url('/assets/images/home-banner.webp') no-repeat center 60%/cover",
   },
   // 博客主题配置
-  Theme: {
-    // 颜色请用 16 进制颜色码
-    // 主题颜色 - 选择更沉稳的颜色搭配您的内容风格
-    "--vh-main-color": "#2c5aa0",
-    // 字体颜色
-    "--vh-font-color": "#34495e", 
-    // 侧边栏宽度
-    "--vh-aside-width": "318px",
-    // 全局圆角
-    "--vh-main-radius": "0.88rem",
-    // 主体内容宽度
-    "--vh-main-max-width": "1458px",
-  },
+  // Theme config moved to globals.css and tailwind.config.mjs
+  // Theme: { ... } removed
   // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
     { text: '投资路', link: '/categories/investment', icon: 'Nav_investment' },

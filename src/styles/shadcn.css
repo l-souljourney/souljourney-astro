@@ -1,6 +1,8 @@
 @layer base {
     :root {
-        --radius: 1rem;
+        --radius: 0.88rem;
+        --site-max-width: 1458px;
+        --sidebar-width: 318px;
 
         /* Zinc Pure Theme - Light Mode */
         --background: 0 0% 100%;

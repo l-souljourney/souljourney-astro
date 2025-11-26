@@ -17,8 +17,8 @@ const { articleList } = Astro.props;
 						<a href={`/article/${_.id}`} class="flex items-center w-full h-10 rounded-2xl text-base transition-colors hover:bg-[#EEEFF3] dark:hover:bg-white/5 group">
 							<em class="shrink-0 w-20 md:w-20 max-md:w-12 h-15 text-zinc-400 text-sm max-md:text-xs font-medium not-italic">{fmtTime(_.date, "MM-DD")}</em>
 							<i class="relative w-10 max-md:w-7 h-full before:content-[''] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:block before:w-1 before:h-1 before:rounded-sm before:bg-[#4E667F] dark:before:bg-[#4E667F] before:transition-all before:duration-300 group-hover:before:h-[50.66%] after:content-[''] after:absolute after:w-0.5 after:h-4 after:left-1/2 after:-translate-x-0.5 after:-translate-y-1/2 after:border-l-2 after:border-dashed after:border-black/10 dark:after:border-white/10 after:pointer-events-none" />
-							<span class="flex-1 text-base md:text-base max-md:text-sm text-primary dark:text-[#e8e8e8] font-semibold transition-all group-hover:pl-[0.28rem] vh-ellipsis">{_.title}</span>
-							<cite class="ml-auto w-[7.8rem] max-lg:hidden text-sm text-zinc-600 dark:text-zinc-400 font-normal not-italic vh-ellipsis">{_.tags.map((tag: string) => `#${tag}`).join(" ")}</cite>
+							<span class="flex-1 text-base md:text-base max-md:text-sm text-primary dark:text-[#e8e8e8] font-semibold transition-all group-hover:pl-[0.28rem] truncate">{_.title}</span>
+							<cite class="ml-auto w-[7.8rem] max-lg:hidden text-sm text-zinc-600 dark:text-zinc-400 font-normal not-italic truncate">{_.tags.map((tag: string) => `#${tag}`).join(" ")}</cite>
 						</a>
 					))}
 				</div>

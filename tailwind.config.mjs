@@ -38,10 +38,10 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
-				//  Legacy colors (保留用于向后兼容)
-				success: 'var(--vh-success)',
-				warning: 'var(--vh-warning)',
-				import: 'var(--vh-import)',
+				// Status Colors (Mapped to Shadcn variables)
+				success: 'hsl(var(--success))',
+				warning: 'hsl(var(--warning))',
+				import: 'hsl(var(--info))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

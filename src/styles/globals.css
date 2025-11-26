@@ -17,6 +17,140 @@ ol[role="list"] {
     list-style: none;
 }
 
-/* ===== CSS变量说明 ===== */
-/* 所有CSS变量已在 Base.less 中统一定义，此处无需重复定义 */
-/* Base.less 会自动编译为 CSS 并在构建时注入 */
+/* ===== Dark Mode Overrides (Moved from Base.less) ===== */
+@layer base {
+    html.dark body::before {
+        background: #1a1a1a url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='8' height='8' fill='none' stroke='rgb(255 255 255 / 0.03)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e") !important;
+    }
+
+    html.dark img:not(.no-dark-filter) {
+        filter: brightness(0.85);
+    }
+
+    html.dark pre {
+        background-color: #1e1e1e !important;
+    }
+}
+
+/* ===== Global Styles (Migrated from Base.less) ===== */
+@layer base {
+    :root {
+        /* Back Top Button Position */
+        --vh-back-top: calc((calc(100vw - 2rem) - min((100vw - 2rem), var(--site-max-width))) / 2 + 1rem);
+    }
+
+    * {
+        /* iOS Tap Highlight */
+        -webkit-tap-highlight-color: transparent;
+        /* Hide Scrollbar */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    *::-webkit-scrollbar {
+        display: none;
+    }
+
+    ::selection {
+        color: hsl(var(--primary-foreground));
+        background: hsl(var(--primary) / 0.88);
+    }
+
+    html {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: url('/assets/images/default.cur'), default;
+    }
+
+    body {
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        height: max-content;
+        color: hsl(var(--foreground));
+        font-family: 'HarmonyOS Sans SC', serif;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='8' height='8' fill='none' stroke='rgb(0 0 0 / 0.1)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+        z-index: -1;
+    }
+
+    footer {
+        box-sizing: border-box;
+        width: 100%;
+        height: max-content;
+    }
+
+    pre,
+    code {
+        font-family: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    }
+
+    a {
+        color: hsl(var(--foreground));
+    }
+}
+
+/* ===== Utility & Animation Styles ===== */
+@layer utilities {
+
+    /* Image Lazy Loading */
+    img[data-vh-lz-src] {
+        transition: all 0.18s ease-in;
+    }
+
+    img[data-vh-lz-src]:not(.loaded) {
+        filter: blur(0.88rem) brightness(1);
+    }
+
+    .main-inner>.main-inner-content img[data-vh-lz-src],
+    .avatar img[data-vh-lz-src] {
+        transition: all 0.18s ease-in;
+    }
+
+    .main-inner>.main-inner-content img[data-vh-lz-src]:not(.loaded),
+    .avatar img[data-vh-lz-src]:not(.loaded) {
+        filter: blur(0.88rem) brightness(1);
+    }
+
+    /* Initial Load Animation */
+    .vh-animation.vh-animation-init {
+        opacity: 0;
+        animation: 300ms vh-init-show;
+        animation-fill-mode: forwards;
+        transition: opacity 0.18s ease-in-out, transform 0.18s ease-in-out;
+    }
+}
+
+@keyframes vh-init-show {
+    0% {
+        transform: translateY(2rem);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Optimizations */
+@media screen and (max-width: 768px) {
+    * {
+        user-select: none;
+        -webkit-user-select: none;
+    }
+}

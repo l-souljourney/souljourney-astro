@@ -30,7 +30,7 @@ const findAndModifyElements = (arr: any[], keyword: string) => {
 // 渲染页面
 let searchHTML = '';
 const renderSearch = (arr: any[]) => {
-  searchHTML = !arr.length ? '<em></em>' : arr.map(i => `<a class="vh-search-item" href="${i.url}"><span class="vh-ellipsis">${i.title}</span><p class="vh-ellipsis line-3">${i.content}</p></a>`).join('');
+  searchHTML = !arr.length ? '<em></em>' : arr.map(i => `<a class="vh-search-item" href="${i.url}"><span class="truncate">${i.title}</span><p class="line-clamp-3">${i.content}</p></a>`).join('');
   document.querySelector('.vh-header>.main>.vh-search>main>.vh-search-list')!.innerHTML = searchHTML;
 }
 
