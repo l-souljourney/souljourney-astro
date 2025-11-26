@@ -12,8 +12,7 @@ const WebCover = PageCover || SiteCover;
 // Schema.org 结构化数据（JSON-LD）
 const WebSiteData = { "@context": "https://schema.org", "@type": "WebSite", name: WebTitle, url: canonicalURL, image: { "@type": "ImageObject", url: SiteCover } };
 const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", headline: WebTitle, image: [WebCover], author: { "@type": "Person", name: Author, url: Site }, publisher: { "@type": "Organization", name: SiteName, logo: { "@type": "ImageObject", url: SiteCover } } };
-// 基础 样式
-import "@/styles/Base.less";
+// Base.less has been migrated to globals.css (loaded in Layout.astro)
 ---
 
 <head>
