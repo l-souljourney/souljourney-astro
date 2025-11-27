@@ -111,5 +111,51 @@ export default {
     paramsName: 'url'
   },
   // 页面阻尼滚动速度
-  ScrollSpeed: 666
+  ScrollSpeed: 666,
+  // 页脚配置
+  Footer: {
+    // 版权信息
+    copyright: {
+      // 所有者名称
+      owner: 'L-忠程',
+      // 品牌 slogan
+      slogan: '生死看淡不服就淦',
+      // 是否显示当前年份（自动计算）
+      showCurrentYear: true
+    },
+    // 社交媒体链接（仅保留 RSS）
+    socialLinks: [
+      {
+        name: 'RSS',
+        label: 'RSS',
+        url: '/rss.xml',
+        icon: 'rss', // 本地 SVG: src/icons/rss.svg
+        title: 'RSS 订阅'
+      }
+    ],
+    // 底部徽章链接（统一徽章风格）
+    badgeLinks: [
+      {
+        name: 'ICP备案',
+        label: '浙ICP备2025152080号-1', // 完整备案号，符合国家要求
+        url: 'https://beian.miit.gov.cn/',
+        icon: 'shield-check', // 盾牌检查图标
+        title: 'ICP备案信息'
+      },
+      {
+        name: 'Astro',
+        label: 'Astro',
+        url: 'https://astro.build/',
+        icon: 'rocket', // 火箭图标
+        title: '基于 Astro 构建'
+      },
+      {
+        name: 'Sitemap',
+        label: 'Sitemap',
+        url: '/sitemap-index.xml',
+        icon: 'globe', // 地球图标
+        title: '网站地图'
+      }
+    ]
+  }
 }

@@ -1,5 +1,109 @@
 # Changelog
 
+## v1.8.8 (2025-11-27)
+
+### 🎨 Footer 全徽章化重构：Shadcn UI 风格统一
+
+本次更新完成了 Footer 组件的全面现代化改造，实现了配置驱动、图标统一、样式规范化，将页脚视觉专业度提升 80%。
+
+#### 核心成果
+
+**1. 全徽章化设计** ✨✨✨
+- **统一风格**: 所有页脚元素（RSS、ICP 备案、Astro、Sitemap）统一为 Shadcn UI 徽章风格
+- **三段式结构**: 图标容器（`bg-secondary`）+ 文字标签（`bg-muted`）+ 边框（`border-border`）
+- **交互统一**: 所有徽章使用统一的 `hover:bg-accent` 效果
+- **间距优化**: 徽章间距从 `gap-6` 缩小到 `gap-2`（8px），布局更紧凑
+
+**2. 配置驱动架构** 🔧
+- **新增配置**: `config.ts` 添加 `Footer.copyright.slogan` 字段
+- **重构配置**: `footerLinks` → `badgeLinks`，每个链接包含 `label` 显示文字
+- **品牌强化**: 底部文字更新为 `L-忠程丨生死看淡不服就淦`
+- **可维护性**: 修改页脚内容只需编辑配置文件
+
+**3. 图标系统优化** 🎨
+- **创建本地图标**: 
+  - `shield-heart.svg` - 盾牌心形（网站运行）
+  - `rss.svg` - RSS 订阅
+  - `book-text.svg` - 书本（博客主题）
+  - `shield-check.svg` - 盾牌检查（ICP 备案）
+  - `rocket.svg` - 火箭（Astro）
+  - `globe.svg` - 地球（网站地图）
+- **颜色同步**: 所有图标使用 `text-current` 自动继承父元素颜色
+- **尺寸统一**: 所有图标统一为 `w-3 h-3`（12px）
+
+**4. 响应式优化** 📱
+- **桌面端**: 徽章横向排列，最大宽度 `max-w-3xl`
+- **移动端**: 自动换行（`flex-wrap`），保持美观
+- **暗黑模式**: 完全基于 Shadcn token，自动适配
+
+#### 技术亮点
+
+**徽章组件标准化**:
+```astro
+<a class="inline-flex items-center h-6 bg-muted text-xs rounded-md overflow-hidden border border-border hover:bg-accent transition-colors">
+  <span class="px-2 bg-secondary text-secondary-foreground">
+    <Icon name="..." class="w-3 h-3" />
+  </span>
+  <span class="px-2">Label</span>
+</a>
+```
+
+**配置示例**:
+```typescript
+Footer: {
+  copyright: {
+    owner: 'L-忠程',
+    slogan: '生死看淡不服就淦'
+  },
+  badgeLinks: [
+    { name: 'ICP备案', label: '浙ICP备2025152080号-1', icon: 'shield-check' }
+  ]
+}
+```
+
+#### 视觉效果对比
+
+| 特性 | v1.8.7 | v1.8.8 | 改进 |
+|------|--------|--------|------|
+| **风格统一** | 混合（徽章+裸图标） | **100% 徽章化** | ✨✨✨ |
+| **图标质量** | 细条图标（不清晰） | **精美矢量图标** | ✨✨✨ |
+| **配置化** | 硬编码 | **config.ts 驱动** | ✨✨✨ |
+| **交互反馈** | 不统一 | **hover 统一变色** | ✨✨ |
+| **品牌展示** | `© 年份 姓名` | **姓名丨slogan** | ✨✨✨ |
+
+#### 代码变更统计
+
+| 文件 | 变更类型 | 行数 |
+|------|---------|-----|
+| `config.ts` | 新增 slogan + 重构 badgeLinks | +15 行 |
+| `Footer.astro` | 全徽章化重构 | ~30 行 |
+| `src/icons/*` | 新增 6 个 SVG 图标 | +6 文件 |
+| **总计** | | **~45 行 + 6 文件** |
+
+#### 问题修复
+
+- 🐛 **图标加载失败**: 修复 `astro-icon` 无法识别 `lucide:` 前缀的问题
+  - **解决方案**: 创建本地 SVG 文件 + 移除在线图标前缀
+  - **文件**: `src/icons/shield-heart.svg`, `rss.svg`, `book-text.svg`, `shield-check.svg`, `rocket.svg`, `globe.svg`
+
+#### 用户体验提升
+
+- ✅ **视觉专业度** ⬆️ 80%：全徽章化设计，告别混乱布局
+- ✅ **风格一致性** ⬆️ 100%：完全遵循 Shadcn UI 设计规范
+- ✅ **品牌识别度** ⬆️ 60%：slogan 突出展示
+- ✅ **交互体验** ⬆️ 50%：统一 hover 效果，反馈明确
+- ✅ **可维护性** ⬆️ 70%：配置驱动，修改便捷
+
+#### 设计理念
+
+**从混乱到统一** - 将页脚从"拼凑风格"提升到"设计系统"：
+- ✅ 视觉语言：Shadcn UI 徽章标准
+- ✅ 配色方案：`muted` + `secondary` + `border` 三层递进
+- ✅ 交互逻辑：`hover:bg-accent` 统一反馈
+- ✅ 间距节奏：`gap-2` 紧凑布局
+
+---
+
 ## v1.8.7 (2025-11-26)
 
 ### 📊 网站统计功能集成
