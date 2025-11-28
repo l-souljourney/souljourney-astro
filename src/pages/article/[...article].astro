@@ -2,6 +2,7 @@
 import { getDescription, fmtTime } from "@/utils/index";
 // 分类映射功能
 import { getCategoryDisplayName } from "@/utils/categoryMapping";
+import { Icon } from 'astro-icon/components';
 import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
 import getReadingTime from 'reading-time';
@@ -50,11 +51,23 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 			bg-white dark:bg-[#252525]
 		">
 			<h1 class="text-2xl md:text-3xl font-bold mb-4 text-foreground">{post.data.title}</h1>
-			<section class="flex flex-wrap items-center gap-4 text-sm text-primary/66">
-				<span>发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}</span>
-				<span>分类于 <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "未分类"}</a></span>
-				<span>字数统计 {article_word_count} 字</span>
-				<span>阅读时长 ≈ {Math.ceil(reading_time)} 分钟</span>
+			<section class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="calendar" class="w-4 h-4 text-primary/80" />
+					发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="folder" class="w-4 h-4 text-primary/80" />
+					分类于 <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "未分类"}</a>
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="file-text" class="w-4 h-4 text-primary/80" />
+					字数统计 {article_word_count} 字
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="clock" class="w-4 h-4 text-primary/80" />
+					阅读时长 ≈ {Math.ceil(reading_time)} 分钟
+				</span>
 			</section>
 		</header>
 		<article

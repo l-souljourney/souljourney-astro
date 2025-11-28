@@ -11,15 +11,15 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 ---
 
 <footer class="w-full py-8 mt-6 bg-background border-t border-border text-muted-foreground transition-colors duration-300">
-	<main class="container mx-auto flex flex-col items-center justify-center gap-6 px-4">
+	<main class="container mx-auto flex flex-col items-center justify-center gap-4 px-4">
 		<!-- 网站运行时间 -->
 		<div class="flex items-center gap-2">
 			<span class="inline-flex items-center h-6 bg-muted text-xs rounded-md overflow-hidden border border-border">
-				<span class="px-2 flex items-center h-full bg-secondary text-secondary-foreground">
+				<span class="px-1.5 flex items-center h-full bg-secondary text-secondary-foreground">
 					<Icon name="shield-heart" class="w-3 h-3" />
 				</span>
-				<cite class="px-2 flex items-center h-full not-italic">网站运行</cite>
-				<em class="web_time px-2 flex items-center h-full not-italic bg-primary text-primary-foreground"></em>
+				<cite class="px-1.5 flex items-center h-full not-italic">网站运行</cite>
+				<em class="web_time px-1.5 flex items-center h-full not-italic bg-primary text-primary-foreground"></em>
 			</span>
 		</div>
 
@@ -33,10 +33,10 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 					title={link.title}
 					class="inline-flex items-center h-6 bg-muted text-xs rounded-md overflow-hidden border border-border hover:bg-accent transition-colors"
 				>
-					<span class="px-2 flex items-center h-full bg-secondary text-secondary-foreground">
+					<span class="px-1.5 flex items-center h-full bg-secondary text-secondary-foreground">
 						<Icon name={link.icon} class="w-3 h-3" />
 					</span>
-					<span class="px-2 flex items-center h-full not-italic">{link.label}</span>
+					<span class="px-1.5 flex items-center h-full not-italic">{link.label}</span>
 				</a>
 			))}
 			
@@ -49,10 +49,10 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 					title={link.title}
 					class="inline-flex items-center h-6 bg-muted text-xs rounded-md overflow-hidden border border-border hover:bg-accent transition-colors"
 				>
-					<span class="px-2 flex items-center h-full bg-secondary text-secondary-foreground">
+					<span class="px-1.5 flex items-center h-full bg-secondary text-secondary-foreground">
 						<Icon name={link.icon} class="w-3 h-3" />
 					</span>
-					<span class="px-2 flex items-center h-full not-italic">{link.label}</span>
+					<span class="px-1.5 flex items-center h-full not-italic">{link.label}</span>
 				</a>
 			))}
 		</div>
