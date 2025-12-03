@@ -9,7 +9,7 @@ tags:
   - MCP
 id: cursor-trial-account-crash-experience
 description: The author discusses using Cursor with Claude 4.5 and MCPs for efficient coding, compares costs of official vs trial accounts, notes trial pool crashes, and hopes domestic IDEs/LLMs improve.
-cover: https://cloudcos.l-souljourney.cn/blog/images/2025/20251113181629914.png
+cover: https://cloudcos.l-souljourney.cn/blog/images/2025/20251114110224578.png
 recommend: true
 top: false
 hide: false
