@@ -4,9 +4,33 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				// Starlight Design System fonts
-				sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
-				mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+				// System Font Stack (Scheme A) - Native & Fast
+				sans: [
+					'ui-sans-serif',
+					'system-ui',
+					'-apple-system',
+					'BlinkMacSystemFont',
+					'"Segoe UI"',
+					'Roboto',
+					'"Helvetica Neue"',
+					'Arial',
+					'"Noto Sans"',
+					'sans-serif',
+					'"Apple Color Emoji"',
+					'"Segoe UI Emoji"',
+					'"Segoe UI Symbol"',
+					'"Noto Color Emoji"',
+				],
+				mono: [
+					'ui-monospace',
+					'SFMono-Regular',
+					'Menlo',
+					'Monaco',
+					'Consolas',
+					'"Liberation Mono"',
+					'"Courier New"',
+					'monospace',
+				],
 			},
 			colors: {
 				// shadcn/ui design tokens

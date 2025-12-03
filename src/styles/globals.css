@@ -1,11 +1,5 @@
-/* Starlight Design System - Fonts (Self-hosted via Fontsource) */
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/500.css';
-@import '@fontsource/jetbrains-mono/600.css';
+/* Starlight Design System - Fonts (System Stack) */
+/* No external font imports needed for System Font Stack */
 
 /* Shadcn + Starlight CSS */
 @import './shadcn.css';
@@ -17,32 +11,7 @@
 
 /* ===== Starlight Design System - Font Configuration ===== */
 @layer base {
-
-    /* Apply Starlight fonts globally */
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-        /* Enable Inter's OpenType features for improved readability */
-        font-feature-settings:
-            'cv02' 1,
-            /* Alternate g */
-            'cv03' 1,
-            /* Alternate r */
-            'cv04' 1,
-            /* Alternate i */
-            'cv11' 1;
-        /* Alternate single-story a */
-    }
-
-    /* Apply JetBrains Mono to code with ligatures enabled */
-    code,
-    pre,
-    kbd,
-    samp {
-        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-        /* Enable programming ligatures: != → ≠, => → ⇒, etc. */
-        font-variant-ligatures: common-ligatures;
-        font-feature-settings: 'liga' 1, 'calt' 1;
-    }
+    /* Fonts are handled by Tailwind Preflight and config */
 }
 
 /* ===== Reset.less补充样式 (Tailwind Preflight未覆盖的部分) ===== */
@@ -112,7 +81,6 @@ ol[role="list"] {
         width: 100vw;
         height: max-content;
         color: hsl(var(--foreground));
-        font-family: 'HarmonyOS Sans SC', serif;
         font-weight: 400;
         overflow-x: hidden;
     }

@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.8.10 (2025-12-03)
+
+### ⚡ 性能与体验优化：字体加载与移动端闪烁修复
+
+本次更新专注于解决移动端（特别是微信浏览器）页面刷新时的"双重闪烁"问题，通过统一字体加载策略，消除了布局偏移 (CLS)，提升了首屏加载稳定性。
+
+#### 核心修复
+
+1.  **移动端"双重闪烁"修复** 🐛
+    -   **问题**: 在微信等移动端浏览器中，页面刷新时会出现明显的布局跳动（Layout Shift），表现为页面先显示一种字体/样式，随后闪烁并切换到最终样式。
+    -   **原因**: `globals.css` 中存在冲突的 `font-family` 声明。`body` 选择器同时被定义了 `Inter`（Starlight 系统）和 `HarmonyOS Sans SC`（旧遗留）。浏览器在加载过程中可能先回退到系统衬线字体 (`serif`)，导致布局塌陷，随后加载 `Inter` 时发生重排。
+    -   **修复**: 移除了 `globals.css` 中冲突的 `font-family: 'HarmonyOS Sans SC', serif;` 声明，确保全站统一使用预加载的 `Inter` 字体系统。
+    -   **收益**: 彻底消除了移动端的 FOUC (Flash of Unstyled Content) 现象，页面加载更加平滑稳定。
+
+#### 优化
+
+-   **字体策略升级**: 从本地自托管字体 (`Inter` / `JetBrains Mono`) 切换为 **原生系统字体栈 (System Font Stack)**。
+    -   **性能**: 移除了约 200KB 的字体文件下载，实现零阻塞、零闪烁的极速加载体验。
+    -   **体验**: 网站字体将与用户操作系统（macOS/Windows/Android）的原生 UI 完美融合，提供最清晰、最熟悉的阅读体验。
+    -   **中文支持**: 自动调用系统最佳中文字体（如 macOS 的 PingFang SC，Windows 的 Microsoft YaHei），无需额外配置。
+
+---
+
 ## v1.8.9 (2025-11-28)
 
 ### 💄 UI Optimizations
