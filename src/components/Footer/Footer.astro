@@ -1,6 +1,10 @@
 ---
 import config from "@/config";
 import { Icon } from 'astro-icon/components';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // 计算版权年份
 const startYear = new Date(config.CreateTime).getFullYear();
@@ -59,7 +63,7 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 
 		<!-- 版权信息 + Slogan -->
 		<div class="text-xs text-muted-foreground">
-			{config.Footer.copyright.owner}丨{config.Footer.copyright.slogan}
+			{t('footer.copyright')}
 		</div>
 	</main>
 </footer>

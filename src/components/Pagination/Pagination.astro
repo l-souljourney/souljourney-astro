@@ -2,17 +2,21 @@
 const { data } = Astro.props;
 // 处理页码
 import { fmtPage } from "@/utils/index";
+// i18n
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <section class="absolute bottom-[0.88rem] right-0 p-4 flex items-center justify-center gap-4 w-full h-max overflow-hidden">
 	<!-- 上一页 -->
-	<a class={`flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]${!data.prev ? " pointer-events-none" : ""}`} href={data.prev || "javascript:;"} title="上一页">
+	<a class={`flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]${!data.prev ? " pointer-events-none" : ""}`} href={data.prev || "javascript:;"} title={t('pagination.prev')}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.18rem] w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
 	</a>
 	<!-- 首页 -->
 	{
 		data.first && data.prev && (
-			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.first} title="第一页">
+			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.first} title={t('pagination.first')}>
 				1
 			</a>
 		)
@@ -20,17 +24,17 @@ import { fmtPage } from "@/utils/index";
 	<!-- 总页的前一页 -->
 	{
 		(!data.next || !data.last) && data.prev && data.current !== "/2" && (
-			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.prev} title={`第${fmtPage(data.prev)}页`}>
+			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.prev} title={`${t('pagination.page')} ${fmtPage(data.prev)}`}>
 				{fmtPage(data.prev)}
 			</a>
 		)
 	}
 	<!-- 当前页 -->
-	<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#8192AE] shadow-sm text-sm text-white select-none cursor-default pointer-events-none overflow-hidden" href="javascript:;" title={`第${fmtPage(data.current)}页`}>{fmtPage(data.current) || "1"}</a>
+	<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#8192AE] shadow-sm text-sm text-white select-none cursor-default pointer-events-none overflow-hidden" href="javascript:;" title={`${t('pagination.page')} ${fmtPage(data.current)}`}>{fmtPage(data.current) || "1"}</a>
 	<!-- 第一页的后一页 -->
 	{
 		(!data.prev || !data.first) && data.next && data.last !== "/2" && (
-			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.next} title={`第${fmtPage(data.next)}页`}>
+			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.next} title={`${t('pagination.page')} ${fmtPage(data.next)}`}>
 				{fmtPage(data.next)}
 			</a>
 		)
@@ -38,13 +42,13 @@ import { fmtPage } from "@/utils/index";
 	<!-- 总页 -->
 	{
 		data.next && data.last && (
-			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.last} title={`第${fmtPage(data.last)}页`}>
+			<a class="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]" href={data.last} title={`${t('pagination.page')} ${fmtPage(data.last)}`}>
 				{fmtPage(data.last)}
 			</a>
 		)
 	}
 	<!-- 下一页 -->
-	<a class={`flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]${!data.next ? " pointer-events-none" : ""}`} href={data.next || "javascript:;"} title="下一页">
+	<a class={`flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-[#252525] shadow-sm text-sm text-[#99a9bf] select-none transition-colors duration-180 cursor-pointer overflow-hidden hover:text-white hover:bg-[rgba(129,146,174,0.36)]${!data.next ? " pointer-events-none" : ""}`} href={data.next || "javascript:;"} title={t('pagination.next')}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.18rem] w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
 	</a>
 </section>

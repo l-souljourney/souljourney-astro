@@ -1,0 +1,117 @@
+---
+import { getDescription, fmtTime } from "@/utils/index";
+// 分类映射功能
+import { getCategoryDisplayName } from "@/utils/categoryMapping";
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry, getCollection } from "astro:content";
+import { render } from "astro:content";
+import getReadingTime from 'reading-time';
+
+// i18n
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+    // 仅筛选英文文章 (ID 以 en/ 开头的)
+    const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+	return enPosts.map((post: any) => ({ params: { article: post.data.id }, props: post }));
+}
+// 处理文章内容
+type Props = CollectionEntry<"blog">;
+const post: any = Astro.props;
+// 获取封面图
+import getCover from "@/utils/getCover";
+const ARTICLE_COVER: string = await getCover(post.data.cover);
+// 页面 Info
+import SITE_CONFIG from "@/config";
+const { Site, Title, Author, GoogleAds } = SITE_CONFIG;
+// 处理文章内容
+const description = getDescription(post);
+const { Content, remarkPluginFrontmatter, headings } = await render(post);
+// 文章字数和阅读时间 - 直接从 post.body 计算
+const readingTime = getReadingTime(post.body);
+const article_word_count = readingTime.words;
+const reading_time = readingTime.minutes;
+// 公共 Layout
+import Layout from "@/layouts/Layout/Layout.astro";
+// Copyright 组件
+import Copyright from "@/components/Copyright/Copyright.astro";
+// Reward 组件
+import Reward from "@/components/Reward/Reward.astro";
+// Google 广告组件
+import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
+
+---
+
+<Layout title={post.data.title || Title} description={description} cover={ARTICLE_COVER} activeNav={post.data.categories} headings={headings}>
+	<article class="
+		w-full
+		bg-white dark:bg-[#252525]
+		rounded-2xl
+		shadow-sm
+		overflow-hidden
+		vh-animation vh-animation-init
+	">
+		<header class="
+			p-8 pb-4
+			bg-white dark:bg-[#252525]
+		">
+			<h1 class="text-2xl md:text-3xl font-bold mb-4 text-foreground">{post.data.title}</h1>
+			<section class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="calendar" class="w-4 h-4 text-primary/80" />
+					{t('post.published')} {fmtTime(post.data.date, "YYYY-MM-DD")}
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="folder" class="w-4 h-4 text-primary/80" />
+					{t('post.category')} <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "Uncategorized"}</a>
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="file-text" class="w-4 h-4 text-primary/80" />
+					{t('post.words')} {article_word_count} {t('post.words')}
+				</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Icon name="clock" class="w-4 h-4 text-primary/80" />
+					{t('post.readTime')} ≈ {Math.ceil(reading_time)} {t('post.readTime')}
+				</span>
+			</section>
+		</header>
+		<article
+			class="
+			prose lg:prose-xl
+			prose-zinc
+			dark:prose-invert
+			max-w-none
+			px-8 pb-8
+		"
+		>	<Content />
+			<section class="flex flex-wrap gap-2 mt-6 not-prose">
+				{
+					(post.data.tags || []).map((i: any) => (
+						<a 
+							href={`/tag/${i}`}
+							class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors duration-180"
+						>
+							<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+								<path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />
+							</svg>
+							{i}
+						</a>
+					))
+				}
+			</section>
+		</main>
+		<footer>
+			<!-- 公众号引流组件 -->
+			<Reward />
+			<!-- 版权©️信息 -->
+			<Copyright site={Site} id={post.data.id} title={post.data.title} sitename={Title} time={fmtTime(post.data.date, "YYYY-MM-DD A")} auther={Author} />
+			<!-- 底部谷歌广告 -->
+			{GoogleAds.ad_Client && GoogleAds.articleAD_Slot && <GoogleAd className="vh-article-ad" slotID={GoogleAds.articleAD_Slot} />}
+		</footer>
+	</article>
+</Layout>

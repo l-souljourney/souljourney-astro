@@ -9,6 +9,11 @@ const description = getDescription(post);
 import getCover from "@/utils/getCover";
 const ARTICLE_COVER: string = await getCover(post.data.cover);
 
+// i18n
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 // Category Gradient Map
 const categoryGradients: Record<string, string> = {
   Code: "from-[#f48600] via-[#ffa12e] to-[#ffe9c9]",
@@ -23,7 +28,7 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 <article class={`group relative flex flex-col w-full min-h-full border border-border rounded-2xl bg-card text-card-foreground shadow-sm overflow-hidden transition-all duration-200 ease-out hover:shadow-md hover:border-primary/20 ${post.data.top ? "active" : ""}`}>
 	{post.data.top && (
 		<div class="absolute top-[1.6rem] left-[0.66rem] px-4 py-[0.18rem] w-max h-max text-base text-white rounded-[0.66rem] -rotate-45 bg-black/20 shadow-[0_2rem_1rem_rgba(0,0,0,0.1)] z-10 backdrop-blur-md select-none pointer-events-none">
-			置顶
+			{t('card.pinned')}
 		</div>
 	)}
 	
@@ -43,12 +48,12 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 				class={`shrink-0 w-max text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r ${gradient}`} 
 				href={`/categories/${post.data.categories}`}
 			>
-				{getCategoryDisplayName(post.data.categories)}
+				{getCategoryDisplayName(post.data.categories) || t('card.uncategorized')}
 			</a>
 			<time class="mt-auto text-[0.805rem] font-normal text-primary">{fmtTime(post.data.date)}</time>
 		</h3>
 		<h1 class="w-full h-max overflow-hidden">
-			<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={`/article/${post.data.id}`}>
+			<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={lang === 'zh' ? `/article/${post.data.id}` : `/en/article/${post.data.id}`}>
 				{post.data.title}
 			</a>
 		</h1>

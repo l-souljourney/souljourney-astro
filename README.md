@@ -18,6 +18,14 @@
 - **天问** - 人生哲学、深度思考、价值观探讨
 - **活着** - 生活感悟、中年思考、人生体验
 
+### 🌍 国际化支持 (v1.9.0)
+
+本博客支持**中英双语**，实现了完整的国际化架构：
+- **中文版**: `https://blog.l-souljourney.cn/`
+- **英文版**: `https://blog.l-souljourney.cn/en/`
+- **智能切换**: Header右上角一键切换语言
+- **SEO优化**: 完整的hreflang标签支持，告诉搜索引擎语言版本关系
+
 ## 🚀 技术特性
 
 - **核心框架**: [Astro 5.16](https://astro.build/) - 极致性能的静态站点生成器
@@ -52,6 +60,11 @@
     - 智能目录 (TOC) 与平滑滚动
     - 完美适配的暗黑模式(零FOUC)
     - 响应式布局与微交互动效
+- **国际化 (i18n)** (v1.9.0):
+    - **双语支持**: 中文 + 英文全栈支持
+    - **智能路由**: 中文 `/`, 英文 `/en/`
+    - **翻译系统**: 30+ UI文本自动翻译
+    - **SEO优化**: hreflang标签 + og:locale动态设置
 
 
 ## 🛠️ 快速开始
@@ -66,6 +79,51 @@ pnpm dev
 # 构建生产版本
 pnpm build
 ```
+
+## 📝 内容发布流程 (Obsidian + CNB)
+
+本博客采用 **Obsidian + Git + CNB** 的现代化内容管理流程：
+
+### 工作流程
+
+```
+Obsidian (本地写作)
+  ↓ Git Push
+CNB Docs仓库 (published/zh/ 和 published/en/)
+  ↓ .cnb.yml 自动触发
+CNB Astro仓库 (自动同步到 src/content/blog/)
+  ↓ 自动构建
+线上博客 (blog.l-souljourney.cn)
+```
+
+### Obsidian 目录结构
+
+```
+Blog/
+├── drafts/          # 草稿区（仅iCloud同步）
+├── ready/           # 待发布（AI处理元数据）
+├── published/       # 已发布（Git + iCloud）
+│   ├── zh/          # 中文文章
+│   └── en/          # 英文文章（AI翻译）
+└── assets/          # 资源文件
+```
+
+### 发布步骤
+
+1. 在 Obsidian `drafts/` 创建Markdown文章
+2. 完成后移至 `ready/`，AI自动填充YAML元数据
+3. 移至 `published/zh/`，Git自动提交推送
+4. CNB监听到变化，自动同步到Astro仓库并构建
+5. (可选) AI翻译为英文，放入 `published/en/`
+
+### CNB自动化
+
+- **监听**: `published/**` 目录变化
+- **同步**: 自动复制到 `src/content/blog/`
+- **构建**: 触发Astro构建和部署
+- **保护**: 空目录检测，防止误删
+
+详见 [Blog仓库README](https://cnb.cool/l-souljourney/souljourneydocs)
 
 ## 🚀 部署方案
 

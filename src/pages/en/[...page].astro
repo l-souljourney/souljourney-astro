@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import setSearchJson from "@/utils/vhSearch";
 import moveTopToFirst from "@/utils/moveTopToFirst";
 
 // i18n
@@ -14,14 +13,13 @@ export async function getStaticPaths(options: GetStaticPathsOptions) {
 	const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 	// 置顶文章功能
 	moveTopToFirst(posts);
-	// 生成 Search JSON 文件 (使用所有文章，确保搜索包含中英文)
-	await setSearchJson(posts);
-	
-    // 过滤中文文章
-    const zhPosts = posts.filter(i => !i.id.startsWith('en/') && !i.data.hide);
+    // 注意：Search JSON 已在主页生成，这里不再重复生成
+
+    // 过滤英文文章
+    const enPosts = posts.filter(i => i.id.startsWith('en/') && !i.data.hide);
 
 	return paginate(
-		zhPosts,
+		enPosts,
 		{ pageSize: 15 }
 	);
 }
@@ -37,8 +35,8 @@ import ArticleCard from "@/components/ArticleCard/ArticleCard.astro";
 import Layout from "@/layouts/Layout/Layout.astro";
 // 分页组件
 import Pagination from "@/components/Pagination/Pagination.astro";
-const currentPage = page_data.url.current.replace("/", "");
-const pageTitle = currentPage ? (lang === 'zh' ? `第${currentPage}页文章` : `Page ${currentPage}`) : "";
+const currentPage = page_data.url.current.replace("/en/", "").replace("/", ""); // 简单处理页码
+const pageTitle = currentPage ? `Page ${currentPage}` : "";
 ---
 
 <Layout title={pageTitle} description={Description} Home={true}>

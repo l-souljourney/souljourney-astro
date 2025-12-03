@@ -26,6 +26,13 @@ export default defineConfig({
 	experimental: {
 		svgo: true,
 	},
+	i18n: {
+		defaultLocale: "zh",
+		locales: ["zh", "en"],
+		routing: {
+			prefixDefaultLocale: false
+		}
+	},
 	markdown: {
 		shikiConfig: {
 			// Starlight Design System - Code Themes

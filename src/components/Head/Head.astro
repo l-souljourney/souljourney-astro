@@ -1,8 +1,15 @@
 ---
 import SITE_CONFIG from "@/config";
+// i18n
+import { getLangFromUrl } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
 // 当前页面的 URL 元地址
 const canonicalData = new URL(Astro.url.pathname, Astro.site);
 const canonicalURL = canonicalData.href.replace(/\/+$/, "");
+// 生成语言切换链接（hreflang）
+const altLangURL = lang === 'zh' 
+  ? new URL(`/en${Astro.url.pathname}`, Astro.site).href.replace(/\/+$/, "")
+  : new URL(Astro.url.pathname.replace(/^\/en/, ''), Astro.site).href.replace(/\/+$/, "");
 // 页面内容的元数据
 const { Title, Keywords, Description, PageCover } = Astro.props;
 const { Site, Title: SiteName, Subtitle, Author, Cover, DNSOptimization } = SITE_CONFIG;
@@ -55,7 +62,7 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<meta property="og:description" content={Description} />
 	<meta property="og:url" content={canonicalURL} />
 	<meta property="og:image" content={WebCover} />
-	<meta property="og:locale" content="zh_CN" />
+	<meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={SiteName} />
@@ -73,6 +80,10 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	{DNSOptimization.map((url: string) => <link rel="preconnect" href={url} />)}
 	<!-- LINK 标签 -->
 	<link rel="canonical" href={canonicalURL} />
+	<!-- hreflang for SEO -->
+	<link rel="alternate" hreflang="zh" href={lang === 'zh' ? canonicalURL : altLangURL} />
+	<link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalURL : altLangURL} />
+	<link rel="alternate" hreflang="x-default" href={lang === 'zh' ? canonicalURL : altLangURL} />
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 	<slot />
 </head>

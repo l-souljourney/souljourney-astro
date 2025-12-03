@@ -10,23 +10,53 @@ import Svg from "@/components/Svg/Svg.astro";
 import Search from "@/components/Search/Search.astro";
 // 主题切换组件
 import ThemeIcon from "@/components/ThemeIcon/ThemeIcon.astro";
+
+// i18n
+import { getLangFromUrl, useTranslations, getRouteFromUrl } from '@/i18n/utils';
+import { languages } from '@/i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const currentRoute = getRouteFromUrl(Astro.url);
+
+// 简单的语言切换逻辑
+const nextLang = lang === 'zh' ? 'en' : 'zh';
+const nextLangLabel = lang === 'zh' ? 'EN' : '中';
+const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
+
 ---
 
 <header class="fixed top-0 left-0 w-screen h-[66px] z-50 transition-colors duration-180 bg-background/80 backdrop-blur-md shadow-sm border-b border-border">
 	<section class="mx-auto px-[0.88rem] flex items-center w-full h-full max-w-[var(--site-max-width)]">
-		<a href="/" class="group flex items-center gap-[0.618rem] w-max h-max px-[0.188rem] py-[0.266rem] text-foreground transition-colors hover:text-primary">
+		<a href={lang === 'zh' ? '/' : '/en'} class="group flex items-center gap-[0.618rem] w-max h-max px-[0.188rem] py-[0.266rem] text-foreground transition-colors hover:text-primary">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19 8.71l-5.333 -4.148a2.666 2.666 0 0 0 -3.274 0l-5.334 4.148a2.665 2.665 0 0 0 -1.029 2.105v7.2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-7.2c0 -.823 -.38 -1.6 -1.03 -2.105"></path><path d="M16 15c-2.21 1.333 -5.792 1.333 -8 0"></path></svg>
-			<span class="pt-[0.188rem] text-[0.98rem] font-bold transition-all duration-100 group-hover:text-primary">Home</span>
+			<span class="pt-[0.188rem] text-[0.98rem] font-bold transition-all duration-100 group-hover:text-primary">{t('nav.home')}</span>
 		</a>
 		<nav class="ml-auto flex items-center gap-[1.18rem] h-full">
 			{
-				Navs.map(i => (
-					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? "text-primary bg-accent" : "text-foreground"}` } href={i.link} target={i.target ? "_blank" : "_self"}>
-						{i.text}
+				Navs.map(i => {
+                    // 处理链接前缀
+                    const link = lang === 'zh' ? i.link : `/en${i.link === '/' ? '' : i.link}`;
+                    // 简单的翻译映射 (实际项目中建议把 Navs 移到 i18n 配置中)
+                    const text = lang === 'en' && i.text === '首页' ? 'Home' :
+                                 lang === 'en' && i.text === '文章' ? 'Posts' :
+                                 lang === 'en' && i.text === '关于' ? 'About' :
+                                 lang === 'en' && i.text === '友链' ? 'Friends' :
+                                 i.text;
+
+                    return (
+					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? "text-primary bg-accent" : "text-foreground"}` } href={link} target={i.target ? "_blank" : "_self"}>
+						{text}
 						<div class="w-4 h-auto object-contain"><Svg src={i.icon} /></div>
 					</a>
-				))
+				)})
 			}
+            
+            <!-- 语言切换按钮 -->
+            <a href={nextRoute} class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground">
+                <span class="text-xs font-bold border border-current rounded px-1">{nextLangLabel}</span>
+            </a>
+
 			<ThemeIcon />
 			<span class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground search-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg> 搜索
