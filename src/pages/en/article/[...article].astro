@@ -1,5 +1,6 @@
 ---
 import { getDescription, fmtTime } from "@/utils/index";
+import { formatDate } from "@/utils/formatDate";
 // 分类映射功能
 import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import { Icon } from 'astro-icon/components';
@@ -62,7 +63,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 			<section class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="calendar" class="w-4 h-4 text-primary/80" />
-					{t('post.published')} {fmtTime(post.data.date, "YYYY-MM-DD")}
+					{t('post.published')} {formatDate(post.data.date, lang, 'short')}
 				</span>
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="folder" class="w-4 h-4 text-primary/80" />

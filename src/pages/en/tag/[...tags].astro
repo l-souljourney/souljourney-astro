@@ -1,0 +1,62 @@
+---
+import { getTagsList } from "@/utils/getArchive";
+import { getCollection } from "astro:content";
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export async function getStaticPaths(): Promise<any> {
+	const posts = await getCollection("blog");
+	// 过滤英文文章
+	const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+	const allTags = new Set<string>();
+	enPosts.forEach((post: any) => {
+		if (post.data.tags) {
+			post.data.tags.forEach((tag: string) => allTags.add(tag));
+		}
+	});
+	return Array.from(allTags).map((tag: string) => ({
+		params: { tags: tag },
+		props: { tag }
+	}));
+}
+
+const { tags } = Astro.params;
+// 特殊处理：仅获取英文文章
+const allPosts = await getCollection("blog");
+const enPosts = allPosts.filter((post: any) => post.id.startsWith('en/'));
+const filteredPosts = enPosts
+  .filter((post: any) => post.data.tags && post.data.tags.includes(tags))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 按年份分组
+const articlesByYear = new Map<number, any[]>();
+filteredPosts.forEach(post => {
+  const year = post.data.date.getFullYear();
+  if (!articlesByYear.has(year)) {
+    articlesByYear.set(year, []);
+  }
+  articlesByYear.get(year)!.push(post);
+});
+
+// 转换为 Archive 组件需要的格式
+const articleList = Array.from(articlesByYear.entries())
+  .sort((a, b) => b[0] - a[0]) // 按年份降序
+  .map(([year, posts]) => ({
+    name: year,
+    data: posts.map(post => post.data)
+  }));
+
+// 页面 Info
+import SITE_CONFIG from "@/config";
+const { Description } = SITE_CONFIG;
+// 公共 Layout
+import Layout from "@/layouts/Layout/Layout.astro";
+// 文章列表组件
+import Archive from "@/components/Archive/Archive.astro";
+---
+
+<Layout title={`Tag: #${tags}`} description={Description} activeNav={tags}>
+	<Archive articleList={articleList} />
+</Layout>

@@ -9,7 +9,9 @@ export const ui = {
     zh: {
         'nav.home': '首页',
         'nav.posts': '文章',
+        'nav.archives': '归档',
         'nav.about': '关于',
+        'nav.friends': '友链',
         'nav.twitter': '推特',
         'footer.copyright': 'L-忠程丨生死看淡不服就淦',
         'footer.rights': 'All Rights Reserved.',
@@ -32,7 +34,9 @@ export const ui = {
     en: {
         'nav.home': 'Home',
         'nav.posts': 'Posts',
+        'nav.archives': 'Archives',
         'nav.about': 'About',
+        'nav.friends': 'Friends',
         'nav.twitter': 'Twitter',
         'footer.copyright': 'L-SoulJourney',
         'footer.rights': 'All Rights Reserved.',

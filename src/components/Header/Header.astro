@@ -24,6 +24,17 @@ const nextLang = lang === 'zh' ? 'en' : 'zh';
 const nextLangLabel = lang === 'zh' ? 'EN' : '中';
 const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
 
+// 导航文本映射
+const navTextMap: Record<string, string> = {
+  '投资路': 'Investment',
+  'AI时代': 'AI Era',
+  '浙商': 'Zhejiang Business',
+  '天问': 'Philosophy',
+  '活着': 'Life',
+  '昔日': 'Archives',
+  '关于': 'About',
+};
+
 ---
 
 <header class="fixed top-0 left-0 w-screen h-[66px] z-50 transition-colors duration-180 bg-background/80 backdrop-blur-md shadow-sm border-b border-border">
@@ -37,12 +48,8 @@ const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/
 				Navs.map(i => {
                     // 处理链接前缀
                     const link = lang === 'zh' ? i.link : `/en${i.link === '/' ? '' : i.link}`;
-                    // 简单的翻译映射 (实际项目中建议把 Navs 移到 i18n 配置中)
-                    const text = lang === 'en' && i.text === '首页' ? 'Home' :
-                                 lang === 'en' && i.text === '文章' ? 'Posts' :
-                                 lang === 'en' && i.text === '关于' ? 'About' :
-                                 lang === 'en' && i.text === '友链' ? 'Friends' :
-                                 i.text;
+                    // 使用映射表翻译导航文本
+                    const text = lang === 'en' && navTextMap[i.text] ? navTextMap[i.text] : i.text;
 
                     return (
 					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? "text-primary bg-accent" : "text-foreground"}` } href={link} target={i.target ? "_blank" : "_self"}>

@@ -1,11 +1,17 @@
 ---
 import { getDescription, fmtTime } from "@/utils/index";
+import { formatDate } from "@/utils/formatDate";
 // 分类映射功能
 import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import { Icon } from 'astro-icon/components';
 import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
 import getReadingTime from 'reading-time';
+
+// i18n
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
 	return posts.map((post: any) => ({ params: { article: post.data.id }, props: post }));
@@ -54,7 +60,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 			<section class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="calendar" class="w-4 h-4 text-primary/80" />
-					发布于 {fmtTime(post.data.date, "YYYY年MM月DD日")}
+					{t('post.published')} {formatDate(post.data.date, lang, 'full')}
 				</span>
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="folder" class="w-4 h-4 text-primary/80" />
