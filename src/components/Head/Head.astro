@@ -47,6 +47,7 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<meta name="keywords" content={(Keywords || ["Astro", "分享", "博客"]).join(", ")} />
 	<meta name="description" content={Description} />
 	<meta name="format-detection" content="telephone=no, email=no, date=no, address=no" />
+    <link rel="alternate" type="application/rss+xml" title={Title} href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'} />
 	<!-- 元数据 -->
 	<meta name="title" content={WebTitle} />
 	<meta name="site" content={Site} />

@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout/Layout.astro";
+import Archive from "@/components/Archive/Archive.astro";
+
+// Get all posts
+const posts = await getCollection("blog");
+// Filter for English posts
+const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+
+// Group by year
+const articlesByYear = new Map<number, any[]>();
+enPosts.forEach((post: any) => {
+  const year = post.data.date.getFullYear();
+  if (!articlesByYear.has(year)) {
+    articlesByYear.set(year, []);
+  }
+  articlesByYear.get(year)!.push(post);
+});
+
+// Format for Archive component
+const articleList = Array.from(articlesByYear.entries())
+  .sort((a, b) => b[0] - a[0]) // Sort by year desc
+  .map(([year, posts]) => ({
+    name: year,
+    data: posts.sort((a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf())
+  }));
+
+const info = {
+  title: "Archives | L-忠程丨生死看淡不服就淦",
+  description: "Archives of L-SoulJourney Blog",
+};
+---
+
+<Layout title={info.title} description={info.description} activeNav="archives">
+	<section class="vh-container">
+		<Archive articleList={articleList} />
+	</section>
+</Layout>
