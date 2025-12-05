@@ -1,8 +1,9 @@
 ---
 import { fmtTime } from "@/utils/index";
-import { getLangFromUrl } from '@/i18n/utils';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 const { articleList } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const prefix = lang === 'en' ? '/en' : '';
 ---
 
@@ -14,7 +15,7 @@ const prefix = lang === 'en' ? '/en' : '';
 					<p class="flex items-center w-full h-10 rounded-2xl text-base transition-colors">
 						<em class="shrink-0 w-20 md:w-20 max-md:w-12 h-15 text-primary dark:text-[#e8e8e8] text-2xl md:text-2xl max-md:text-xl font-semibold leading-[3.75rem] text-right not-italic">{i.name}</em>
 						<i class="relative w-10 max-md:w-7 h-full before:content-[''] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:block before:w-[0.36rem] before:h-[0.36rem] before:border-[0.28rem] before:border-solid before:border-[#0000006D] dark:before:border-white/20 before:rounded-full before:bg-white dark:before:bg-[#333] before:transition-all before:duration-300" />
-						<span class="flex-1 text-zinc-600 dark:text-zinc-400 font-medium transition-all">{i.data.length}篇文章</span>
+						<span class="flex-1 text-zinc-600 dark:text-zinc-400 font-medium transition-all">{i.data.length} {lang === 'en' ? 'articles' : '篇文章'}</span>
 					</p>
 					{i.data.map((_: any) => (
 						<a href={`${prefix}/article/${_.id.replace('en/', '')}`} class="flex items-center w-full h-10 rounded-2xl text-base transition-colors hover:bg-[#EEEFF3] dark:hover:bg-white/5 group">
