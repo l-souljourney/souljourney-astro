@@ -1,33 +1,32 @@
 ---
-import { getCategoriesList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
-import { getCategoryDisplayName, getAllCategoryPaths } from "@/utils/categoryMapping";
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import { getCategoryDisplayName } from "@/utils/categoryMapping";
+// 公共 Layout
+import Layout from "@/layouts/Layout/Layout.astro";
+// 文章列表组件
+import Archive from "@/components/Archive/Archive.astro";
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-
-export async function getStaticPaths(): Promise<any> {
-	const posts = await getCollection("blog");
-	// 过滤英文文章
-	const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
-	// 获取所有文章使用的分类
-	const usedCategories = new Set(enPosts.map((post: any) => post.data.categories));
-	// 获取所有配置的分类
-	const allCategories = getAllCategoryPaths();
-	// 合并：文章分类 + 配置的分类（确保所有导航中的分类都有页面）
-	const allPaths = new Set([...usedCategories, ...allCategories]);
-	// 生成所有分类的页面路径
-	return Array.from(allPaths).map((category: string) => ({ 
-		params: { categories: category }, 
-		props: { category } 
-	}));
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  // Filter for English posts
+  const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+  
+  // Get unique categories from English posts
+  const categories = [...new Set(enPosts.map((post: any) => post.data.categories))];
+  
+  return categories.map((category) => ({
+    params: { categories: category },
+  }));
 }
-// 获取分类列表
+
 const { categories } = Astro.params;
-// 特殊处理：仅获取英文文章
-const allPosts = await getCollection("blog");
-const enPosts = allPosts.filter((post: any) => post.id.startsWith('en/'));
+const lang = getLangFromUrl(Astro.url);
+const categoryDisplayName = getCategoryDisplayName(categories, 'en');
+
+const posts = await getCollection("blog");
+// Filter for English posts
+const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
 const filteredPosts = enPosts
   .filter((post: any) => post.data.categories === categories)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -51,16 +50,12 @@ const articleList = Array.from(articlesByYear.entries())
   }));
   
 // 页面 Info
-import SITE_CONFIG from "@/config";
-const { Description } = SITE_CONFIG;
-// 公共 Layout
-import Layout from "@/layouts/Layout/Layout.astro";
-// 文章列表组件
-import Archive from "@/components/Archive/Archive.astro";
-// 获取分类中文显示名称
-const categoryDisplayName = getCategoryDisplayName(categories);
+const info = {
+  title: `Category: ${categoryDisplayName} | L-忠程丨生死看淡不服就淦`,
+  description: "L-忠程的博客,分享技术、投资、生活与感悟",
+};
 ---
 
-<Layout title={`Category: ${categoryDisplayName}`} description={Description} activeNav={categories}>
+<Layout title={info.title} description={info.description} activeNav={categories}>
 	<Archive articleList={articleList} />
 </Layout>

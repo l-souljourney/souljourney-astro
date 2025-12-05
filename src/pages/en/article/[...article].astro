@@ -46,29 +46,24 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 
 ---
 
-<Layout title={post.data.title || Title} description={description} cover={ARTICLE_COVER} activeNav={post.data.categories} headings={headings}>
-	<article class="
-		w-full
-		bg-white dark:bg-[#252525]
-		rounded-2xl
-		shadow-sm
-		overflow-hidden
-		vh-animation vh-animation-init
-	">
-		<header class="
-			p-8 pb-4
-			bg-white dark:bg-[#252525]
-		">
-			<h1 class="text-2xl md:text-3xl font-bold mb-4 text-foreground">{post.data.title}</h1>
-			<section class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-				<span class="inline-flex items-center gap-1.5">
-					<Icon name="calendar" class="w-4 h-4 text-primary/80" />
-					{t('post.published')} {formatDate(post.data.date, lang, 'short')}
-				</span>
-				<span class="inline-flex items-center gap-1.5">
-					<Icon name="folder" class="w-4 h-4 text-primary/80" />
-					{t('post.category')} <a href={`/categories/${post.data.categories}`} class="text-primary hover:text-primary/80 transition-colors">{getCategoryDisplayName(post.data.categories) || "Uncategorized"}</a>
-				</span>
+<Layout title={post.data.title} description={post.data.description}>
+  <article class="flex flex-col gap-10">
+    <header class="flex flex-col gap-6">
+      <h1 class="text-4xl max-md:text-2xl font-bold text-primary dark:text-[#e8e8e8] leading-tight">
+        {post.data.title}
+      </h1>
+      <div class="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <span class="flex items-center gap-1">
+          <i class="iconfont icon-calendar text-lg"></i>
+          {t('post.published')} {formatDate(post.data.date, 'en', 'short')}
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="iconfont icon-folder text-lg"></i>
+          {t('post.category')} 
+          <a href={`/en/categories/${post.data.categories}`} class="hover:text-primary transition-colors">
+            {getCategoryDisplayName(post.data.categories, 'en')}
+          </a>
+        </span>
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="file-text" class="w-4 h-4 text-primary/80" />
 					{t('post.words')} {article_word_count} {t('post.words')}
