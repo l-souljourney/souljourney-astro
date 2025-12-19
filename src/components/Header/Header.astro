@@ -24,16 +24,8 @@ const nextLang = lang === 'zh' ? 'en' : 'zh';
 const nextLangLabel = lang === 'zh' ? 'EN' : '中';
 const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
 
-// 导航文本映射
-const navTextMap: Record<string, string> = {
-  '投资路': 'Investment',
-  'AI时代': 'AI Era',
-  '浙商': 'Zhejiang Business',
-  '天问': 'Philosophy',
-  '活着': 'Life',
-  '昔日': 'Archives',
-  '关于': 'About',
-};
+// 移除硬编码映射表
+// const navTextMap = ...
 
 ---
 
@@ -45,11 +37,19 @@ const navTextMap: Record<string, string> = {
 		</a>
 		<nav class="ml-auto flex items-center gap-[1.18rem] h-full">
 			{
-				Navs.map(i => {
+                Navs.map(i => {
                     // 处理链接前缀
                     const link = lang === 'zh' ? i.link : `/en${i.link === '/' ? '' : i.link}`;
-                    // 使用映射表翻译导航文本
-                    const text = lang === 'en' && navTextMap[i.text] ? navTextMap[i.text] : i.text;
+                    // 使用 key 翻译导航文本
+                    // i.text 现在的格式是 'nav.investment'，直接作为 key 传入 t()
+                    // 之前的逻辑是 i.text 是中文，然后查表。现在 config 已经是 key 了。
+                    // 但是 i18n/ui.ts 里 key 是 'nav.investment'。
+                    // config 里 text 是 'nav.investment'。
+                    // 所以 t(i.text) 应该直接工作，前提是 i18n/ui.ts 的 key 直接就是 'nav.investment' 而不是 'nav.nav.investment'。
+                    // ui.ts: 'nav.investment': '投资路'
+                    // useTranslations(lang)(key) -> ui[lang][key]
+                    // 所以 t('nav.investment') works.
+                    const text = t(i.text as any);
 
                     return (
 					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? "text-primary bg-accent" : "text-foreground"}` } href={link} target={i.target ? "_blank" : "_self"}>
@@ -66,7 +66,7 @@ const navTextMap: Record<string, string> = {
 
 			<ThemeIcon />
 			<span class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground search-btn">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg> 搜索
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg> {t('header.search')}
 			</span>
 			<span class="flex md:hidden items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground menu-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.28rem] w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 6h16"></path><path d="M7 12h13"></path><path d="M10 18h10"></path></svg>

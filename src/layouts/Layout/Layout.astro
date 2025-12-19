@@ -23,9 +23,11 @@ import TOC from "@/components/TOC/TOC.astro";
 import "@/styles/globals.css";
 // Base.less has been migrated to globals.css and removed
 import { ClientRouter } from 'astro:transitions';
+import { getLangFromUrl } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
 ---
 
-<html lang="zh-CN">
+<html lang={lang}>
 	<Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
 		<!-- 谷歌广告JS加载项 -->
 		{ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}

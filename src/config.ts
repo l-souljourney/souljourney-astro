@@ -43,13 +43,13 @@ export default {
   // Theme: { ... } removed
   // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
-    { text: '投资路', link: '/categories/investment', icon: 'Nav_investment' },
-    { text: 'AI时代', link: '/categories/ai-era', icon: 'Nav_ai' },
-    { text: '浙商', link: '/categories/zhejiang-business', icon: 'Nav_business' },
-    { text: '天问', link: '/categories/philosophy', icon: 'Nav_philosophy' },
-    { text: '活着', link: '/categories/life', icon: 'Nav_life' },
-    { text: '昔日', link: '/archives', icon: 'Nav_archives' },
-    { text: '关于', link: '/about', icon: 'Nav_about' },
+    { text: 'nav.investment', link: '/categories/investment', icon: 'Nav_investment' },
+    { text: 'nav.ai_era', link: '/categories/ai-era', icon: 'Nav_ai' },
+    { text: 'nav.business', link: '/categories/zhejiang-business', icon: 'Nav_business' },
+    { text: 'nav.philosophy', link: '/categories/philosophy', icon: 'Nav_philosophy' },
+    { text: 'nav.life', link: '/categories/life', icon: 'Nav_life' },
+    { text: 'nav.archives', link: '/archives', icon: 'Nav_archives' },
+    { text: 'nav.about', link: '/about', icon: 'Nav_about' },
   ],
   // 侧边栏个人网站
   WebSites: [
@@ -130,7 +130,7 @@ export default {
         label: 'RSS',
         url: '/rss.xml',
         icon: 'rss', // 本地 SVG: src/icons/rss.svg
-        title: 'RSS 订阅'
+        title: 'footer.rss'
       }
     ],
     // 底部徽章链接（统一徽章风格）
@@ -140,21 +140,21 @@ export default {
         label: '浙ICP备2025152080号-1', // 完整备案号，符合国家要求
         url: 'https://beian.miit.gov.cn/',
         icon: 'shield-check', // 盾牌检查图标
-        title: 'ICP备案信息'
+        title: 'footer.icp'
       },
       {
         name: 'Astro',
         label: 'Astro',
         url: 'https://astro.build/',
         icon: 'rocket', // 火箭图标
-        title: '基于 Astro 构建'
+        title: 'footer.badge.astro'
       },
       {
         name: 'Sitemap',
         label: 'Sitemap',
         url: '/sitemap-index.xml',
         icon: 'globe', // 地球图标
-        title: '网站地图'
+        title: 'footer.sitemap'
       }
     ]
   }

@@ -1,8 +1,7 @@
+import { ui } from '@/i18n/ui';
 import { getRssString } from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { getDescription } from '@/utils/index'
-import SITE_CONFIG from '@/config';
-const { Title, Description } = SITE_CONFIG;
+import { getDescription } from '@/utils/index';
 
 export async function GET(context: any) {
     const posts = await getCollection('blog');
@@ -10,8 +9,8 @@ export async function GET(context: any) {
     const enPosts = posts.filter(i => !i.data.hide && i.id.startsWith('en/'));
 
     const res = await getRssString({
-        title: `${Title} (English)`,
-        description: Description,
+        title: `${ui.en['site.title']} (English)`,
+        description: ui.en['site.description'],
         site: context.site,
         items: enPosts.map((post) => ({
             title: post.data.title,

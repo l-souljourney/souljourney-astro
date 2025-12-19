@@ -2,6 +2,8 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout/Layout.astro";
 import Archive from "@/components/Archive/Archive.astro";
+import { useTranslations } from '@/i18n/utils';
+const t = useTranslations('en');
 
 // Get all posts
 const posts = await getCollection("blog");
@@ -15,7 +17,7 @@ enPosts.forEach((post: any) => {
   if (!articlesByYear.has(year)) {
     articlesByYear.set(year, []);
   }
-  articlesByYear.get(year)!.push(post);
+  articlesByYear.get(year)!.push({ ...post.data, id: post.id });
 });
 
 // Format for Archive component
@@ -23,11 +25,13 @@ const articleList = Array.from(articlesByYear.entries())
   .sort((a, b) => b[0] - a[0]) // Sort by year desc
   .map(([year, posts]) => ({
     name: year,
-    data: posts.sort((a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf())
+    data: posts.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf())
   }));
 
+
+
 const info = {
-  title: "Archives | L-忠程丨生死看淡不服就淦",
+  title: "Archives",
   description: "Archives of L-SoulJourney Blog",
 };
 ---
