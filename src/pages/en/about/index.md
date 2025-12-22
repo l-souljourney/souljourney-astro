@@ -4,6 +4,7 @@ h1: "About Me"
 desc: "Hi there, I'm L-SoulJourney 👋"
 layout: "@/layouts/PageLayout/PageLayout.astro"
 type: "about"
+activeNav: "about"
 ---
 
 I'm L-SoulJourney (执笔忠程), a lifelong learner on a journey of continuous reflection, documentation, and sharing.

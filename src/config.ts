@@ -1,3 +1,5 @@
+import type { UIKeys } from '@/i18n/ui';
+
 export default {
   // 网站标题 - 符合ICP备案要求
   Title: 'L-忠程丨生死看淡不服就淦',
@@ -43,14 +45,14 @@ export default {
   // Theme: { ... } removed
   // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
-    { text: 'nav.investment', link: '/categories/investment', icon: 'Nav_investment' },
-    { text: 'nav.ai_era', link: '/categories/ai-era', icon: 'Nav_ai' },
-    { text: 'nav.business', link: '/categories/zhejiang-business', icon: 'Nav_business' },
-    { text: 'nav.philosophy', link: '/categories/philosophy', icon: 'Nav_philosophy' },
-    { text: 'nav.life', link: '/categories/life', icon: 'Nav_life' },
-    { text: 'nav.archives', link: '/archives', icon: 'Nav_archives' },
-    { text: 'nav.about', link: '/about', icon: 'Nav_about' },
-  ],
+    { text: 'nav.investment', link: '/categories/investment', icon: 'Nav_investment', id: 'investment' },
+    { text: 'nav.ai_era', link: '/categories/ai-era', icon: 'Nav_ai', id: 'ai-era' },
+    { text: 'nav.business', link: '/categories/zhejiang-business', icon: 'Nav_business', id: 'zhejiang-business' },
+    { text: 'nav.philosophy', link: '/categories/philosophy', icon: 'Nav_philosophy', id: 'philosophy' },
+    { text: 'nav.life', link: '/categories/life', icon: 'Nav_life', id: 'life' },
+    { text: 'nav.archives', link: '/archives', icon: 'Nav_archives', id: 'archives' },
+    { text: 'nav.about', link: '/about', icon: 'Nav_about', id: 'about' },
+  ] as { text: UIKeys; link: string; icon: string; id: string; target?: string }[],
   // 侧边栏个人网站
   WebSites: [
     { text: 'GitHub', link: 'https://github.com/l-souljourney/souljourney-astro', icon: 'WebSite_github' },

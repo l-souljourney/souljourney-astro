@@ -4,6 +4,7 @@ h1: "关于我"
 desc: "Hi there, I'm 执笔忠程 👋"
 layout: "@/layouts/PageLayout/PageLayout.astro"
 type: "about"
+activeNav: "about"
 ---
 
 我是执笔忠程，一个在人生路上不断思考、记录与分享的行者。

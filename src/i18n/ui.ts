@@ -103,3 +103,5 @@ export const ui = {
         'footer.badge.astro': 'Astro',
     },
 } as const;
+
+export type UIKeys = keyof typeof ui.zh;

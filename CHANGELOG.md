@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.5 (2025-01-02) - 国际化代码质量优化
+
+### ⚡ Optimizations
+- **类型安全**: 为 `config.ts` 中的导航配置引入强类型检查 (`UIKeys`)，防止 i18n 键名拼写错误。
+- **导航高亮**: 重构 Header 导航高亮逻辑，使用明确的 `id` 替代脆弱的 URL 匹配，彻底修复多语言路径下的高亮问题。
+- **404 页面**: 统一 404 页面架构，使用 `src/pages/404.astro` 组件替代 Markdown 文件，自动适配当前语言显示错误信息。
+- **代码清理**: 移除冗余的 Markdown 404 页面，修复 About 页面 Frontmatter 缺失 `activeNav` 属性的问题。
+
+---
+
 ## v1.9.4 (2025-01-01) - 国际化深度修复
 
 ### 🐛 Fixed & Refactored

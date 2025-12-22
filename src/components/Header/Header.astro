@@ -52,7 +52,7 @@ const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/
                     const text = t(i.text as any);
 
                     return (
-					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(i.link.includes(activeNav) || (i.link.includes('/categories/') && activeNav && i.link.includes(activeNav))) ? "text-primary bg-accent" : "text-foreground"}` } href={link} target={i.target ? "_blank" : "_self"}>
+					<a class={`hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground ${(activeNav === i.id) ? "text-primary bg-accent" : "text-foreground"}` } href={link} target={i.target ? "_blank" : "_self"}>
 						{text}
 						<div class="w-4 h-auto object-contain"><Svg src={i.icon} /></div>
 					</a>

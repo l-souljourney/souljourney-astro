@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/Layout/Layout.astro';
+import SITE_CONFIG from '@/config';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+export const prerender = true;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { Description } = SITE_CONFIG;
+
+const title = t('404.title');
+const desc = t('404.desc');
+const backText = t('404.back');
+const homeLink = lang === 'zh' ? '/' : '/en/';
+---
+
+<Layout title={title} description={Description}>
+	<section class="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
+		<h1 class="text-9xl font-bold text-primary mb-4">404</h1>
+		<h2 class="text-2xl font-bold mb-4">{title}</h2>
+		<p class="text-muted-foreground mb-8 text-lg">{desc}</p>
+		<a href={homeLink} class="px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity font-medium">
+			{backText}
+		</a>
+	</section>
+</Layout>
