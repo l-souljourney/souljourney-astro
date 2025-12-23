@@ -1,7 +1,13 @@
 ---
 import { getArchiveList } from "@/utils/getArchive";
 // 获取归档列表
-const articleList = await getArchiveList();
+const allArchives = await getArchiveList();
+// 过滤掉英文文章 (id 以 'en/' 开头)
+const articleList = allArchives.map(yearGroup => ({
+  ...yearGroup,
+  data: yearGroup.data.filter((post: any) => !post.id.startsWith('en/'))
+})).filter(yearGroup => yearGroup.data.length > 0);
+
 // 页面 Info
 import SITE_CONFIG from "@/config";
 const { Description } = SITE_CONFIG;

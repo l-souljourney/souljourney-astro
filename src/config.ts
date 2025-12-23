@@ -153,7 +153,7 @@ export default {
       },
       {
         name: 'Sitemap',
-        label: 'Sitemap',
+        label: 'footer.sitemap',
         url: '/sitemap-index.xml',
         icon: 'globe', // 地球图标
         title: 'footer.sitemap'

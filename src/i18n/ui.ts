@@ -40,6 +40,17 @@ export const ui = {
         // Header
         'header.search': '搜索',
 
+        // Aside
+        'aside.articles': '文章数',
+        'aside.categories': '分类数',
+        'aside.tags': '标签数',
+        'aside.category.title': '分类',
+        'aside.tag.title': '热门标签',
+        'aside.recommend': '推荐文章',
+        'aside.ad': '广而告之',
+        'aside.ad.loading': '广告加载中...',
+        'aside.wechat.desc': '文章交流与作者互动，都在公众号留言区',
+
         // Nav Not-Found Fallback (Keys for Navs)
         'nav.investment': '投资路',
         'nav.ai_era': 'AI时代',
@@ -87,6 +98,17 @@ export const ui = {
 
         // Header
         'header.search': 'Search',
+
+        // Aside
+        'aside.articles': 'Articles',
+        'aside.categories': 'Categories',
+        'aside.tags': 'Tags',
+        'aside.category.title': 'Categories',
+        'aside.tag.title': 'Tags',
+        'aside.recommend': 'Recommended',
+        'aside.ad': 'Sponsor',
+        'aside.ad.loading': 'Ad Loading...',
+        'aside.wechat.desc': 'Interact with author in WeChat discussion area',
 
         // Nav
         'nav.investment': 'Investment',
