@@ -15,12 +15,19 @@ const fmtArticleList = (articleList: any) => {
   return Object.keys(groupedByYear).map(year => ({ name: parseInt(year), data: groupedByYear[year] })).reverse();
 }
 
+// 统一过滤逻辑
+const filterPosts = (posts: any[], lang?: string) => {
+  if (lang === 'en') {
+    return posts.filter(p => p.data.lang === 'en' || (p.id.startsWith('en/') && p.data.lang !== 'zh'));
+  } else {
+    return posts.filter(p => p.data.lang === 'zh' || (!p.data.lang && !p.id.startsWith('en/')));
+  }
+};
+
 // 获取分类下的文章列表
 const getCategoriesList = async (categories: string, lang?: string) => {
   const posts = await getCollection("blog");
-  const filteredPosts = lang === 'en'
-    ? posts.filter((p: any) => p.id.startsWith('en/'))
-    : posts.filter((p: any) => !p.id.startsWith('en/'));
+  const filteredPosts = filterPosts(posts, lang);
 
   const articleList = filteredPosts.filter((i: any) => i.data.categories == categories).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
   return fmtArticleList(articleList);
@@ -29,18 +36,17 @@ const getCategoriesList = async (categories: string, lang?: string) => {
 // 获取标签下的文章列表
 const getTagsList = async (tags: string, lang?: string) => {
   const posts = await getCollection("blog");
-  const filteredPosts = lang === 'en'
-    ? posts.filter((p: any) => p.id.startsWith('en/'))
-    : posts.filter((p: any) => !p.id.startsWith('en/'));
+  const filteredPosts = filterPosts(posts, lang);
 
-  const articleList = filteredPosts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const articleList = filteredPosts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
   return fmtArticleList(articleList);
 }
 
 // 获取归档列表
-const getArchiveList = async () => {
+const getArchiveList = async (lang?: string) => {
   const posts = await getCollection("blog");
-  const articleList = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
+  const filteredPosts = filterPosts(posts, lang);
+  const articleList = filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
   return fmtArticleList(articleList);
 }
 

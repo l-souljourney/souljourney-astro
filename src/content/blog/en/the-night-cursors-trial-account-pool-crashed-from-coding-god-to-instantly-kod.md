@@ -14,6 +14,7 @@ recommend: true
 top: false
 hide: false
 created: 2025-12-03
+lang: en
 ---
 ## With Cursor in Hand, I'm a Coding God  
 These past few months, especially after Claude 4.5 launched, paired with Cursor’s Agent capabilities and various MCPs (tools that let Cursor and LLMs create work plans via natural language and call code-level APIs), I’ve experienced the flow state of being a coding god. Whether it’s toB or toC projects—new builds or old refactors—**not exactly dominating the coding world, but it was definitely smooth sailing**.  

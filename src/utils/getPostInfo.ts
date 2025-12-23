@@ -9,9 +9,10 @@ const filterPostsByLang = (lang?: string) => {
   // 这里采用更通用的判断：如果 lang 是 'en'，只取 id 以 'en/' 开头的
   // 如果 lang 是 'zh'，只取 id 不以 'en/' 开头的
   if (lang === 'en') {
-    return posts.filter(p => p.id.startsWith('en/'));
+    return posts.filter(p => p.data.lang === 'en' || (p.id.startsWith('en/') && p.data.lang !== 'zh'));
   } else {
-    return posts.filter(p => !p.id.startsWith('en/'));
+    // 中文：lang 是 zh 或者 (没有 lang 且 id 不以 en/ 开头)
+    return posts.filter(p => p.data.lang === 'zh' || (!p.data.lang && !p.id.startsWith('en/')));
   }
 };
 

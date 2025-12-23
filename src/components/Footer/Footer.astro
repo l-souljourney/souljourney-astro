@@ -56,10 +56,20 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 					<span class="px-1.5 flex items-center h-full bg-secondary text-secondary-foreground">
 						<Icon name={link.icon} class="w-3 h-3" />
 					</span>
-					<span class="px-1.5 flex items-center h-full not-italic">{t(link.label as any)}</span>
+					<span class="px-1.5 flex items-center h-full not-italic">{t(link.label as any) === link.label ? link.label : t(link.label as any)}</span>
 				</a>
 			))}
 		</div>
+
+        <!-- 显式 ICP 备案信息 (中国大陆法律要求) -->
+        {config.ICP && config.ICP.enable && (
+            <div class="flex items-center justify-center gap-2 mt-2">
+                <a href={config.ICP.link} target="_blank" rel="noopener noreferrer" class="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                    <Icon name="shield-check" class="w-3 h-3" />
+                    {config.ICP.number}
+                </a>
+            </div>
+        )}
 
 		<!-- 版权信息 + Slogan -->
 		<div class="text-xs text-muted-foreground">
