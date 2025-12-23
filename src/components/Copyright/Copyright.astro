@@ -1,7 +1,6 @@
 ---
 const { time, sitename, title, site, id, auther } = Astro.props;
 const articleURL = `${site}/article/${id}`;
----
 
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 const lang = getLangFromUrl(Astro.url);

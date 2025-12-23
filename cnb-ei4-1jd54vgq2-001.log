@@ -1,0 +1,421 @@
+[00:00:00       ] $ find /data/orange-ci/runner/1928392548777652224/* -mindepth 0 -maxdepth 0 -type d | wc -l
+[00:00:00   +2ms] find: '/data/orange-ci/runner/1928392548777652224/*': No such file or directory
+[00:00:00   +0ms] 0
+[00:00:00   +0ms] exit code: 0, signal: 0
+[00:00:00   +9ms] $ cgcreate -g cpuset:cnb-ei4-1jd54vgq2-001 && echo '16,121-127' > /sys/fs/cgroup/cpuset/cnb-ei4-1jd54vgq2-001/cpuset.cpus && cgcreate -g cpu:cnb-ei4-1jd54vgq2-001 && echo '800000' > /sys/fs/cgroup/cpu/cnb-ei4-1jd54vgq2-001/cpu.cfs_quota_us && echo 100000 > /sys/fs/cgroup/cpu/cnb-ei4-1jd54vgq2-001/cpu.cfs_period_us && cgcreate -g memory:cnb-ei4-1jd54vgq2-001 && echo '16g' > /sys/fs/cgroup/memory/cnb-ei4-1jd54vgq2-001/memory.limit_in_bytes && echo '16g' > /sys/fs/cgroup/memory/cnb-ei4-1jd54vgq2-001/memory.memsw.limit_in_bytes
+[00:00:00  +89ms] exit code: 0, signal: 0
+[00:00:00  +22ms] $ mkdir -p /data/orange-ci/runner/1928392548777652224/ && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/runner/1928392548777652224/ 3347359064" /data/orange-ci && mkdir -p /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224 && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224 3709986038" /data/orange-ci && mkdir -p /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224 && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224 3146992683" /data/orange-ci && mkdir -p /data/orange-ci/volumes/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/ && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/volumes/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/ 119554862" /data/orange-ci && mkdir -p /data/orange-ci/tmp/cnb-ei4-1jd54vgq2-001/ && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/tmp/cnb-ei4-1jd54vgq2-001/ 2617924088" /data/orange-ci
+[00:00:00   +3ms] Setting up project 3347359064 (path /data/orange-ci/runner/1928392548777652224/)...
+[00:00:00   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 3347359064 with recursion depth limited (0).
+[00:00:00  +46ms] Setting up project 3709986038 (path /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224)...
+[00:00:00   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 3709986038 with recursion depth limited (0).
+[00:00:00  +49ms] Setting up project 3146992683 (path /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224)...
+[00:00:00   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 3146992683 with recursion depth limited (0).
+[00:00:00   +2ms] Setting up project 119554862 (path /data/orange-ci/volumes/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/)...
+[00:00:00   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 119554862 with recursion depth limited (0).
+[00:00:00   +4ms] Setting up project 2617924088 (path /data/orange-ci/tmp/cnb-ei4-1jd54vgq2-001/)...
+[00:00:00   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 2617924088 with recursion depth limited (0).
+[00:00:00  +54ms] exit code: 0, signal: 0
+[00:00:01  +35ms] $ xfs_quota -x -c 'limit -p bsoft=512G bhard=512G 3347359064' /data/orange-ci && xfs_quota -x -c 'limit -p bsoft=512G bhard=512G 3709986038' /data/orange-ci && xfs_quota -x -c 'limit -p bsoft=512G bhard=512G 3146992683' /data/orange-ci && xfs_quota -x -c 'limit -p bsoft=512G bhard=512G 119554862' /data/orange-ci && xfs_quota -x -c 'limit -p bsoft=256G bhard=256G 2617924088' /data/orange-ci
+[00:00:01   +6ms] exit code: 0, signal: 0
+[00:00:01 +103ms] $ mkdir -p  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/workspace/node_modules/ && touch  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/upper/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/work/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/
+[00:00:01  +20ms] exit code: 0, signal: 0
+[00:00:01  +17ms] $ extra_opts=""
+                  if [ "$(printf '%s\n' "5.10" "$(uname -r | cut -d. -f1,2)" | sort -V | head -n1)" = "5.10" ]; then
+                    extra_opts="$extra_opts,volatile"
+                  fi
+                  if ! mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/workspace/node_modules/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/work/",index=off$extra_opts /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/; then
+                    mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/workspace/node_modules/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/work/",index=off /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/
+                  fi
+[00:00:01  +34ms] exit code: 0, signal: 0
+[00:00:01  +20ms] $ flock -xo -w600 /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/workspace/node_modules/ echo done
+[00:00:01   +3ms] done
+[00:00:01  +28ms] exit code: 0, signal: 0
+[00:00:01  +76ms] $ mkdir -p  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.local/share/pnpm/ && touch  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/upper/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/work/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/
+[00:00:01  +49ms] exit code: 0, signal: 0
+[00:00:01  +33ms] $ extra_opts=""
+                  if [ "$(printf '%s\n' "5.10" "$(uname -r | cut -d. -f1,2)" | sort -V | head -n1)" = "5.10" ]; then
+                    extra_opts="$extra_opts,volatile"
+                  fi
+                  if ! mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.local/share/pnpm/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/work/",index=off$extra_opts /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/; then
+                    mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.local/share/pnpm/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/work/",index=off /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/
+                  fi
+[00:00:01  +20ms] exit code: 0, signal: 0
+[00:00:01 +106ms] $ flock -xo -w600 /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.local/share/pnpm/ echo done
+[00:00:01  +18ms] done
+[00:00:01   +0ms] exit code: 0, signal: 0
+[00:00:01   +6ms] $ mkdir -p  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.cache/pnpm/ && touch  /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/upper/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/work/ && mkdir -p  /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/
+[00:00:01  +34ms] exit code: 0, signal: 0
+[00:00:01   +6ms] $ extra_opts=""
+                  if [ "$(printf '%s\n' "5.10" "$(uname -r | cut -d. -f1,2)" | sort -V | head -n1)" = "5.10" ]; then
+                    extra_opts="$extra_opts,volatile"
+                  fi
+                  if ! mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.cache/pnpm/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/work/",index=off$extra_opts /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/; then
+                    mount -t overlay volumes -o lowerdir="/data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.cache/pnpm/",upperdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/upper/",workdir="/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/work/",index=off /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/
+                  fi
+[00:00:01   +6ms] exit code: 0, signal: 0
+[00:00:01   +7ms] $ flock -xo -w600 /data/orange-ci/caches/cnb.cool/l-souljourney~souljourney-astro~1928392548777652224/-/root/.cache/pnpm/ echo done
+[00:00:01   +1ms] done
+[00:00:01  +30ms] exit code: 0, signal: 0
+[00:00:01   +7ms] $ cat /etc/hosts
+[00:00:01   +2ms] 127.0.0.1 VM-0-16-tencentos VM-0-16-tencentos
+[00:00:01   +0ms] 127.0.0.1 localhost.localdomain localhost
+[00:00:01   +0ms] 127.0.0.1 localhost4.localdomain4 localhost4
+[00:00:01   +0ms] 
+[00:00:01   +0ms] ::1 VM-0-16-tencentos VM-0-16-tencentos
+[00:00:01   +0ms] ::1 localhost.localdomain localhost
+[00:00:01   +0ms] ::1 localhost6.localdomain6 localhost6
+[00:00:01   +0ms] 
+[00:00:01   +0ms] exit code: 0, signal: 0
+[00:00:01   +5ms] $ docker run -d --rm -e TZ='Asia/Shanghai' -e HTTP_PROXY -e HTTPS_PROXY -e NO_PROXY -e http_proxy -e https_proxy -e no_proxy --ulimit nofile=65535:65535 --sysctl net.ipv4.ping_group_range="0 2147483647"  --cap-drop CAP_NET_RAW --cgroup-parent=/cnb-ei4-1jd54vgq2-001/ --cpus 8 -m 16g --memory-swap 16g --name cnb-ei4-1jd54vgq2-001-network-bus --entrypoint= orangeci/network-bus:latest sleep 79200
+[00:00:01  +42ms] 217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102
+[00:00:02 +690ms] exit code: 0, signal: 0
+[00:00:02   +8ms] $ docker pull "orangeci/network-bus:latest"
+[00:00:02   +0ms] $ docker run --rm --network host --pid=host --cap-add NET_ADMIN --cap-add SYS_ADMIN -v /var/run/docker.sock:/var/run/docker.sock --name cnb-ei4-1jd54vgq2-001-orange-tc orangeci/orange-tc:latest -c cnb-ei4-1jd54vgq2-001-network-bus -d default:56Mbps -d 10.200.254.0/24:3Gbps -d 169.254.0.0/16:8Gbps -u default:56Mbps -u 10.200.254.0/24:1Gbps -u 169.254.0.0/16:8Gbps -a nsenter -b
+[00:00:03 +655ms] latest: Pulling from orangeci/network-bus
+[00:00:03  +12ms] Digest: sha256:88737276d46f4115fbce2c748dae79c83944e92254f9e64d1247d71f0cacbf08
+[00:00:03   +0ms] Status: Image is up to date for orangeci/network-bus:latest
+[00:00:03   +3ms] docker.io/orangeci/network-bus:latest
+[00:00:03   +4ms] exit code: 0, signal: 0
+[00:00:03  +18ms] $ echo "1766478303033 orangeci/network-bus:latest 2025-12-23 04:25:03" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:03   +1ms] exit code: 0, signal: 0
+[00:00:03  +90ms] container: cnb-ei4-1jd54vgq2-001-network-bus
+[00:00:03   +0ms] mode: 
+[00:00:03   +0ms] action: nsenter
+[00:00:03   +0ms] batch: true
+[00:00:03   +0ms] input downloads: [default:56Mbps 10.200.254.0/24:3Gbps 169.254.0.0/16:8Gbps]
+[00:00:03   +0ms] input uploads: [default:56Mbps 10.200.254.0/24:1Gbps 169.254.0.0/16:8Gbps]
+[00:00:03 +176ms] container cnb-ei4-1jd54vgq2-001-network-bus action nsenter exec veth err results may be incomplete or inconsistent
+[00:00:03   +0ms] action nsenter exec err,so backoff to action tc
+[00:00:04 +755ms] tc cmd veths:  veth58ea128
+[00:00:04   +0ms] tc veths: veth58ea128
+[00:00:04 +889ms] done
+[00:00:05 +325ms] exit code: 0, signal: 0
+[00:00:05  +14ms] $ docker pull "orangeci/orange-tc:latest"
+[00:00:05   +2ms] $ docker run -d --rm -e TZ='Asia/Shanghai' -e HTTP_PROXY -e HTTPS_PROXY -e NO_PROXY -e http_proxy -e https_proxy -e no_proxy --ulimit nofile=65535:65535 --sysctl net.ipv4.ping_group_range="0 2147483647"  --cap-drop CAP_NET_RAW --cgroup-parent=/cnb-ei4-1jd54vgq2-001/ --cpus 8 -m 16g --memory-swap 16g --network container:cnb-ei4-1jd54vgq2-001-network-bus --init --name cnb-ei4-1jd54vgq2-001-pid-bus --entrypoint= orangeci/network-bus:latest sleep 79200
+[00:00:05 +210ms] e9edcb75cfefbc1dd2868e8efee46bf89cdb4b2487c779b7322e7bd2b664c81c
+[00:00:05 +449ms] latest: Pulling from orangeci/orange-tc
+[00:00:06  +31ms] Digest: sha256:eeddbbb98defbd7db5175879b1fb72ab865c5f7de41ccd0bd1140933e6761132
+[00:00:06   +0ms] Status: Image is up to date for orangeci/orange-tc:latest
+[00:00:06   +3ms] docker.io/orangeci/orange-tc:latest
+[00:00:06  +11ms] exit code: 0, signal: 0
+[00:00:06   +6ms] $ echo "1766478306007 orangeci/orange-tc:latest 2025-12-23 04:25:06" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:06   +1ms] exit code: 0, signal: 0
+[00:00:06 +292ms] exit code: 0, signal: 0
+[00:00:06  +18ms] $ mkdir -p /data/orange-ci/git/cnb.cool/1928392548777652224/cache/ && mkdir -p /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001
+[00:00:06   +0ms] $ docker pull "orangeci/network-bus:latest"
+[00:00:06  +17ms] exit code: 0, signal: 0
+[00:00:06   +6ms] $ docker run --rm -e TZ='Asia/Shanghai' -u root --network=host --privileged=true --ulimit nofile=65535:65535 --storage-opt size=256G --shm-size 2g -v /data/orange-ci/git/cnb.cool/1928392548777652224/cache/:/data/orange-ci/git/cnb.cool/1928392548777652224/cache/ -v /data/orange-ci/runner/1928392548777652224/:/yyds:rshared -v /data/orange-ci/runner/:/data/orange-ci/runner/:rshared $ORANGE_ENVS --init --name cnb-ei4-1jd54vgq2-001-git-clone-yyds cnbcool/git-clone-yyds:latest
+[00:00:07 +649ms] latest: Pulling from orangeci/network-bus
+[00:00:07  +43ms] Digest: sha256:88737276d46f4115fbce2c748dae79c83944e92254f9e64d1247d71f0cacbf08
+[00:00:07   +0ms] Status: Image is up to date for orangeci/network-bus:latest
+[00:00:07   +3ms] docker.io/orangeci/network-bus:latest
+[00:00:07  +72ms] exit code: 0, signal: 0
+[00:00:08  +1.4s] use git username/password
+[00:00:08   +4ms] git version 2.39.5
+[00:00:08   +1ms] file:/etc/gitconfig	filter.lfs.clean=git-lfs clean -- %f
+[00:00:08   +0ms] file:/etc/gitconfig	filter.lfs.smudge=git-lfs smudge -- %f
+[00:00:08   +0ms] file:/etc/gitconfig	filter.lfs.process=git-lfs filter-process
+[00:00:08   +0ms] file:/etc/gitconfig	filter.lfs.required=true
+[00:00:08   +0ms] file:/root/.gitconfig	user.name=cnb
+[00:00:08   +0ms] file:/root/.gitconfig	user.email=cnb@noreply.cnb.cool
+[00:00:08   +0ms] file:/root/.gitconfig	credential.helper=/bin/git-credential
+[00:00:08   +0ms] file:/root/.gitconfig	credential.usehttppath=true
+[00:00:08   +0ms] file:/root/.gitconfig	url.https://cnb.cool/.insteadof=git@cnb.cool:
+[00:00:08   +0ms] file:/root/.gitconfig	url.https://cnb.cool/.insteadof=cnb.cool:
+[00:00:08   +0ms] file:/root/.gitconfig	url.https://cnb.cool/.insteadof=http://cnb.cool/
+[00:00:08   +0ms] file:/root/.gitconfig	core.quotepath=false
+[00:00:08   +0ms] file:/root/.gitconfig	core.autocrlf=false
+[00:00:08   +0ms] file:/root/.gitconfig	core.longpaths=true
+[00:00:08   +0ms] file:/root/.gitconfig	i18n.commitencoding=utf-8
+[00:00:08   +0ms] file:/root/.gitconfig	merge.directoryrenames=false
+[00:00:08   +0ms] file:/root/.gitconfig	gc.auto=0
+[00:00:08   +0ms] file:/root/.gitconfig	gc.pruneexpire=never
+[00:00:08   +0ms] file:/root/.gitconfig	lfs.concurrenttransfers=8
+[00:00:08  +23ms] [32m2025-12-23 16:25.08 $[0m lfs-progress-for-git
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m flock -xon /data/orange-ci/git/cnb.cool/1928392548777652224/cache/ /bin/git-clone
+[00:00:08   +0ms] [.git] show progress...
+[00:00:08  +13ms] [32m2025-12-23 16:25.08 $[0m git remote set-url origin "https://cnb.cool/l-souljourney/souljourney-astro.git"
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m git remote -v
+[00:00:08   +1ms] origin	https://cnb.cool/l-souljourney/souljourney-astro.git (fetch)
+[00:00:08   +0ms] origin	https://cnb.cool/l-souljourney/souljourney-astro.git (push)
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m git for-each-ref refs/tags/ refs/heads/ refs/remotes/ |wc -l
+[00:00:08   +2ms] 2
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m git for-each-ref --format="delete \"%(refname)\"" refs/tags/ refs/heads/ refs/remotes/ |git update-ref --stdin
+[00:00:08   +3ms] [32m2025-12-23 16:25.08 $[0m git fetch -v --progress --force --no-recurse-submodules --refmap=+refs/heads/*:refs/remotes/origin/* origin "refs/heads/main"
+[00:00:08  +80ms] [git-credential]: user: souljourney
+[00:00:08  +16ms] [git-credential]: for https://cnb.cool/l-souljourney/souljourney-astro
+[00:00:08   +0ms] [git-credential]: hit self by env
+[00:00:08   +0ms] [git-credential]: allow souljourney view true
+[00:00:08   +0ms] [git-credential]: done
+[00:00:08  +15ms] [git-credential]: store ignored
+[00:00:08   +1ms] POST git-upload-pack (371 bytes)
+[00:00:08  +15ms] POST git-upload-pack (293 bytes)
+[00:00:08  +16ms] remote: Enumerating objects: 5, done.        
+[00:00:08   +0ms] remote: Counting objects:  20% (1/5)        
+[00:00:08   +0ms] remote: Counting objects:  40% (2/5)        
+[00:00:08   +0ms] remote: Counting objects:  60% (3/5)        
+[00:00:08   +0ms] remote: Counting objects:  80% (4/5)        
+[00:00:08   +0ms] remote: Counting objects: 100% (5/5)        
+[00:00:08   +0ms] remote: Counting objects: 100% (5/5), done.        
+[00:00:08   +0ms] remote: Compressing objects:  33% (1/3)        
+[00:00:08   +0ms] remote: Compressing objects:  66% (2/3)        
+[00:00:08   +0ms] remote: Compressing objects: 100% (3/3)        
+[00:00:08   +0ms] remote: Compressing objects: 100% (3/3), done.        
+[00:00:08   +0ms] remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0        
+[00:00:08   +6ms] From https://cnb.cool/l-souljourney/souljourney-astro
+[00:00:08   +0ms]  * branch            main       -> FETCH_HEAD
+[00:00:08   +1ms]  * [new branch]      main       -> origin/main
+[00:00:08   +3ms] [32m2025-12-23 16:25.08 $[0m git update-ref refs/fetched/2e3bd656234b562e9872a55e222f12da2503cc06 FETCH_HEAD
+[00:00:08   +4ms] [32m2025-12-23 16:25.08 $[0m git checkout -f -B "main" "2e3bd656234b562e9872a55e222f12da2503cc06"
+[00:00:08   +5ms] Reset branch 'main'
+[00:00:08   +0ms] Your branch is up to date with 'origin/main'.
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m git clean -ffdx
+[00:00:08   +3ms] [32m2025-12-23 16:25.08 $[0m git branch -u "origin/main"
+[00:00:08   +2ms] branch 'main' set up to track 'origin/main'.
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m git branch --show-current
+[00:00:08   +1ms] main
+[00:00:08   +5ms] [32m2025-12-23 16:25.08 $[0m flock -xo /data/orange-ci/git/cnb.cool/1928392548777652224/cache/ echo done
+[00:00:08   +1ms] done
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m copy-on-write for /yyds/cnb-ei4-1jd54vgq2-001/workspace
+[00:00:08   +6ms] [32m2025-12-23 16:25.08 $[0m cd /yyds/cnb-ei4-1jd54vgq2-001/workspace && /bin/git-checkout
+[00:00:08   +5ms] [32m2025-12-23 16:25.08 $[0m git remote set-url origin "https://cnb.cool/l-souljourney/souljourney-astro.git"
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m git remote -v
+[00:00:08   +2ms] origin	https://cnb.cool/l-souljourney/souljourney-astro.git (fetch)
+[00:00:08   +0ms] origin	https://cnb.cool/l-souljourney/souljourney-astro.git (push)
+[00:00:08   +5ms] [32m2025-12-23 16:25.08 $[0m git branch --show-current
+[00:00:08   +1ms] main
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m git rev-parse HEAD
+[00:00:08   +1ms] 2e3bd656234b562e9872a55e222f12da2503cc06
+[00:00:08   +2ms] [32m2025-12-23 16:25.08 $[0m skip fetch due to fetched in clone
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m skip checkout due to checkouted in clone
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m skip checkout submodules due to checkouted in clone
+[00:00:08   +1ms] [32m2025-12-23 16:25.08 $[0m done
+[00:00:09 +524ms] exit code: 0, signal: 0
+[00:00:09  +44ms] $ docker pull "node:18-alpine"
+[00:00:09   +0ms] $ du -sb /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace/.git | awk '{print $1}'
+[00:00:09   +0ms] $ docker pull "cnbcool/git-clone-yyds:latest"
+[00:00:09   +3ms] 29827932
+[00:00:09   +0ms] exit code: 0, signal: 0
+[00:00:10 +636ms] latest: Pulling from cnbcool/git-clone-yyds
+[00:00:10   +7ms] 18-alpine: Pulling from library/node
+[00:00:10  +30ms] Digest: sha256:3b2b4b7a4e12387f0504d790c4ff6ac112d1a3603c9795b662456aa3d19d6283
+[00:00:10   +0ms] Status: Image is up to date for cnbcool/git-clone-yyds:latest
+[00:00:10  +16ms] docker.io/cnbcool/git-clone-yyds:latest
+[00:00:10   +4ms] Digest: sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+[00:00:10   +0ms] Status: Image is up to date for node:18-alpine
+[00:00:10  +18ms] docker.io/library/node:18-alpine
+[00:00:10  +18ms] exit code: 0, signal: 0
+[00:00:10  +27ms] exit code: 0, signal: 0
+[00:00:10  +25ms] $ echo "1766478310111 node:18-alpine 2025-12-23 04:25:10" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:10   +0ms] $ echo "1766478310083 cnbcool/git-clone-yyds:latest 2025-12-23 04:25:10" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:10   +1ms] exit code: 0, signal: 0
+[00:00:10  +19ms] exit code: 0, signal: 0
+[00:00:10  +21ms] $ docker run -d --rm -e TZ='Asia/Shanghai' -u root $ORANGE_ENVS --pid container:cnb-ei4-1jd54vgq2-001-pid-bus --network container:cnb-ei4-1jd54vgq2-001-network-bus --ulimit nofile=65535:65535 --sysctl net.ipv4.ping_group_range="0 2147483647"  --cap-drop CAP_NET_RAW --cgroup-parent=/cnb-ei4-1jd54vgq2-001/ --cpus 8 -m 16g --memory-swap 16g --storage-opt size=256G --shm-size 2g --name cnb-ei4-1jd54vgq2-001 -v /etc/localtime:/etc/localtime:ro -v /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace/:/workspace/ -w /workspace/ -v /var/lib/lxcfs/proc/cpuinfo:/proc/cpuinfo -v /var/lib/lxcfs/proc/diskstats:/proc/diskstats -v /var/lib/lxcfs/proc/loadavg:/proc/loadavg -v /var/lib/lxcfs/proc/meminfo:/proc/meminfo -v /var/lib/lxcfs/proc/slabinfo:/proc/slabinfo -v /var/lib/lxcfs/proc/stat:/proc/stat -v /var/lib/lxcfs/proc/swaps:/proc/swaps -v /var/lib/lxcfs/proc/uptime:/proc/uptime -v /var/lib/lxcfs/sys/devices/system/cpu:/sys/devices/system/cpu -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/:/workspace/node_modules/ -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/:/root/.local/share/pnpm/ -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/:/root/.cache/pnpm/ --entrypoint= --init node:18-alpine sleep 72000
+[00:00:10 +111ms] 64e31db6ab28cd7da3764bdf9d9857997205cf41fe3cb6d0b99113e88f50a36d
+[00:00:10 +476ms] exit code: 0, signal: 0
+[00:00:10   +7ms] $ docker inspect -f '{{.ResolvConfPath}}' cnb-ei4-1jd54vgq2-001
+[00:00:10  +21ms] /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/resolv.conf
+[00:00:10  +28ms] exit code: 0, signal: 0
+[00:00:10  +24ms] $ mkdir -p /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/ && xfs_quota -x -c "project -s -d 0 -p /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/ 424986676" /data/orange-ci && xfs_quota -x -c 'limit -p bsoft=2M bhard=2M 424986676' /data/orange-ci && chattr -p 424986676 /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/hosts && chattr -p 424986676 /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/hostname && chattr -p 424986676 /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/resolv.conf
+[00:00:10   +3ms] Setting up project 424986676 (path /data/orange-ci/docker/containers/217a692ceb6b1d2268e179ef0bdc2b9b0cf441834c100cc75d5b633c59d42102/)...
+[00:00:10   +0ms] Processed 1 (/etc/projects and cmdline) paths for project 424986676 with recursion depth limited (0).
+[00:00:10  +47ms] exit code: 0, signal: 0
+[00:00:11 +103ms] $ if [ -e "/workspace/.git" ]; then
+                  echo "https://cnb:$GIT_PASSWORD@cnb.cool" > /workspace/.git/.git-credentials;
+                  echo "$GIT_CONFIG" >> /workspace/.git/config;
+                  echo "$GIT_CONFIG" >> /etc/gitconfig;
+                  fi;
+[00:00:11 +138ms] exit code: 0, signal: 0
+[00:00:11 +458ms] $ npm install -g pnpm@latest
+                  pnpm config set registry https://mirrors.cloud.tencent.com/npm/
+                  pnpm install --frozen-lockfile
+                  pnpm run build
+                  echo "✅ 构建完成: $(du -sh dist/ | cut -f1)"
+[00:00:13  +2.1s] 
+[00:00:13   +0ms] added 1 package in 2s
+[00:00:13   +0ms] 
+[00:00:13   +0ms] 1 package is looking for funding
+[00:00:13   +0ms]   run `npm fund` for details
+[00:00:14  +1.2s] Lockfile is up to date, resolution step is skipped
+[00:00:15  +97ms] Already up to date
+[00:00:15 +733ms] 
+[00:00:15  +16ms] Done in 1.3s using pnpm v10.26.1
+[00:00:16 +470ms] 
+[00:00:16   +0ms] > l-souljourney-blog@1.9.5 build /workspace
+[00:00:16   +0ms] > astro build
+[00:00:16   +0ms] 
+[00:00:19  +2.7s] [2m16:25:19[22m [34m[content][39m Syncing content
+[00:00:19   +1ms] [2m16:25:19[22m [34m[content][39m Content config changed
+[00:00:19   +0ms] [2m16:25:19[22m [34m[content][39m Clearing content store
+[00:00:19 +273ms] [2m16:25:19[22m [34m[content][39m Synced content
+[00:00:19   +0ms] [2m16:25:19[22m [34m[types][39m Generated [2m670ms[22m
+[00:00:19   +1ms] [2m16:25:19[22m [34m[build][39m output: [34m"static"[39m
+[00:00:19   +0ms] [2m16:25:19[22m [34m[build][39m mode: [34m"static"[39m
+[00:00:19   +0ms] [2m16:25:19[22m [34m[build][39m directory: [34m/workspace/dist/[39m
+[00:00:19   +0ms] [2m16:25:19[22m [34m[build][39m Collecting build info...
+[00:00:19   +1ms] [2m16:25:19[22m [34m[build][39m [32m✓ Completed in 728ms.[39m
+[00:00:19   +1ms] [2m16:25:19[22m [34m[build][39m Building static entrypoints...
+[00:00:21  +2.4s] [2m16:25:21[22m [34m[astro-icon][39m Loaded icons from src/icons
+[00:00:22 +648ms] [2m16:25:22[22m [34m[vite][39m [32m✓ built in 3.00s[39m
+[00:00:22   +0ms] [2m16:25:22[22m [34m[build][39m [32m✓ Completed in 3.04s.[39m
+[00:00:22   +1ms] 
+[00:00:22   +0ms] [42m[30m building client (vite) [39m[49m
+[00:00:22  +10ms] [2m16:25:22[22m [34m[vite][39m transforming...
+[00:00:22 +469ms] [2m16:25:22[22m [34m[vite][39m [32m✓[39m 79 modules transformed.
+[00:00:22  +39ms] [2m16:25:22[22m [34m[vite][39m rendering chunks...
+[00:00:22  +32ms] [2m16:25:22[22m [34m[vite][39m computing gzip size...
+[00:00:22   +3ms] [2m16:25:22[22m [34m[vite][39m [2mdist/[22m[2mvh_static/[22m[35mLayout.CFwGdNXj.css                                            [39m[1m[2m13.82 kB[22m[1m[22m[2m │ gzip:  2.60 kB[22m
+[00:00:22   +0ms] [2m16:25:22[22m [34m[vite][39m [2mdist/[22m[2mvh_static/[22m[36mClientRouter.astro_astro_type_script_index_0_lang.QW52Ox2j.js  [39m[1m[2m15.33 kB[22m[1m[22m[2m │ gzip:  5.27 kB[22m
+[00:00:22   +0ms] [2m16:25:22[22m [34m[vite][39m [2mdist/[22m[2mvh_static/[22m[36mLayout.astro_astro_type_script_index_0_lang.CoPNKoAc.js        [39m[1m[2m63.41 kB[22m[1m[22m[2m │ gzip: 27.27 kB[22m
+[00:00:22   +0ms] [2m16:25:22[22m [34m[vite][39m [2mdist/[22m[2mvh_static/[22m[36mSearch.astro_astro_type_script_index_0_lang.tZYucdM2.js        [39m[1m[2m74.58 kB[22m[1m[22m[2m │ gzip: 23.59 kB[22m
+[00:00:22   +0ms] [2m16:25:22[22m [34m[vite][39m [32m✓ built in 550ms[39m
+[00:00:22  +11ms] 
+[00:00:22   +0ms] [42m[30m generating static routes [39m[49m
+[00:00:22  +11ms] [2m16:25:22[22m [32m▶[39m src/pages/404.astro
+[00:00:22  +16ms] [2m16:25:22[22m   [34m└─[39m [2m/404.html[22m [2m(+16ms)[22m 
+[00:00:22   +1ms] [2m16:25:22[22m [32m▶[39m src/pages/about/index.md
+[00:00:22   +5ms] [2m16:25:22[22m   [34m└─[39m [2m/about/index.html[22m [2m(+5ms)[22m 
+[00:00:22   +1ms] [2m16:25:22[22m [32m▶[39m src/pages/archives/index.astro
+[00:00:22   +6ms] [2m16:25:22[22m   [34m└─[39m [2m/archives/index.html[22m [2m(+5ms)[22m 
+[00:00:22   +2ms] [2m16:25:22[22m [32m▶[39m src/pages/article/[...article].astro
+[00:00:23 +449ms] getLangFromUrl is not defined
+[00:00:23   +0ms]   [1mStack trace:[22m
+[00:00:23   +0ms] [2m    at file:///workspace/dist/chunks/Reward_Bgg-G_zA.mjs:28:34
+[00:00:23   +0ms]     at AstroComponentInstance.init (file:///workspace/dist/chunks/astro/server_HMITKSHo.mjs:5618:29)
+[00:00:23   +0ms]     at Object.render (file:///workspace/dist/chunks/astro/server_HMITKSHo.mjs:6032:23)
+[00:00:23   +0ms]     at file:///workspace/dist/chunks/astro/server_HMITKSHo.mjs:5135:18
+[00:00:23   +0ms]     at createBufferedRenderer (file:///workspace/dist/chunks/astro/server_HMITKSHo.mjs:970:10)[22m
+[00:00:23  +72ms] [2m16:25:22[22m   [34m├─[39m [2m/article/the-night-cursors-trial-account-pool-crashed-from-coding-god-to-instantly-kod/index.html[22m ELIFECYCLE  Command failed with exit code 1.
+[00:00:23  +89ms] exit code: 1, signal: -1
+[00:00:23   +9ms] $ docker run -i --rm --network none --pid=container:cnb-ei4-1jd54vgq2-001 "orangeci/check-is-remote-debugging:latest"
+[00:00:24 +842ms] no debugging is found by tty.
+[00:00:24 +269ms] exit code: 1, signal: -1
+[00:00:24   +8ms] $ docker pull "orangeci/check-is-remote-debugging:latest"
+[00:00:24 +169ms] $ docker kill cnb-ei4-1jd54vgq2-001
+[00:00:25 +407ms] cnb-ei4-1jd54vgq2-001
+[00:00:25  +41ms] exit code: 0, signal: 0
+[00:00:25   +5ms] $ echo "stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/ ..."
+[00:00:25  +31ms] stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/ ...
+[00:00:25   +1ms] exit code: 0, signal: 0
+[00:00:25  +35ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/" && umount "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/" || true
+[00:00:25   +2ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/ is a mountpoint
+[00:00:25  +58ms] exit code: 0, signal: 0
+[00:00:25   +1ms] latest: Pulling from orangeci/check-is-remote-debugging
+[00:00:25  +16ms] Digest: sha256:519a2e95ed0a11547c9d3e183028cb044d7bac3cb8317c6c14181a45c482e444
+[00:00:25   +1ms] Status: Image is up to date for orangeci/check-is-remote-debugging:latest
+[00:00:25   +2ms] docker.io/orangeci/check-is-remote-debugging:latest
+[00:00:25  +26ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/" || true
+[00:00:25  +24ms] exit code: 0, signal: 0
+[00:00:25   +2ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/ is not a mountpoint
+[00:00:25   +1ms] exit code: 0, signal: 0
+[00:00:25   +5ms] $ echo "1766478325495 orangeci/check-is-remote-debugging:latest 2025-12-23 04:25:25" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:25   +0ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/" || true
+[00:00:25  +23ms] exit code: 0, signal: 0
+[00:00:25   +0ms] mountpoint: /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o/merged/: No such file or directory
+[00:00:25  +28ms] exit code: 0, signal: 0
+[00:00:25  +32ms] $ rmdir -p -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/ || true
+[00:00:25  +16ms] rmdir: failed to remove '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/': Directory not empty
+[00:00:25   +0ms] rmdir: removing directory, '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/'
+[00:00:25  +23ms] exit code: 0, signal: 0
+[00:00:25   +5ms] $ mkdir /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o//clearing || true
+[00:00:25   +1ms] mkdir: cannot create directory '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-g0441o//clearing': No such file or directory
+[00:00:25  +22ms] exit code: 0, signal: 0
+[00:00:25   +5ms] $ echo "stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/ ..."
+[00:00:25   +1ms] stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/ ...
+[00:00:25   +0ms] exit code: 0, signal: 0
+[00:00:25  +45ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/" && umount "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/" || true
+[00:00:25   +3ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/ is a mountpoint
+[00:00:25  +37ms] exit code: 0, signal: 0
+[00:00:25  +15ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/" || true
+[00:00:25   +2ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/ is not a mountpoint
+[00:00:25   +1ms] exit code: 0, signal: 0
+[00:00:25   +8ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/" || true
+[00:00:25  +44ms] mountpoint: /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg/merged/: No such file or directory
+[00:00:25  +58ms] exit code: 0, signal: 0
+[00:00:25  +18ms] $ rmdir -p -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/ || true
+[00:00:25   +2ms] rmdir: failed to remove '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/': Directory not empty
+[00:00:25   +0ms] rmdir: removing directory, '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/'
+[00:00:25   +0ms] exit code: 0, signal: 0
+[00:00:25  +13ms] $ mkdir /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg//clearing || true
+[00:00:25   +2ms] mkdir: cannot create directory '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-2qeskg//clearing': No such file or directory
+[00:00:25   +0ms] exit code: 0, signal: 0
+[00:00:25  +49ms] $ echo "stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/ ..."
+[00:00:25   +1ms] stop /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/ ...
+[00:00:26  +41ms] exit code: 0, signal: 0
+[00:00:26  +13ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/" && umount "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/" || true
+[00:00:26   +3ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/ is a mountpoint
+[00:00:26   +5ms] exit code: 0, signal: 0
+[00:00:26  +32ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/" || true
+[00:00:26   +3ms] /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/ is not a mountpoint
+[00:00:26   +0ms] exit code: 0, signal: 0
+[00:00:26   +5ms] $ mountpoint "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/" || rm -rf  "/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/" || true
+[00:00:26   +2ms] mountpoint: /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg/merged/: No such file or directory
+[00:00:26   +1ms] exit code: 0, signal: 0
+[00:00:26   +8ms] $ rmdir -p -v /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/ || true
+[00:00:26   +2ms] rmdir: removing directory, '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/'
+[00:00:26   +0ms] rmdir: removing directory, '/data/orange-ci/copy-on-write'
+[00:00:26   +0ms] rmdir: failed to remove directory '/data/orange-ci/copy-on-write': Directory not empty
+[00:00:26  +27ms] exit code: 0, signal: 0
+[00:00:26  +18ms] $ mkdir /data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg//clearing || true
+[00:00:26  +16ms] mkdir: cannot create directory '/data/orange-ci/copy-on-write/l-souljourney~souljourney-astro~1928392548777652224/cnb-ei4-1jd54vgq2-001-0g59mg//clearing': No such file or directory
+[00:00:26   +0ms] exit code: 0, signal: 0
+[00:00:26   +5ms] $ docker kill cnb-ei4-1jd54vgq2-001-pid-bus
+[00:00:26 +211ms] cnb-ei4-1jd54vgq2-001-pid-bus
+[00:00:26   +2ms] exit code: 0, signal: 0
+[00:00:26  +16ms] $ docker run --rm --network host --pid=host --cap-add NET_ADMIN --cap-add SYS_ADMIN -v /var/run/docker.sock:/var/run/docker.sock --name cnb-ei4-1jd54vgq2-001-orange-tc-clean orangeci/orange-tc:latest -c cnb-ei4-1jd54vgq2-001-network-bus -m clean -d default:56Mbps -d 10.200.254.0/24:3Gbps -d 169.254.0.0/16:8Gbps -u default:56Mbps -u 10.200.254.0/24:1Gbps -u 169.254.0.0/16:8Gbps -a nsenter -b
+[00:00:26 +589ms] container: cnb-ei4-1jd54vgq2-001-network-bus
+[00:00:26   +0ms] mode: clean
+[00:00:26   +0ms] action: nsenter
+[00:00:26   +0ms] batch: true
+[00:00:27 +326ms] clean done
+[00:00:27 +174ms] exit code: 0, signal: 0
+[00:00:27  +28ms] $ docker kill cnb-ei4-1jd54vgq2-001-network-bus
+[00:00:27 +269ms] cnb-ei4-1jd54vgq2-001-network-bus
+[00:00:27   +1ms] exit code: 0, signal: 0
+[00:00:27  +94ms] $ mountpoint "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace" && umount "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace" || true
+[00:00:27   +3ms] /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace is a mountpoint
+[00:00:27   +8ms] exit code: 0, signal: 0
+[00:00:27  +18ms] $ mountpoint "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace" || rm -rf "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace" || true
+[00:00:27   +2ms] /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace is not a mountpoint
+[00:00:27   +1ms] exit code: 0, signal: 0
+[00:00:27  +17ms] $ mountpoint "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace" || rm -rf "/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001" || true
+[00:00:27   +2ms] mountpoint: /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/workspace: No such file or directory
+[00:00:27  +70ms] exit code: 0, signal: 0
+[00:00:28   +6ms] $ rmdir -p -v /data/orange-ci/runner/1928392548777652224 || true
+[00:00:28   +1ms] rmdir: removing directory, '/data/orange-ci/runner/1928392548777652224'
+[00:00:28   +0ms] rmdir: removing directory, '/data/orange-ci/runner'
+[00:00:28   +0ms] rmdir: failed to remove directory '/data/orange-ci/runner': Directory not empty
+[00:00:28   +0ms] exit code: 0, signal: 0
+[00:00:28   +8ms] $ mkdir /data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/clearing || true
+[00:00:28   +2ms] mkdir: cannot create directory '/data/orange-ci/runner/1928392548777652224/cnb-ei4-1jd54vgq2-001/clearing': No such file or directory
+[00:00:28   +0ms] exit code: 0, signal: 0
+[00:00:28   +5ms] $ if [ -d '/sys/fs/cgroup/cpu/cnb-ei4-1jd54vgq2-001' ]; then cgdelete -r 'cpu:cnb-ei4-1jd54vgq2-001'; fi
+[00:00:28  +29ms] exit code: 0, signal: 0
+[00:00:28   +7ms] $ if [ -d '/sys/fs/cgroup/memory/cnb-ei4-1jd54vgq2-001' ]; then cgdelete -r 'memory:cnb-ei4-1jd54vgq2-001'; fi
+[00:00:28  +58ms] exit code: 0, signal: 0
+[00:00:28  +15ms] $ if [ -d '/sys/fs/cgroup/cpuset/cnb-ei4-1jd54vgq2-001' ]; then cgdelete -r 'cpuset:cnb-ei4-1jd54vgq2-001'; fi
+[00:00:28  +32ms] exit code: 0, signal: 0
+[00:00:28   +5ms] $ rmdir /sys/fs/cgroup/*/cnb-ei4-1jd54vgq2-001
+[00:00:28   +2ms] rmdir: failed to remove '/sys/fs/cgroup/net_cls/cnb-ei4-1jd54vgq2-001': No such file or directory
+[00:00:28   +0ms] rmdir: failed to remove '/sys/fs/cgroup/net_prio/cnb-ei4-1jd54vgq2-001': No such file or directory
+[00:00:28  +29ms] exit code: 1, signal: -1
+[00:00:28   +7ms] $ docker pull "cnbcool/clear-containers"
+[00:00:28  +29ms] Using default tag: latest
+[00:00:28 +624ms] latest: Pulling from cnbcool/clear-containers
+[00:00:28  +20ms] Digest: sha256:812510bd6314d37a8a8e3281caf12fbc0c6bd064fb2fe9218d5eced545cf22a1
+[00:00:28   +0ms] Status: Image is up to date for cnbcool/clear-containers:latest
+[00:00:28   +3ms] docker.io/cnbcool/clear-containers:latest
+[00:00:28  +52ms] exit code: 0, signal: 0
+[00:00:28  +14ms] $ echo "1766478328904 cnbcool/clear-containers 2025-12-23 04:25:28" >> /data/orange-ci/runner/docker-usage.txt
+[00:00:28  +27ms] exit code: 0, signal: 0
+[00:00:28   +5ms] $ docker run --rm --network none -v /var/run/docker.sock:/var/run/docker.sock -v /orange-runner/log:/orange-runner/log -e PLUGIN_LOG_DIR="/orange-runner/log" -e PLUGIN_ID="cnb-ei4-1jd54vgq2-001" -e PLUGIN_TIMEOUT=72000000 cnbcool/clear-containers
+[00:00:29 +769ms] [32m[2025-12-23T08:25:29.715] [INFO] cnb-ei4-1jd54vgq2-001 - [39mno timeout containers
+[00:00:30 +340ms] exit code: 0, signal: 0
+[00:00:30  +16ms] $ find /data/orange-ci/runner/*/* -mindepth 0 -maxdepth 0 -type d -mmin +1200
+[00:00:30  +31ms] exit code: 0, signal: 0
+[00:00:30   +6ms] $ find /data/orange-ci/runner/*/*/clearing -mindepth 0 -maxdepth 0 -type d
+[00:00:30   +2ms] find: '/data/orange-ci/runner/*/*/clearing': No such file or directory
+[00:00:30  +36ms] exit code: 1, signal: -1
+[00:00:30   +5ms] $ rm -rf "/data/orange-ci/tmp/cnb-ei4-1jd54vgq2-001/"
+[00:00:30  +45ms] exit code: 0, signal: 0
