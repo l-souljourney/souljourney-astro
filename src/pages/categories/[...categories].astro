@@ -19,7 +19,7 @@ const zhPosts = allPosts.filter((post: any) => !post.id.startsWith('en/'));
 }
 // 获取分类列表
 const { categories } = Astro.params;
-const articleList = await getCategoriesList(categories);
+const articleList = await getCategoriesList(categories, 'zh');
 // 页面 Info
 import SITE_CONFIG from "@/config";
 const { Description } = SITE_CONFIG;

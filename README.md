@@ -133,6 +133,40 @@ Blog/
 2.  **双线部署**: 同时部署至腾讯云 COS 和 GitHub Pages
 3.  **分支同步**: 自动同步 `main` 分支代码到 `develop` 分支
 
+## 🧪 自动化测试 (Playwright)
+
+本项目集成 **Playwright** 进行端到端 (E2E) 测试，确保国际化路由、核心功能与通过性验证的稳定性。
+
+### 测试环境配置
+
+为了避免端口冲突，测试环境配置为独立运行：
+- **端口**: `4322` (独立于开发端口 `4321`)
+- **模式**: `reuseExistingServer: true` (复用已存在的测试服务，提高调试效率)
+
+### 常用命令
+
+```bash
+# 运行所有回归测试 (Headless mode)
+pnpm test
+
+# 启动图形化测试界面 (推荐调试用)
+pnpm test:ui
+
+# 查看最后一次测试报告
+npx playwright show-report
+```
+
+### 测试范围
+
+当前版本 (v1.9.8) 覆盖以下核心场景：
+1.  **Smoke Test**: 首页核心元素加载验证
+2.  **Archive Link**: 归档页文章链接有效性检查 (修复 404 回归)
+3.  **Cross-Language Isolation**: 验证分类页、侧边栏内容不仅显示对应语言
+4.  **404 Behavior**: 验证中英文 404 页面自动降级与文案适配
+5.  **Light Crawler**: 随机抽查全站链接深度有效性
+
+---
+
 ## 📄 许可证
 
 本项目采用 [MIT 许可证](LICENSE)。

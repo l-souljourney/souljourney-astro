@@ -8,7 +8,7 @@ const fmtArticleList = (articleList: any) => {
     const year = item.data.date.getFullYear();
     // 初始化
     !acc[year] && (acc[year] = []);
-    acc[year].push({ ...item.data, id: item.id });
+    acc[year].push({ ...item.data, id: item.data.id || item.id });
     return acc;
   }, {});
   // 转换为目标格式
@@ -16,16 +16,24 @@ const fmtArticleList = (articleList: any) => {
 }
 
 // 获取分类下的文章列表
-const getCategoriesList = async (categories: string) => {
+const getCategoriesList = async (categories: string, lang?: string) => {
   const posts = await getCollection("blog");
-  const articleList = posts.filter((i: any) => i.data.categories == categories).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
+  const filteredPosts = lang === 'en'
+    ? posts.filter((p: any) => p.id.startsWith('en/'))
+    : posts.filter((p: any) => !p.id.startsWith('en/'));
+
+  const articleList = filteredPosts.filter((i: any) => i.data.categories == categories).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
   return fmtArticleList(articleList);
 }
 
 // 获取标签下的文章列表
-const getTagsList = async (tags: string) => {
+const getTagsList = async (tags: string, lang?: string) => {
   const posts = await getCollection("blog");
-  const articleList = posts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const filteredPosts = lang === 'en'
+    ? posts.filter((p: any) => p.id.startsWith('en/'))
+    : posts.filter((p: any) => !p.id.startsWith('en/'));
+
+  const articleList = filteredPosts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   return fmtArticleList(articleList);
 }
 

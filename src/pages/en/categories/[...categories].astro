@@ -6,6 +6,8 @@ import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import Layout from "@/layouts/Layout/Layout.astro";
 // 文章列表组件
 import Archive from "@/components/Archive/Archive.astro";
+// 转换为 Archive 组件需要的格式
+import { getCategoriesList } from "@/utils/getArchive";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -21,33 +23,9 @@ export async function getStaticPaths() {
 }
 
 const { categories } = Astro.params;
-const lang = getLangFromUrl(Astro.url);
+// const lang = getLangFromUrl(Astro.url);
 const categoryDisplayName = getCategoryDisplayName(categories, 'en');
-
-const posts = await getCollection("blog");
-// Filter for English posts
-const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
-const filteredPosts = enPosts
-  .filter((post: any) => post.data.categories === categories)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-// 按年份分组
-const articlesByYear = new Map<number, any[]>();
-filteredPosts.forEach(post => {
-  const year = post.data.date.getFullYear();
-  if (!articlesByYear.has(year)) {
-    articlesByYear.set(year, []);
-  }
-  articlesByYear.get(year)!.push(post);
-});
-
-// 转换为 Archive 组件需要的格式
-const articleList = Array.from(articlesByYear.entries())
-  .sort((a, b) => b[0] - a[0]) // 按年份降序
-  .map(([year, posts]) => ({
-    name: year,
-    data: posts.map(post => post.data)
-  }));
+const articleList = await getCategoriesList(categories, 'en');
   
 // 页面 Info
 const info = {

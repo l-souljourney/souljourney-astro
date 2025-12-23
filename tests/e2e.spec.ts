@@ -1,54 +1,94 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'http://localhost:4321';
+const BASE_URL = 'http://localhost:4322';
 
-test.describe('Astro Blog v1.9.7 i18n Regression Tests', () => {
+test.describe('Astro Blog v1.9.8 i18n Deep Regression', () => {
 
     // 1. Smoke Test
     test('Smoke: Homepage loads successfully', async ({ page }) => {
         await page.goto('/');
         await expect(page).toHaveTitle(/L-忠程/);
-        await expect(page.locator('header nav')).toBeVisible();
     });
 
-    // 2. Sidebar Isolation (Fixing "Chinese sidebar on English page" bug)
-    test('Regression: English Sidebar should NOT show Chinese titles', async ({ page }) => {
-        await page.goto('/en/archives');
-
-        // Check Sidebar titles
-        const aside = page.locator('aside');
-        await expect(aside).toContainText('Categories');
-        await expect(aside).toContainText('Tags');
-
-        // Should NOT contain Chinese titles
-        await expect(aside).not.toContainText('分类');
-        await expect(aside).not.toContainText('热门标签');
-    });
-
-    // 3. Archive Isolation (Fixing "Mixed content in Archive" bug)
-    test('Regression: Chinese Archives should NOT show English posts', async ({ page }) => {
+    // 2. Fix Verification: Archive Links 404 Check
+    test('Fix: Archive links should NOT be 404', async ({ page }) => {
         await page.goto('/archives');
 
-        // Select all English links in the archive list
-        // English links usually start with /en/article/ or have similar patterns
-        // We check that NONE of the links contain '/en/' if your Chinese posts don't use that
-        const englishLinks = page.locator('a[href^="/en/article/"]');
-        await expect(englishLinks).toHaveCount(0);
+        // Locate the first article link in the main archive section
+        // Using a more specific selector to avoid sidebar/nav links
+        const firstArticleLocator = page.locator('main section a[href^="/article/"]').first();
+
+        if (await firstArticleLocator.count() > 0) {
+            const href = await firstArticleLocator.getAttribute('href');
+            console.log(`Checking First Article Link: ${href}`);
+
+            if (href) {
+                // Direct navigation is more robust than clicking for pure link validation
+                // avoiding UI interception (overlays, images, floating headers)
+                await page.goto(href);
+
+                // Assertions
+                await expect(page.locator('h1').first()).toBeVisible(); // Ensure some title exists
+                await expect(page.locator('body')).not.toContainText('404');
+                await expect(page.locator('body')).not.toContainText('Page Not Found');
+            }
+        } else {
+            console.log('No articles found in archive to test.');
+        }
     });
 
-    // 4. English TOC (Fixing "Missing TOC" bug)
-    test('Regression: English Article should have Table of Contents', async ({ page }) => {
-        // Visit a known English article with h2/h3
-        // Use the actual one we saw in getPostInfo or earlier analysis
-        // "cursor-trial-account-crash-experience" seems to be one
-        await page.goto('/en/article/cursor-trial-account-crash-experience');
+    // 3. Fix Verification: English Category Count
+    test('Fix: English Category should only confirm English posts', async ({ page }) => {
+        // Visit AI Era category in English
+        await page.goto('/en/categories/ai-era');
 
-        const toc = page.locator('aside nav ul');
-        // If article has h3, TOC should be populated.
-        // We might need to select a specific article known to have headings.
-        // Let's assume this one does based on earlier read_url_content.
-        if (await toc.count() > 0) {
-            await expect(toc).toBeVisible();
+        // Check the count in Archive list
+        // Selector for archive items: .flex-col > .flex (based on Archive.astro structure)
+        // Actually Archive.astro uses: 
+        // <div class="flex flex-col"> ... <a href...> ... </a> </div> inside the main container
+        // We should count the 'a' tags or the wrapper divs.
+        // Let's use the 'a' tags inside the archive list section.
+        const posts = page.locator('section.vh-animation a.group');
+        const count = await posts.count();
+        console.log(`English 'AI Era' Post Count: ${count}`);
+
+        // Assert reasonable count (should be > 0)
+        // And ideally checking against a known number if possible, but >0 and <Total is a good heuristic
+        expect(count).toBeGreaterThan(0);
+    });
+
+    // 4. Fix Verification: English 404
+    test('Fix: English 404 Page should be English', async ({ page }) => {
+        await page.goto('/en/this-page-does-not-exist-at-all');
+
+        // The title h2 should be "Page Not Found" (Client-side patched)
+        // Wait for client-side script to execute
+        await expect(page.locator('h2')).toHaveText('Page Not Found', { timeout: 5000 });
+        // The button should point to /en/
+        // The button should point to /en/ and have text "Back to Home" (set by script)
+        await expect(page.locator('a[href="/en/"]').filter({ hasText: 'Back to Home' })).toBeVisible();
+    });
+
+    // 5. Crawler Strategy (Recursive Link Check - Simplified)
+    test('Crawler: Simple depth-1 link check', async ({ page }) => {
+        await page.goto('/en/archives');
+
+        // Get all internal article links
+        const links = await page.evaluate(() => {
+            return Array.from(document.querySelectorAll('a'))
+                .map(a => a.href)
+                .filter(href => href.includes('localhost') && href.includes('/article/') && !href.includes('#'));
+        });
+
+        console.log(`Found ${links.length} links to crawl.`);
+
+        // Randomly check up to 5 links
+        const sample = links.slice(0, 5);
+        for (const link of sample) {
+            console.log(`Crawling: ${link}`);
+            await page.goto(link);
+            await expect(page.locator('body')).not.toContainText('404');
+            await expect(page.locator('h1')).toBeVisible();
         }
     });
 

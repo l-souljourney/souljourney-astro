@@ -7,7 +7,7 @@ tags:
   - Claude
   - LLM
   - MCP
-id: cursor-trial-account-crash-experience
+id: the-night-cursors-trial-account-pool-crashed-from-coding-god-to-instantly-kod
 description: The author discusses using Cursor with Claude 4.5 and MCPs for efficient coding, compares costs of official vs trial accounts, notes trial pool crashes, and hopes domestic IDEs/LLMs improve.
 cover: https://cloudcos.l-souljourney.cn/blog/images/2025/20251114110224578.png
 recommend: true

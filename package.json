@@ -12,7 +12,9 @@
     "astro": "astro",
     "newpost": "node ./script/newpost.js",
     "offdev": "astro preferences disable devToolbar",
-    "ondev": "astro preferences enable devToolbar"
+    "ondev": "astro preferences enable devToolbar",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.12",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
     "@playform/compress": "^0.1.9",
+    "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/dplayer": "^1.25.5",
     "@types/nprogress": "^0.2.3",

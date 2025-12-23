@@ -25,3 +25,19 @@ const homeLink = lang === 'zh' ? '/' : '/en/';
 		</a>
 	</section>
 </Layout>
+
+<script>
+  // 客户端检测：如果 URL 包含 /en/，则强制显示英文 404 信息
+  if (window.location.pathname.startsWith('/en/')) {
+    const title = document.querySelector('h2');
+    const desc = document.querySelector('p');
+    const link = document.querySelector('a');
+    
+    if (title) title.textContent = 'Page Not Found';
+    if (desc) desc.textContent = "Sorry, the page you looking for doesn't exist.";
+    if (link) {
+        link.textContent = 'Back to Home';
+        link.href = '/en/';
+    }
+  }
+</script>

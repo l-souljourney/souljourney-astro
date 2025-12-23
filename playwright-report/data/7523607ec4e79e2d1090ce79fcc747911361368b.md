@@ -1,0 +1,203 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation:
+    - generic:
+      - generic:
+        - heading "L-忠程丨生死看淡不服就淦" [level=3]
+      - generic:
+        - link "Back to Home":
+          - /url: /en/
+        - link "nav.ai_era":
+          - /url: /categories/ai-era
+          - generic:
+            - img
+          - text: nav.ai_era
+        - link "nav.business":
+          - /url: /categories/zhejiang-business
+          - generic:
+            - img
+          - text: nav.business
+        - link "nav.philosophy":
+          - /url: /categories/philosophy
+          - generic:
+            - img
+          - text: nav.philosophy
+        - link "nav.life":
+          - /url: /categories/life
+          - generic:
+            - img
+          - text: nav.life
+        - link "nav.archives":
+          - /url: /archives
+          - generic:
+            - img
+          - text: nav.archives
+        - link "nav.about":
+          - /url: /about
+          - generic:
+            - img
+          - text: nav.about
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Home" [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img [ref=e5]
+        - generic [ref=e9]: Home
+      - navigation [ref=e10]:
+        - link "Investment" [ref=e11] [cursor=pointer]:
+          - /url: /en/categories/investment
+          - text: Investment
+          - img [ref=e13]
+        - link "AI Era" [ref=e14] [cursor=pointer]:
+          - /url: /en/categories/ai-era
+          - text: AI Era
+          - img [ref=e16]
+        - link "Business" [ref=e18] [cursor=pointer]:
+          - /url: /en/categories/zhejiang-business
+          - text: Business
+          - img [ref=e20]
+        - link "Philosophy" [ref=e22] [cursor=pointer]:
+          - /url: /en/categories/philosophy
+          - text: Philosophy
+          - img [ref=e24]
+        - link "Life" [ref=e26] [cursor=pointer]:
+          - /url: /en/categories/life
+          - text: Life
+          - img [ref=e28]
+        - link "Archives" [ref=e30] [cursor=pointer]:
+          - /url: /en/archives
+          - text: Archives
+          - img [ref=e32]
+        - link "About" [ref=e34] [cursor=pointer]:
+          - /url: /en/about
+          - text: About
+          - img [ref=e36]
+        - link "中" [ref=e38] [cursor=pointer]:
+          - /url: /the-night-cursors-trial-account-pool-crashed-from-coding-god-to-instantly-kod
+          - generic [ref=e39]: 中
+        - button "切换主题" [ref=e40] [cursor=pointer]:
+          - img [ref=e41]
+        - generic [ref=e44] [cursor=pointer]:
+          - img [ref=e45]
+          - text: Search
+      - generic:
+        - main:
+          - generic:
+            - generic:
+              - generic:
+                - search "Search this site":
+                  - textbox "Search"
+                  - button "Clear"
+  - main [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e52]:
+        - heading "404" [level=1] [ref=e53]
+        - heading "Page Not Found" [level=2] [ref=e54]
+        - paragraph [ref=e55]: Sorry, the page you looking for doesn't exist.
+        - link "Go Home" [ref=e56] [cursor=pointer]:
+          - /url: /en/
+      - complementary [ref=e57]:
+        - generic [ref=e58]:
+          - img "L-SoulJourney" [ref=e59]
+          - generic [ref=e60]: L-SoulJourney
+          - paragraph [ref=e61]: Life and Death are trivial, Just do it.
+          - generic [ref=e62]:
+            - link "GitHub" [ref=e63] [cursor=pointer]:
+              - /url: https://github.com/l-souljourney/souljourney-astro
+              - img [ref=e65]
+            - link "投资笔记" [ref=e67] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzk1NzY4ODU4NA==&action=getalbum&album_id=3776069041266311168#wechat_redirect
+              - img [ref=e69]
+            - link "关于我" [ref=e71] [cursor=pointer]:
+              - /url: /about
+              - img [ref=e73]
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: "1"
+              - paragraph [ref=e78]: Articles
+            - generic [ref=e79]:
+              - generic [ref=e80]: "1"
+              - paragraph [ref=e81]: Categories
+            - generic [ref=e82]:
+              - generic [ref=e83]: "4"
+              - paragraph [ref=e84]: Tags
+        - generic [ref=e86]:
+          - img "关注公众号 L-忠程丨生死看淡不服就淦" [ref=e88]
+          - paragraph [ref=e89]: L-忠程丨生死看淡不服就淦
+          - paragraph [ref=e90]: Interact with author in WeChat discussion area
+        - generic [ref=e91]:
+          - heading "Categories" [level=3] [ref=e92]
+          - link "AI Era 1" [ref=e94] [cursor=pointer]:
+            - /url: /en/categories/ai-era
+            - generic [ref=e95]: AI Era
+            - generic [ref=e96]: "1"
+        - generic [ref=e97]:
+          - heading "Tags" [level=3] [ref=e98]
+          - generic [ref=e99]:
+            - link "Cursor 1" [ref=e100] [cursor=pointer]:
+              - /url: /en/tag/Cursor
+              - generic [ref=e101]: Cursor
+              - emphasis [ref=e102]: "1"
+            - link "Claude 1" [ref=e103] [cursor=pointer]:
+              - /url: /en/tag/Claude
+              - generic [ref=e104]: Claude
+              - emphasis [ref=e105]: "1"
+            - link "LLM 1" [ref=e106] [cursor=pointer]:
+              - /url: /en/tag/LLM
+              - generic [ref=e107]: LLM
+              - emphasis [ref=e108]: "1"
+            - link "MCP 1" [ref=e109] [cursor=pointer]:
+              - /url: /en/tag/MCP
+              - generic [ref=e110]: MCP
+              - emphasis [ref=e111]: "1"
+        - generic [ref=e113]:
+          - heading "Recommended" [level=3] [ref=e114]
+          - link "1 The Night Cursor's Trial Account Pool Crashed From Coding God to Instantly KO'd 2025-12-03 中午" [ref=e116] [cursor=pointer]:
+            - /url: /en/article/cursor-trial-account-crash-experience
+            - generic [ref=e117]:
+              - generic [ref=e118]: "1"
+              - generic [ref=e119]: The Night Cursor's Trial Account Pool Crashed From Coding God to Instantly KO'd
+            - time [ref=e120]: 2025-12-03 中午
+    - generic:
+      - img
+      - img
+  - contentinfo [ref=e121]:
+    - main [ref=e122]:
+      - generic [ref=e124]:
+        - img [ref=e126]
+        - generic [ref=e128]: Running Time
+        - emphasis [ref=e129]: 356天
+      - generic [ref=e130]:
+        - link "RSS" [ref=e131] [cursor=pointer]:
+          - /url: /rss.xml
+          - img [ref=e133]
+          - generic [ref=e135]: RSS
+        - link "ICP" [ref=e136] [cursor=pointer]:
+          - /url: https://beian.miit.gov.cn/
+          - img [ref=e138]
+        - link "Astro" [ref=e141] [cursor=pointer]:
+          - /url: https://astro.build/
+          - img [ref=e143]
+        - link "Sitemap" [ref=e146] [cursor=pointer]:
+          - /url: /sitemap-index.xml
+          - img [ref=e148]
+          - generic [ref=e150]: Sitemap
+      - generic [ref=e151]: L-SoulJourney
+  - generic [ref=e154]:
+    - button "Menu" [ref=e155]:
+      - img [ref=e157]
+      - generic: Menu
+    - button "Inspect" [ref=e161]:
+      - img [ref=e163]
+      - generic: Inspect
+    - button "Audit" [ref=e165]:
+      - generic [ref=e166]:
+        - img [ref=e167]
+        - img [ref=e170]
+      - generic: Audit
+    - button "Settings" [ref=e173]:
+      - img [ref=e175]
+      - generic: Settings
+```
