@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.9.7 (2025-12-23) - 自动化测试架构与 Bug 修复
+
+### 🐛 Bug Fixes
+- **归档列表**: 修复了 `getArchive` 工具函数丢失文章 ID 的问题，彻底解决了中文归档页无法过滤英文文章的 Bug。
+- **文章目录 (TOC)**: 修复了英文文章页 (`/en/article/...`) 因缺少 `headings` 属性传递导致右侧目录不显示的 Bug。
+
+### ⚡ Infrastructure
+- **Playwright 集成**: 引入端到端 (E2E) 自动化测试框架。
+- **测试用例**: 新增 `tests/e2e.spec.ts`，涵盖首页、侧边栏语言隔离、归档内容过滤等核心回归测试场景。
+- **测试配置**: 新增 `playwright.config.ts`，配置本地测试环境。
+
+---
+
 ## v1.9.6 (2025-12-22) - 国际化深度优化
 
 ### 🌍 i18n Optimizations

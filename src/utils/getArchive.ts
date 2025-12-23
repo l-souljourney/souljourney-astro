@@ -8,7 +8,7 @@ const fmtArticleList = (articleList: any) => {
     const year = item.data.date.getFullYear();
     // 初始化
     !acc[year] && (acc[year] = []);
-    acc[year].push(item.data);
+    acc[year].push({ ...item.data, id: item.id });
     return acc;
   }, {});
   // 转换为目标格式
