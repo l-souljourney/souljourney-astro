@@ -83,6 +83,59 @@ main:
               echo "🌐 访问地址: https://${CDN_DOMAIN}"
             fi
 
+        - name: refresh edgeone cache
+          image: python:3.9-slim
+          script: |
+            echo "🚀 开始刷新 EdgeOne 缓存..."
+            
+            # 1. 检查必要变量
+            if [ -z "${TEO_ZONE_ID}" ]; then
+              echo "⚠️ 未配置 TEO_ZONE_ID，跳过刷新"
+              exit 0
+            fi
+            
+            # 2. 安装腾讯云 EdgeOne SDK
+            echo "📦 安装依赖..."
+            pip install --no-cache-dir tencentcloud-sdk-python-teo -i https://mirrors.cloud.tencent.com/pypi/simple
+            
+            # 3. 执行刷新脚本
+            echo "🔄 调用 API 刷新全站缓存..."
+            python -c "
+            import os
+            import sys
+            import json
+            from tencentcloud.common import credential
+            from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
+            from tencentcloud.teo.v20220901 import teo_client, models
+
+            try:
+                # 初始化认证
+                cred = credential.Credential(
+                    os.environ.get('COS_SECRET_ID'), 
+                    os.environ.get('COS_SECRET_KEY')
+                )
+                
+                # 初始化客户端
+                client = teo_client.TeoClient(cred, 'ap-guangzhou')
+                
+                # 构造请求: 刷新全站 (purge_host)
+                req = models.CreatePurgeTaskRequest()
+                req.ZoneId = os.environ.get('TEO_ZONE_ID')
+                req.Type = 'purge_host' 
+                req.Targets = [ os.environ.get('CDN_DOMAIN', 'blog.l-souljourney.cn') ] 
+                
+                # 发送请求
+                resp = client.CreatePurgeTask(req)
+                print(f'✅ 刷新任务提交成功! TaskId: {resp.JobId}')
+                
+            except TencentCloudSDKException as err:
+                print(f'❌ 刷新失败: {err}')
+                sys.exit(1)
+            except Exception as e:
+                print(f'❌ 系统错误: {e}')
+                sys.exit(1)
+            "
+
 # Pull Request：快速检查
 pull_request:
   push:
