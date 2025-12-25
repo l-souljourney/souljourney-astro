@@ -64,6 +64,17 @@ export const ui = {
         'footer.rss': 'RSS 订阅',
         'footer.running': '网站运行',
         'footer.badge.astro': 'Astro',
+
+        // Copyright
+        'copyright.author': '本文作者',
+        'copyright.publishedAt': '发布于',
+        'copyright.link': '本文链接',
+        'copyright.sitedesc': '本站所有文章，除特别声明外，均采用',
+        'copyright.reprint': '许可协议。转载请注明出处！',
+        'copyright.license': 'CC BY-NC-SA 4.0',
+
+        // Sidebar
+        'aside.toc': '文章目录',
     },
     en: {
         'nav.home': 'Home',
@@ -123,6 +134,17 @@ export const ui = {
         'footer.rss': 'RSS Feed',
         'footer.running': 'Running Time',
         'footer.badge.astro': 'Astro',
+
+        // Copyright
+        'copyright.author': 'Author',
+        'copyright.publishedAt': 'Published at',
+        'copyright.link': 'Article Link',
+        'copyright.sitedesc': 'All articles in this blog are licensed under',
+        'copyright.reprint': 'unless stating additionally. Please cite the source when reprinting!',
+        'copyright.license': 'CC BY-NC-SA 4.0',
+
+        // Sidebar
+        'aside.toc': 'Table of Contents',
     },
 } as const;
 

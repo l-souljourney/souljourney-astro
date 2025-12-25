@@ -1,5 +1,9 @@
 ---
 const { headings } = Astro.props;
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 
 // 只获取 h3 级别的标题
 const toc = headings?.filter((heading) => heading.depth === 3) || [];
@@ -9,7 +13,7 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
 {
   toc.length > 0 && (
     <aside class="sticky top-[calc(66px+0.68rem)] z-10 flex-shrink-0 w-[19rem] h-fit p-5 flex flex-col gap-3 rounded-2xl bg-white shadow-sm overflow-visible transition-[top] duration-300 max-xl:hidden dark:bg-[#252525]">
-      <h3 class="w-full text-[0.68rem] font-normal text-primary/56 m-0">文章目录</h3>
+      <h3 class="w-full text-[0.68rem] font-normal text-primary/56 m-0">{t('aside.toc')}</h3>
       <nav class="h-auto overflow-visible">
         <ul class="list-none p-0 m-0">
           {toc.map((heading) => (
