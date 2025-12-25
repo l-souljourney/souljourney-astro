@@ -25,7 +25,7 @@ export default {
   CreateTime: '2025-01-01',
   // ICP备案信息
   ICP: {
-    enable: true,
+    enable: false,
     number: '浙ICP备2025152080号-1',
     link: 'https://beian.miit.gov.cn/',
     siteName: 'L-忠程丨生死看淡不服就淦'

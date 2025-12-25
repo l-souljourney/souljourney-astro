@@ -57,7 +57,7 @@ const copyrightYear = config.Footer.copyright.showCurrentYear && startYear !== c
 						<Icon name={link.icon} class="w-3 h-3" />
 					</span>
 					<span class="px-1.5 flex items-center h-full not-italic text-muted-foreground whitespace-nowrap">
-						{t(link.label as any) === link.label ? link.label : t(link.label as any)}
+						{t(link.label as any) || link.label}
 					</span>
 				</a>
 			))}
