@@ -19,7 +19,7 @@ activeNav: "about"
 
 如果你想与我交流投资心得、商业思考或人生感悟，欢迎通过以下方式联系：
 
-- **博客：** https://blog.l-souljourney.cn
+- **博客：** https://www.l-souljourney.cn
 - **私信：** 请通过公众号私信联系
 
 ## 📱 我的公众号

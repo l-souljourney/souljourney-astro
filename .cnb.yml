@@ -122,7 +122,7 @@ main:
                 req = models.CreatePurgeTaskRequest()
                 req.ZoneId = os.environ.get('TEO_ZONE_ID')
                 req.Type = 'purge_host' 
-                req.Targets = [ os.environ.get('CDN_DOMAIN', 'blog.l-souljourney.cn') ] 
+                req.Targets = [ os.environ.get('CDN_DOMAIN', 'www.l-souljourney.cn') ] 
                 
                 # 发送请求
                 resp = client.CreatePurgeTask(req)

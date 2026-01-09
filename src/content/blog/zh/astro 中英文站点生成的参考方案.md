@@ -190,8 +190,8 @@ relatedSlug: "en/my-first-post"
 #### **建议构建两份内容，分别上传：**
 
 ```
-astro build --site https://blog.l-souljourney.cn/zh/
-astro build --site https://blog.l-souljourney.cn/en/
+astro build --site https://www.l-souljourney.cn/zh/
+astro build --site https://www.l-souljourney.cn/en/
 ```
 
 - COS 上传 /zh/、/en/ 到指定目录，根路径 / 做 JS 自动跳转或用静态 /index.html 实现重定向

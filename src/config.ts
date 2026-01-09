@@ -4,7 +4,7 @@ export default {
   // 网站标题 - 符合ICP备案要求
   Title: 'L-忠程丨生死看淡不服就淦',
   // 网站地址
-  Site: 'https://blog.l-souljourney.cn',
+  Site: 'https://www.l-souljourney.cn',
   // 网站副标题
   Subtitle: '生死看淡 不服就淦',
   // 网站描述

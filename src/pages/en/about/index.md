@@ -19,7 +19,7 @@ All articles are also published on WeChat Official Account. Welcome to grow toge
 
 If you'd like to discuss investment insights, business thoughts, or life philosophy with me, feel free to reach out:
 
-- **Blog:** https://blog.l-souljourney.cn
+- **Blog:** https://www.l-souljourney.cn
 - **Direct Message:** Please contact me through WeChat Official Account
 
 ## 📱 WeChat Official Accounts

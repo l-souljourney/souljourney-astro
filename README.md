@@ -21,8 +21,8 @@
 ### 🌍 国际化支持 (v1.9.0)
 
 本博客支持**中英双语**，实现了完整的国际化架构：
-- **中文版**: `https://blog.l-souljourney.cn/`
-- **英文版**: `https://blog.l-souljourney.cn/en/`
+- **中文版**: `https://www.l-souljourney.cn/`
+- **英文版**: `https://www.l-souljourney.cn/en/`
 - **智能切换**: Header右上角一键切换语言
 - **SEO优化**: 完整的hreflang标签支持，告诉搜索引擎语言版本关系
 
@@ -94,7 +94,7 @@ CNB Docs仓库 (published/zh/ 和 published/en/)
   ↓ .cnb.yml 自动触发
 CNB Astro仓库 (自动同步到 src/content/blog/)
   ↓ 自动构建
-线上博客 (blog.l-souljourney.cn)
+线上博客 (www.l-souljourney.cn)
 ```
 
 ### Obsidian 目录结构
