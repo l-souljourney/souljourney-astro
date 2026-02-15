@@ -15,7 +15,6 @@
 - 框架：Astro 5.x + TypeScript
 - 样式：Tailwind CSS + 部分自定义 CSS
 - 内容：Markdown/MDX 双语博客 (`src/content/blog/`)
-- 测试：Playwright E2E (`tests/e2e.spec.ts`)
 - 配置文件：`astro.config.mjs`、`tailwind.config.mjs`、`src/config.ts`
 
 常用命令：
@@ -24,8 +23,6 @@
 pnpm dev          # 启动开发服务器
 pnpm build        # 生产构建
 pnpm preview      # 预览构建
-pnpm test         # 运行 E2E 测试
-pnpm test:ui      # UI 模式运行测试
 pnpm newpost      # 创建新博客文章
 ```
 
