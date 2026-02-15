@@ -41,6 +41,7 @@ jobs:
   deploy-cos:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Download build artifacts
@@ -49,17 +50,24 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Setup coscli
-        uses: git9527/setup-coscli@v1
-        with:
-          region: ${{ secrets.COS_REGION }}
-          secret-id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          secret-key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-          bucket: ${{ secrets.COS_BUCKET }}
-          coscli-version: latest
+      - name: Validate COS secrets
+        run: |
+          if [ -z "${{ secrets.TENCENT_CLOUD_SECRET_ID }}" ] || [ -z "${{ secrets.TENCENT_CLOUD_SECRET_KEY }}" ] || [ -z "${{ secrets.COS_BUCKET }}" ] || [ -z "${{ secrets.COS_REGION }}" ]; then
+            echo "❌ COS secrets are incomplete"
+            exit 1
+          fi
+          echo "✅ COS secrets check passed"
 
-      - name: Sync to COS
-        run: coscli sync dist/ cos://${{ secrets.COS_BUCKET }}/ --delete --force --recursive
+      - name: Deploy to COS
+        uses: TencentCloud/cos-action@v1
+        with:
+          secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
+          secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
+          cos_bucket: ${{ secrets.COS_BUCKET }}
+          cos_region: ${{ secrets.COS_REGION }}
+          local_path: dist
+          remote_path: /
+          clean: true
 
       - name: Show deployment info
         run: |
