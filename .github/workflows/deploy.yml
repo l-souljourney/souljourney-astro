@@ -65,25 +65,3 @@ jobs:
           if [ -n "${{ secrets.CDN_DOMAIN }}" ]; then
             echo "🌐 Website: https://${{ secrets.CDN_DOMAIN }}"
           fi
-
-  refresh-cdn:
-    needs: deploy-cos
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Refresh CDN cache
-        uses: weiwenhao/tencent-cdn-refresh-action@v1.0.0
-        if: secrets.TEO_ZONE_ID != ''
-        with:
-          secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-          zone_id: ${{ secrets.TEO_ZONE_ID }}
-          targets: |
-            https://${{ secrets.CDN_DOMAIN }}
-        env:
-          SECRET_ID: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          SECRET_KEY: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-
-      - name: CDN refresh skipped
-        if: secrets.TEO_ZONE_ID == ''
-        run: echo "⚠️ TEO_ZONE_ID not configured, CDN refresh skipped"
