@@ -11,9 +11,16 @@
 
 ### 📋 阶段规划
 - [x] 阶段 1: 环境准备与 Cloudflare Pages 部署 ✅
-- [ ] 阶段 2: 腾讯云 COS + CDN 部署
+- [x] 阶段 2: 腾讯云 COS + CDN 部署 ✅
 - [ ] 阶段 3: 历史配置清理
 - [ ] 阶段 4: 验证与收尾
+
+### ✅ 阶段 2 完成内容
+- **GitHub Actions Workflow**: 创建 `.github/workflows/deploy.yml`
+  - 构建 job: pnpm install + pnpm build
+  - 部署 job: 使用 cos-cli-action 同步到 COS
+  - CDN 刷新 job: 使用 tencent-cdn-refresh-action（需配置 TEO_ZONE_ID）
+- **本地构建验证**: 35 页面构建成功
 
 ---
 
