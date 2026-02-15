@@ -1,26 +1,19 @@
 # Changelog
 
-## v2.0.0 (2026-02-15) - GitHub 部署架构重构
+## v2.0.0 (2026-02-15) - GitHub Actions 自动化部署
 
 ### 🔄 重构内容
-- **Git 远程清理**: 移除 `.git/config` 中的 GitHub Token，改为 SSH 方式连接
-- **AGENTS.md 创建**: 添加项目约束文档，规范 Agent 工作流程
-- **2.0 迁移方案**: 创建 `docs/2.0-GitHub-Deploy-Migration.md` 规划文档
-- **Cloudflare Pages**: 确认通过 GitHub 集成自动部署，无需额外配置
-- **历史配置清理**: 删除冗余的 GitHub Actions workflow 文件
+- **部署架构升级**: 从 CNB 迁移到 GitHub Actions，实现自动化构建与部署
+- **双平台部署**: 支持腾讯云 COS + Cloudflare Pages 双 CDN 部署
+- **构建优化**: 使用 pnpm + Node.js 20 构建环境
 
-### 📋 阶段规划
-- [x] 阶段 1: 环境准备与 Cloudflare Pages 部署 ✅
-- [x] 阶段 2: 腾讯云 COS + CDN 部署 ✅
-- [ ] 阶段 3: 历史配置清理
-- [ ] 阶段 4: 验证与收尾
-
-### ✅ 阶段 2 完成内容
+### ✅ 完成内容
 - **GitHub Actions Workflow**: 创建 `.github/workflows/deploy.yml`
   - 构建 job: pnpm install + pnpm build
-  - 部署 job: 使用 cos-cli-action 同步到 COS
-  - CDN 刷新 job: 使用 tencent-cdn-refresh-action（需配置 TEO_ZONE_ID）
+  - 部署 job: 使用 coscli 同步到 COS
+- **Cloudflare Pages**: 通过 GitHub 集成自动部署
 - **本地构建验证**: 35 页面构建成功
+- **历史清理**: 已删除 `.cnb.yml` 和 `wrangler.jsonc` 冗余配置文件，完成 2.0 架构迁移。
 
 ---
 
@@ -29,7 +22,7 @@
 ### ✨ 新特性
 - **CI/CD 流水线**: 新增 EdgeOne CDN 缓存自动刷新阶段。
   - 在 COS 部署完成后，自动调用 API 刷新整站 (`purge_host`) 缓存。
-  - 需配置 `TEO_ZONE_ID` 环境变量。
+  - 支持配置 CDN 缓存刷新。
 
 ### 🐛 问题修复
 - **页脚优化**: 修复了 ICP 备案号和 Astro 徽章文字显示为空的问题。

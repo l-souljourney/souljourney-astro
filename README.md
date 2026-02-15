@@ -81,57 +81,15 @@ pnpm dev
 pnpm build
 ```
 
-## 📝 内容发布流程 (Obsidian + CNB)
-
-本博客采用 **Obsidian + Git + CNB** 的现代化内容管理流程：
-
-### 工作流程
-
-```
-Obsidian (本地写作)
-  ↓ Git Push
-CNB Docs仓库 (published/zh/ 和 published/en/)
-  ↓ .cnb.yml 自动触发
-CNB Astro仓库 (自动同步到 src/content/blog/)
-  ↓ 自动构建
-线上博客 (www.l-souljourney.cn)
-```
-
-### Obsidian 目录结构
-
-```
-Blog/
-├── drafts/          # 草稿区（仅iCloud同步）
-├── ready/           # 待发布（AI处理元数据）
-├── published/       # 已发布（Git + iCloud）
-│   ├── zh/          # 中文文章
-│   └── en/          # 英文文章（AI翻译）
-└── assets/          # 资源文件
-```
-
-### 发布步骤
-
-1. 在 Obsidian `drafts/` 创建Markdown文章
-2. 完成后移至 `ready/`，AI自动填充YAML元数据
-3. 移至 `published/zh/`，Git自动提交推送
-4. CNB监听到变化，自动同步到Astro仓库并构建
-5. (可选) AI翻译为英文，放入 `published/en/`
-
-### CNB自动化
-
-- **监听**: `published/**` 目录变化
-- **同步**: 自动复制到 `src/content/blog/`
-- **构建**: 触发Astro构建和部署
-- **保护**: 空目录检测，防止误删
-
-详见 [Blog仓库README](https://cnb.cool/l-souljourney/souljourneydocs)
-
 ## 🚀 部署方案
 
-本项目配置了 **CNB (云原生构建)** 自动化流水线：
-1.  **自动构建**: 代码推送到 `main` 分支自动触发构建
-2.  **双线部署**: 同时部署至腾讯云 COS 和 GitHub Pages
-3.  **分支同步**: 自动同步 `main` 分支代码到 `develop` 分支
+本项目配置了 **GitHub Actions** 自动化部署流水线：
+
+1. **自动构建**: 代码推送到 `main` 分支自动触发构建
+2. **双平台部署**: 
+   - 腾讯云 COS + CDN（国内访问）
+   - Cloudflare Pages（海外访问）
+3. **构建产物**: 静态 HTML 文件，自动同步到云存储
 
 ## 🧪 自动化测试 (Playwright)
 
