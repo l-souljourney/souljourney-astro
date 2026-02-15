@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2.0 (2026-02-15) - GitHub Sync 集成
+
+### 🔄 自动化同步
+- **GitHub Sync Workflow**: 新增 `dispatch-to-hub.yml` 工作流。
+- **全量同步**: 实现了 Issues 和 PRs 到 `souljourney-code` 仓库的全量同步功能。
+- **安全优化**: 使用 `jq` 优化 Payload 处理逻辑，提升数据安全性与解析稳定性。
+
+---
+
 ## v2.1.0 (2026-02-15) - 瘦身优化：移除测试框架
 
 ### 🧹 清理内容
