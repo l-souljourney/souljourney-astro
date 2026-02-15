@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.0.0 (2026-02-15) - GitHub 部署架构重构
+
+### 🔄 重构内容
+- **Git 远程清理**: 移除 `.git/config` 中的 GitHub Token，改为 SSH 方式连接
+- **AGENTS.md 创建**: 添加项目约束文档，规范 Agent 工作流程
+- **2.0 迁移方案**: 创建 `docs/2.0-GitHub-Deploy-Migration.md` 规划文档
+- **Cloudflare Pages**: 确认通过 GitHub 集成自动部署，无需额外配置
+- **历史配置清理**: 删除冗余的 GitHub Actions workflow 文件
+
+### 📋 阶段规划
+- [x] 阶段 1: 环境准备与 Cloudflare Pages 部署 ✅
+- [ ] 阶段 2: 腾讯云 COS + CDN 部署
+- [ ] 阶段 3: 历史配置清理
+- [ ] 阶段 4: 验证与收尾
+
+---
+
 ## v1.9.13 (2025-12-25) - CDN 自动刷新与体验优化
 
 ### ✨ 新特性
