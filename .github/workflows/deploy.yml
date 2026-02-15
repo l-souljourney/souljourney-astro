@@ -50,14 +50,14 @@ jobs:
           path: dist/
 
       - name: Deploy to COS
-        uses: ynext1213/cos-cli-action@v1
+        uses: TencentCloud/cos-action@v1
         with:
           secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
           secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
           bucket: ${{ secrets.COS_BUCKET }}
           region: ${{ secrets.COS_REGION }}
-          upload_dir: ./
-          dist_dir: dist/
+          upload_dir: dist
+          remote_dir: /
 
       - name: Show deployment info
         run: |
