@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.0 (2026-02-15) - 瘦身优化：移除测试框架
+
+### 🧹 清理内容
+- **移除 Playwright**: 全面移除 Playwright E2E 测试框架及相关配置
+  - 删除 `playwright.config.ts` 和 `tests/` 目录
+  - 移除 `package.json` 中的测试脚本与依赖
+  - 同步清理 `README.md` 和 `AGENTS.md` 中的测试说明
+- **构建验证**: 移除测试框架后，全站 35 页面构建依然成功，确保核心流程不受影响
+
+---
+
 ## v2.0.0 (2026-02-15) - GitHub Actions 自动化部署
 
 ### 🔄 重构内容
