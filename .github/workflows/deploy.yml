@@ -1,7 +1,6 @@
 name: Deploy to COS + CDN
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
 
@@ -32,17 +31,6 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Write build metadata
-        run: |
-          cat > dist/build-meta.json <<EOF
-          {
-            "commit_sha": "${GITHUB_SHA}",
-            "run_id": "${GITHUB_RUN_ID}",
-            "build_time_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          }
-          EOF
-          echo "✅ build-meta.json generated"
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -54,7 +42,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -130,61 +118,6 @@ jobs:
       - name: Show deployment info
         run: |
           echo "✅ COS deployment completed"
-          if [ -n "${{ vars.PRIMARY_DOMAIN }}" ]; then
-            echo "🌐 Primary domain: https://${{ vars.PRIMARY_DOMAIN }}"
-          elif [ -n "${{ secrets.CDN_DOMAIN }}" ]; then
-            echo "🌐 Primary domain (fallback): https://${{ secrets.CDN_DOMAIN }}"
+          if [ -n "${{ secrets.CDN_DOMAIN }}" ]; then
+            echo "🌐 Website: https://${{ secrets.CDN_DOMAIN }}"
           fi
-          if [ -n "${{ vars.PAGES_DOMAIN }}" ]; then
-            echo "🌍 Pages domain: https://${{ vars.PAGES_DOMAIN }}"
-          fi
-
-  verify-production:
-    needs: deploy-cos
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-    env:
-      PRIMARY_DOMAIN: ${{ vars.PRIMARY_DOMAIN }}
-      PAGES_DOMAIN: ${{ vars.PAGES_DOMAIN }}
-      FALLBACK_CDN_DOMAIN: ${{ secrets.CDN_DOMAIN }}
-    steps:
-      - name: Verify deployed commit on production domains
-        run: |
-          verify_domain() {
-            local domain="$1"
-            local label="$2"
-            domain="${domain#http://}"
-            domain="${domain#https://}"
-            domain="${domain%/}"
-            local url="https://${domain}/build-meta.json"
-
-            if [ -z "${domain}" ]; then
-              echo "⚠️ ${label} is empty, skip verification"
-              return 0
-            fi
-
-            echo "🔎 Verifying ${label}: ${url}"
-            for i in $(seq 1 20); do
-              body=$(curl --silent --show-error --fail --max-time 10 "${url}" || true)
-              if echo "${body}" | grep -q "\"commit_sha\"[[:space:]]*:[[:space:]]*\"${GITHUB_SHA}\""; then
-                echo "✅ ${label} is serving commit ${GITHUB_SHA}"
-                return 0
-              fi
-
-              echo "⏳ ${label} not updated yet (attempt ${i}/20), retry in 15s"
-              sleep 15
-            done
-
-            echo "❌ ${label} verification failed: expected commit ${GITHUB_SHA}"
-            return 1
-          }
-
-          EFFECTIVE_PRIMARY_DOMAIN="${PRIMARY_DOMAIN}"
-          if [ -z "${EFFECTIVE_PRIMARY_DOMAIN}" ] && [ -n "${FALLBACK_CDN_DOMAIN}" ]; then
-            EFFECTIVE_PRIMARY_DOMAIN="${FALLBACK_CDN_DOMAIN}"
-            echo "ℹ️ Using fallback primary domain from CDN_DOMAIN secret"
-          fi
-
-          verify_domain "${EFFECTIVE_PRIMARY_DOMAIN}" "Primary domain"
-          verify_domain "${PAGES_DOMAIN}" "Cloudflare Pages domain"
