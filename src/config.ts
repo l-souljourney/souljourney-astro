@@ -4,7 +4,7 @@ export default {
   // 网站标题 - 符合ICP备案要求
   Title: 'L-忠程丨生死看淡不服就淦',
   // 网站地址
-  Site: 'https://www.l-souljourney.cn',
+  Site: import.meta.env.PUBLIC_SITE_URL || 'https://www.l-souljourney.cn',
   // 网站副标题
   Subtitle: '生死看淡 不服就淦',
   // 网站描述
@@ -19,8 +19,6 @@ export default {
   Cover: '/assets/images/banner/072c12ec85d2d3b5.webp',
   // 网站侧边栏公告 - 已改为微信公众号二维码块
   Tips: '',
-  // 首页打字机文案列表 - 已禁用动态滚动更新
-  TypeWriteList: [],
   // 网站创建时间
   CreateTime: '2025-01-01',
   // ICP备案信息

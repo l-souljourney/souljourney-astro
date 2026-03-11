@@ -1,6 +1,4 @@
 import { inRouter, outRouter } from "@/utils/updateRouter";
-// Banner 打字效果
-import TypeWriteInit from "@/scripts/TypeWrite";
 // 初始化文章代码块
 import codeInit from "@/scripts/Code";
 // 初始化视频播放器
@@ -9,8 +7,6 @@ import videoInit from "@/scripts/Video";
 import livePhotoInit from '@/scripts/LivePhoto'
 // 初始化BackTop组件
 import BackTopInitFn from "@/scripts/BackTop";
-// 搜索
-import { searchFn, vhSearchInit } from "@/scripts/Search";
 // 图片懒加载
 import vhLzImgInit from "@/scripts/vhLazyImg";
 // 图片灯箱
@@ -44,8 +40,6 @@ const indexInit = async (isReady: boolean = true) => {
     videoInit(videoList);
     // 初始化 LivePhoto
     livePhotoInit();
-    // 初始化搜索 - 已迁移至 Search.astro 组件内处理
-    // vhSearchInit();
     // 图片懒加载
     vhLzImgInit();
     // 图片灯箱
@@ -54,8 +48,6 @@ const indexInit = async (isReady: boolean = true) => {
     BackTopInitFn();
     // 网站时间
     initWebSiteTime();
-    // 搜索快捷键 - 已废弃，Pagefind 自带搜索功能
-    // searchFn("");
     // 已删除：友情链接、朋友圈RSS、动态说说页面初始化
     // 移动端侧边栏
     initMobileSidebar();
@@ -67,8 +59,6 @@ const indexInit = async (isReady: boolean = true) => {
     SeoPushInit();
     // SmoothScroll
     SmoothScroll();
-    // Banner 打字效果
-    TypeWriteInit();
   } catch (error) {
     console.error("初始化过程中发生错误:", error);
   }

@@ -24,8 +24,6 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 test/
-/public/vh-search.json
-
 /public/hanplayer
 /public/MineWeb
 /public/other

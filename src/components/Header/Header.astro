@@ -13,14 +13,12 @@ import ThemeIcon from "@/components/ThemeIcon/ThemeIcon.astro";
 
 // i18n
 import { getLangFromUrl, useTranslations, getRouteFromUrl } from '@/i18n/utils';
-import { languages } from '@/i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const currentRoute = getRouteFromUrl(Astro.url);
 
 // 简单的语言切换逻辑
-const nextLang = lang === 'zh' ? 'en' : 'zh';
 const nextLangLabel = lang === 'zh' ? 'EN' : '中';
 const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
 
@@ -65,9 +63,9 @@ const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/
             </a>
 
 			<ThemeIcon />
-			<span class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground search-btn">
+			<button type="button" aria-label={t('header.search')} class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground search-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg> {t('header.search')}
-			</span>
+			</button>
 			<span class="flex md:hidden items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground menu-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.28rem] w-auto object-contain"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 6h16"></path><path d="M7 12h13"></path><path d="M10 18h10"></path></svg>
 			</span>

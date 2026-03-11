@@ -14,18 +14,18 @@ export function useTranslations(lang: keyof typeof ui) {
 
 export function getRouteFromUrl(url: URL): string | undefined {
     const pathname = new URL(url).pathname;
-    const parts = pathname.split('/');
-    const path = parts.pop() || parts.pop();
-
-    if (path === undefined) {
-        return undefined;
-    }
 
     const currentLang = getLangFromUrl(url);
 
     if (defaultLang === currentLang) {
-        return url.pathname;
+        return pathname;
     }
 
-    return `/${path}`;
+    const localePrefix = `/${currentLang}`;
+    if (!pathname.startsWith(localePrefix)) {
+        return pathname;
+    }
+
+    const route = pathname.slice(localePrefix.length);
+    return route.startsWith('/') ? route || '/' : `/${route}`;
 }
