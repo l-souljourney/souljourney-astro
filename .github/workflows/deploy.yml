@@ -153,6 +153,9 @@ jobs:
           verify_domain() {
             local domain="$1"
             local label="$2"
+            domain="${domain#http://}"
+            domain="${domain#https://}"
+            domain="${domain%/}"
             local url="https://${domain}/build-meta.json"
 
             if [ -z "${domain}" ]; then
