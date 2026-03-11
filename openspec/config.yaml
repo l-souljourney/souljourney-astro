@@ -1,0 +1,51 @@
+schema: spec-driven
+
+context: |
+  Project: Souljourney Blog (L-忠程个人博客)
+  Version: 1.9.5 → 2.x series migration
+  Site: https://www.l-souljourney.cn
+
+  Tech stack:
+    - Astro 5.16.0 (SSG static site)
+    - TypeScript (strict mode)
+    - Tailwind CSS 3.4 + @tailwindcss/typography
+    - pnpm 9, Node.js 20
+    - astro-pagefind (search), astro-icon (SVG icons)
+    - Remark/Rehype plugins for markdown processing
+    - Content Collections (src/content/blog/zh/ and en/)
+
+  Deployment:
+    - GitHub as single source of truth
+    - GitHub Actions → Tencent Cloud COS (China, via coscli + global acceleration)
+    - Cloudflare Pages auto-deploy (international)
+    - DNSPod split routing (China → Tencent CDN, overseas → Cloudflare)
+
+  Content pipeline:
+    - L-Engine v3.8 (FastAPI on Alibaba Cloud FC) → GitHub Contents API → auto build
+    - Engine commits as: souljourney-engine <engine@l-souljourney.cn>
+    - Commit format: content(zh): <title> / feat|fix|refactor: <description>
+
+  i18n:
+    - Bilingual: Chinese (default, root /) and English (/en/)
+    - URL-based language detection
+    - Translation keys in src/i18n/ui.ts
+
+  Key docs:
+    - docs/plans/2026-03-10-v2.x-roadmap.md (version roadmap)
+    - docs/2026-03-09-v3-8-frontend-integration-spec.md (Engine spec)
+    - docs/technical-audit-report-2026-02-10.md (audit findings)
+
+rules:
+  proposal:
+    - Always reference the v2.x roadmap version number
+    - Include "Non-goals" section to prevent scope creep
+    - Specify Engine dependency if any
+  design:
+    - Reference specific file paths (src/...) for all changes
+    - Include before/after code snippets for critical changes
+    - Note i18n implications for any UI changes
+  tasks:
+    - Break tasks into chunks of max 2 hours each
+    - Each task must have clear acceptance criteria
+    - Tag tasks with priority (H/M/L) from audit report
+    - Security fixes must be separate atomic tasks

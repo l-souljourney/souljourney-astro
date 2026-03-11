@@ -13,6 +13,7 @@ const ARTICLE_COVER: string = await getCover(post.data.cover);
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const withLangPrefix = (path: string) => (lang === 'zh' ? path : `/en${path}`);
 
 // Category Gradient Map
 const categoryGradients: Record<string, string> = {
@@ -46,14 +47,14 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 		<h3 class="flex items-center justify-between w-full h-max">
 			<a 
 				class={`shrink-0 w-max text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r ${gradient}`} 
-				href={`/categories/${post.data.categories}`}
+				href={withLangPrefix(`/categories/${post.data.categories}`)}
 			>
 				{getCategoryDisplayName(post.data.categories) || t('card.uncategorized')}
 			</a>
 			<time class="mt-auto text-[0.805rem] font-normal text-primary">{fmtTime(post.data.date)}</time>
 		</h3>
 		<h1 class="w-full h-max overflow-hidden">
-			<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={lang === 'zh' ? `/article/${post.data.id}` : `/en/article/${post.data.id}`}>
+			<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={withLangPrefix(`/article/${post.data.id}`)}>
 				{post.data.title}
 			</a>
 		</h1>
@@ -66,7 +67,7 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 	<h4 class="mt-auto px-[1.166rem] pt-[0.66rem] pb-[1rem] w-full h-max overflow-hidden flex flex-wrap">
 		{post.data.tags.map((tag: string) => (
 			<a 
-				href={`/tag/${tag}`} 
+				href={withLangPrefix(`/tag/${tag}`)} 
 				class="mr-[0.88rem] text-zinc-600 dark:text-zinc-400 text-[0.688rem] font-normal transition-colors duration-180 hover:text-primary last:mr-0 before:content-['#']"
 			>
 				{tag}

@@ -33,18 +33,6 @@ export default defineConfig({
 			prefixDefaultLocale: false
 		}
 	},
-	markdown: {
-		shikiConfig: {
-			// Starlight Design System - Code Themes
-			// Using GitHub themes for familiarity and readability
-			theme: {
-				light: 'github-light',
-				dark: 'github-dark-dimmed',
-			},
-			// Enable line numbers and word wrap as needed
-			wrap: false,
-		},
-	},
 	integrations: [
 		tailwind(),
 		icon(),
@@ -61,7 +49,13 @@ export default defineConfig({
 		remarkPlugins: [remarkMath, remarkDirective, remarkNote,],
 		rehypePlugins: [rehypeKatex, rehypeSlug, addClassNames],
 		syntaxHighlight: 'shiki',
-		shikiConfig: { theme: 'github-light' },
+		shikiConfig: {
+			theme: {
+				light: 'github-light',
+				dark: 'github-dark-dimmed',
+			},
+			wrap: false,
+		},
 	},
 	vite: { resolve: { alias: { "@": path.resolve(__dirname, "./src") } } },
 	server: { host: '0.0.0.0' }

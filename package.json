@@ -1,7 +1,7 @@
 {
   "name": "l-souljourney-blog",
   "type": "module",
-  "version": "1.9.5",
+  "version": "2.0.0",
   "description": "L-忠程的个人博客，记录投资感悟、AI探索、商业思考与人生哲学",
   "author": "执笔忠程",
   "license": "MIT",
@@ -32,9 +32,6 @@
     "@astrojs/tailwind": "^6.0.2",
     "@playform/compress": "^0.1.9",
     "@tailwindcss/typography": "^0.5.19",
-    "@types/dplayer": "^1.25.5",
-    "@types/nprogress": "^0.2.3",
-    "@waline/client": "^3.5.7",
     "autoprefixer": "^10.4.22",
     "cheerio": "^1.0.0",
     "dayjs": "^1.11.13",

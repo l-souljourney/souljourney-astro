@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import setSearchJson from "@/utils/vhSearch";
 import moveTopToFirst from "@/utils/moveTopToFirst";
 
 // i18n
@@ -14,8 +13,6 @@ export async function getStaticPaths(options: GetStaticPathsOptions) {
 	const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 	// 置顶文章功能
 	moveTopToFirst(posts);
-	// 生成 Search JSON 文件 (使用所有文章，确保搜索包含中英文)
-	await setSearchJson(posts);
 	
     // 过滤中文文章
     const zhPosts = posts.filter(i => !i.id.startsWith('en/') && !i.data.hide);
