@@ -10,6 +10,7 @@ import Svg from "@/components/Svg/Svg.astro";
 import Search from "@/components/Search/Search.astro";
 // 主题切换组件
 import ThemeIcon from "@/components/ThemeIcon/ThemeIcon.astro";
+import { getAlternateArticlePath, parseArticleRoute } from "@/utils/articleI18n";
 
 // i18n
 import { getLangFromUrl, useTranslations, getRouteFromUrl } from '@/i18n/utils';
@@ -17,10 +18,15 @@ import { getLangFromUrl, useTranslations, getRouteFromUrl } from '@/i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const currentRoute = getRouteFromUrl(Astro.url);
+const articleRoute = parseArticleRoute(Astro.url.pathname);
+const articleAltPath = articleRoute ? await getAlternateArticlePath(Astro.url) : null;
 
 // 简单的语言切换逻辑
 const nextLangLabel = lang === 'zh' ? 'EN' : '中';
-const nextRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
+const defaultSwitchRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
+const nextRoute = articleRoute
+	? (articleAltPath || (lang === 'zh' ? '/en' : '/'))
+	: defaultSwitchRoute;
 
 // 移除硬编码映射表
 // const navTextMap = ...

@@ -23,30 +23,6 @@ article_type: news
 render_profile: default
 ---
 
----
-title: 市场的本质不是价格波动，而是认知的博弈。财富的本质不是运气，而是对供需与预期的节奏把握。
-date: 2025-10-16 12:03:44
-categories: philosophy
-tags:
-  - AI
-  - 交易
-  - 止损
-id: ""
-description: 个逻辑写出一版具有思考性、
-cover: https://cloudcos.l-souljourney.cn/blog/images/2026/mn4gfwqh_5c587558.png
-recommend: false
-top: false
-hide: false
-created: ""
-updated: 2026-03-24 18:11:31
-slug: obs-1e2bf5c7
-lang: zh
-source_id: obs_1e2bf5c7
-author: 执笔丨忠程
-word_count: 1536
-reading_time: 6
----
-
 非常好 👍
 
 你把“市场交易预期、买卖决定财富、供需决定价格”上升到**“自我认知”**的层面，这是一个非常有张力、也容易引发读者共鸣的切入点。它把经济规律转化成**人生与思维规律的隐喻**，既理性又具哲学感，非常适合你公众号/博客的内容调性。
