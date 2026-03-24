@@ -8,7 +8,7 @@ const fmtArticleList = (articleList: any) => {
     const year = item.data.date.getFullYear();
     // 初始化
     !acc[year] && (acc[year] = []);
-    acc[year].push({ ...item.data, id: item.data.id || item.id });
+    acc[year].push({ ...item.data });
     return acc;
   }, {});
   // 转换为目标格式
@@ -18,9 +18,9 @@ const fmtArticleList = (articleList: any) => {
 // 统一过滤逻辑
 const filterPosts = (posts: any[], lang?: string) => {
   if (lang === 'en') {
-    return posts.filter(p => p.data.lang === 'en' || (p.id.startsWith('en/') && p.data.lang !== 'zh'));
+    return posts.filter(p => p.data.lang === 'en');
   } else {
-    return posts.filter(p => p.data.lang === 'zh' || (!p.data.lang && !p.id.startsWith('en/')));
+    return posts.filter(p => p.data.lang !== 'en');
   }
 };
 

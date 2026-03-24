@@ -53,11 +53,11 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 			</a>
 			<time class="mt-auto text-[0.805rem] font-normal text-primary">{fmtTime(post.data.date)}</time>
 		</h3>
-		<h1 class="w-full h-max overflow-hidden">
-			<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={withLangPrefix(`/article/${post.data.id}`)}>
-				{post.data.title}
-			</a>
-		</h1>
+			<h1 class="w-full h-max overflow-hidden">
+				<a class="text-[1.06rem] font-semibold text-foreground transition-colors duration-180 hover:text-primary line-clamp-1" href={withLangPrefix(`/article/${post.data.slug}`)}>
+					{post.data.title}
+				</a>
+			</h1>
 	</header>
 
 	<h2 class="px-[1.166rem] w-full h-max text-zinc-500 dark:text-zinc-400 text-[0.805rem] font-normal tracking-[0.88px] leading-[1.28rem] line-clamp-2">

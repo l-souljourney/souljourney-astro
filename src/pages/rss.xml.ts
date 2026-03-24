@@ -10,11 +10,11 @@ export async function GET(context: any) {
 		title: Title,
 		description: Description,
 		site: context.site,
-		items: posts.filter(i => !i.data.hide && !i.id.startsWith('en/')).map((post) => ({
+		items: posts.filter(i => !i.data.hide && i.data.lang !== 'en').map((post) => ({
 			title: post.data.title,
 			pubDate: post.data.updated || post.data.date,
 			description: getDescription(post),
-			link: `/article/${post.data.id}`
+			link: `/article/${post.data.slug}`
 		})).sort((a: any, b: any) => (new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())),
 	});
 	// 添加 XML 样式表指令

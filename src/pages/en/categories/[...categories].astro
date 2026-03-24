@@ -11,8 +11,7 @@ import { getCategoriesList } from "@/utils/getArchive";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  // Filter for English posts
-  const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+  const enPosts = posts.filter((post: any) => post.data.lang === 'en');
   
   // Get unique categories from English posts
   const categories = [...new Set(enPosts.map((post: any) => post.data.categories))];

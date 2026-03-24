@@ -10,12 +10,14 @@ tags:
   - 投资策略
   - 股市分析
   - Astro博客
-id: astro-bilingual-site-solution
+slug: astro-bilingual-site-solution
+source_id: obs_astro_bilingual_site_solution_20251203
 description: 介绍如何构建双语Astro博客，包括整体架构设计、关键功能模块改造、国内外双部署策略、自动语言切换实现及优化建议，帮助落地成熟的国际站点架构。
 cover: ""
 recommend: false
 top: false
 hide: false
+lang: zh
 created: 2025-07-28
 ---
 做一下测试

@@ -7,7 +7,8 @@ tags:
   - Claude
   - LLM
   - MCP
-id: the-night-cursors-trial-account-pool-crashed-from-coding-god-to-instantly-kod
+slug: the-night-cursors-trial-account-pool-crashed-from-coding-god-to-instantly-kod
+source_id: obs_cursor_trial_pool_crash_20251203_en
 description: The author discusses using Cursor with Claude 4.5 and MCPs for efficient coding, compares costs of official vs trial accounts, notes trial pool crashes, and hopes domestic IDEs/LLMs improve.
 cover: https://cloudcos.l-souljourney.cn/blog/images/2025/20251114110224578.png
 recommend: true
@@ -90,5 +91,4 @@ Key need: Stable, efficient platform to solve problems—not fight tools. After 
 Sincerely hope **domestic IDEs and LLMs step up**—so we don’t rely on foreign tools and their expensive/unstable trial pools.  
 
 ![image.png](https://cloudcos.l-souljourney.cn/blog/images/2025/20251114110224578.png)
-
 
