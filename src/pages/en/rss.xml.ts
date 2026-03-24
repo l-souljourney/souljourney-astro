@@ -5,8 +5,7 @@ import { getDescription } from '@/utils/index';
 
 export async function GET(context: any) {
     const posts = await getCollection('blog');
-    // Filter for English posts
-    const enPosts = posts.filter(i => !i.data.hide && i.id.startsWith('en/'));
+    const enPosts = posts.filter(i => !i.data.hide && i.data.lang === 'en');
 
     const res = await getRssString({
         title: `${ui.en['site.title']} (English)`,
@@ -16,7 +15,7 @@ export async function GET(context: any) {
             title: post.data.title,
             pubDate: post.data.updated || post.data.date,
             description: getDescription(post),
-            link: `/en/article/${post.id.replace('en/', '')}`
+            link: `/en/article/${post.data.slug}`
         })).sort((a: any, b: any) => (new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())),
     });
     // Add XML stylesheet

@@ -15,8 +15,7 @@ export async function getStaticPaths(options: GetStaticPathsOptions) {
 	moveTopToFirst(posts);
     // 注意：Search JSON 已在主页生成，这里不再重复生成
 
-    // 过滤英文文章
-    const enPosts = posts.filter(i => i.id.startsWith('en/') && !i.data.hide);
+    const enPosts = posts.filter(i => i.data.lang === 'en' && !i.data.hide);
 
 	return paginate(
 		enPosts,

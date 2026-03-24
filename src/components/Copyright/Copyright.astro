@@ -1,6 +1,8 @@
 ---
-const { time, sitename, title, site, id, auther } = Astro.props;
-const articleURL = `${site}/article/${id}`;
+const { time, sitename, title, site, slug, auther, lang: pageLang } = Astro.props;
+const path = pageLang === "en" ? `/en/article/${slug}` : `/article/${slug}`;
+const normalizedSite = String(site || "").replace(/\/$/, "");
+const articleURL = `${normalizedSite}${path}`;
 
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 const lang = getLangFromUrl(Astro.url);

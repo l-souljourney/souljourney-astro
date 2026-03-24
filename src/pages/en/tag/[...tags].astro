@@ -8,8 +8,7 @@ const t = useTranslations(lang);
 
 export async function getStaticPaths(): Promise<any> {
 	const posts = await getCollection("blog");
-	// 过滤英文文章
-	const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+	const enPosts = posts.filter((post: any) => post.data.lang === 'en');
 	const allTags = new Set<string>();
 	enPosts.forEach((post: any) => {
 		if (post.data.tags) {
@@ -25,7 +24,7 @@ export async function getStaticPaths(): Promise<any> {
 const { tags } = Astro.params;
 // 特殊处理：仅获取英文文章
 const allPosts = await getCollection("blog");
-const enPosts = allPosts.filter((post: any) => post.id.startsWith('en/'));
+const enPosts = allPosts.filter((post: any) => post.data.lang === 'en');
 const filteredPosts = enPosts
   .filter((post: any) => post.data.tags && post.data.tags.includes(tags))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());

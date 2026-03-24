@@ -15,9 +15,8 @@ const t = useTranslations(lang);
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
-    // 仅筛选英文文章 (ID 以 en/ 开头的)
-    const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
-	return enPosts.map((post: any) => ({ params: { article: post.data.id }, props: post }));
+    const enPosts = posts.filter((post: any) => post.data.lang === 'en');
+	return enPosts.map((post: any) => ({ params: { article: post.data.slug }, props: post }));
 }
 // 处理文章内容
 type Props = CollectionEntry<"blog">;
@@ -31,10 +30,10 @@ const { Site, Title, Author, GoogleAds } = SITE_CONFIG;
 // 处理文章内容
 const description = getDescription(post);
 const { Content, remarkPluginFrontmatter, headings } = await render(post);
-// 文章字数和阅读时间 - 直接从 post.body 计算
+// 优先使用 frontmatter 的统计字段，缺失时回退实时计算值。
 const readingTime = getReadingTime(post.body);
-const article_word_count = readingTime.words;
-const reading_time = readingTime.minutes;
+const articleWordCount = typeof post.data.word_count === "number" ? post.data.word_count : readingTime.words;
+const readingMinutes = typeof post.data.reading_time === "number" ? post.data.reading_time : readingTime.minutes;
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
 // Copyright 组件
@@ -66,13 +65,13 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
         </span>
 				<span class="inline-flex items-center gap-1.5">
 					<Icon name="file-text" class="w-4 h-4 text-primary/80" />
-					{t('post.words')} {article_word_count} {t('post.words')}
-				</span>
-				<span class="inline-flex items-center gap-1.5">
-					<Icon name="clock" class="w-4 h-4 text-primary/80" />
-					{t('post.readTime')} ≈ {Math.ceil(reading_time)} {t('post.readTime')}
-				</span>
-			</section>
+						{t('post.words')} {articleWordCount} {t('post.words')}
+					</span>
+					<span class="inline-flex items-center gap-1.5">
+						<Icon name="clock" class="w-4 h-4 text-primary/80" />
+						{t('post.readTime')} ≈ {Math.ceil(readingMinutes)} {t('post.readTime')}
+					</span>
+				</section>
 		</header>
 		<article
 			class="
@@ -105,7 +104,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 			<!-- 公众号引流组件 -->
 			<Reward />
 			<!-- 版权©️信息 -->
-			<Copyright site={Site} id={post.data.id} title={post.data.title} sitename={Title} time={fmtTime(post.data.date, "YYYY-MM-DD A")} auther={Author} />
+			<Copyright site={Site} slug={post.data.slug} lang="en" title={post.data.title} sitename={Title} time={fmtTime(post.data.date, "YYYY-MM-DD A")} auther={post.data.author || Author} />
 			<!-- 底部谷歌广告 -->
 			{GoogleAds.ad_Client && GoogleAds.articleAD_Slot && <GoogleAd className="vh-article-ad" slotID={GoogleAds.articleAD_Slot} />}
 		</footer>

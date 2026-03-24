@@ -7,8 +7,7 @@ const t = useTranslations('en');
 
 // Get all posts
 const posts = await getCollection("blog");
-// Filter for English posts
-const enPosts = posts.filter((post: any) => post.id.startsWith('en/'));
+const enPosts = posts.filter((post: any) => post.data.lang === 'en');
 
 // Group by year
 const articlesByYear = new Map<number, any[]>();
@@ -17,7 +16,7 @@ enPosts.forEach((post: any) => {
   if (!articlesByYear.has(year)) {
     articlesByYear.set(year, []);
   }
-  articlesByYear.get(year)!.push({ ...post.data, id: post.id });
+  articlesByYear.get(year)!.push({ ...post.data });
 });
 
 // Format for Archive component

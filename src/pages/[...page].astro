@@ -14,8 +14,7 @@ export async function getStaticPaths(options: GetStaticPathsOptions) {
 	// 置顶文章功能
 	moveTopToFirst(posts);
 	
-    // 过滤中文文章
-    const zhPosts = posts.filter(i => !i.id.startsWith('en/') && !i.data.hide);
+    const zhPosts = posts.filter(i => i.data.lang !== 'en' && !i.data.hide);
 
 	return paginate(
 		zhPosts,

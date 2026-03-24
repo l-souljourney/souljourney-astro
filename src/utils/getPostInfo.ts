@@ -4,15 +4,10 @@ const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf()
 // 辅助函数：根据语言过滤文章
 const filterPostsByLang = (lang?: string) => {
   if (!lang) return posts;
-  // 如果是 'zh'，匹配没有 'en/' 前缀的 ID (假设中文是默认无前缀或非 en)
-  // 或者根据项目约定，中文 ID 可能不带 en/，而英文带 en/
-  // 这里采用更通用的判断：如果 lang 是 'en'，只取 id 以 'en/' 开头的
-  // 如果 lang 是 'zh'，只取 id 不以 'en/' 开头的
   if (lang === 'en') {
-    return posts.filter(p => p.data.lang === 'en' || (p.id.startsWith('en/') && p.data.lang !== 'zh'));
+    return posts.filter(p => p.data.lang === 'en');
   } else {
-    // 中文：lang 是 zh 或者 (没有 lang 且 id 不以 en/ 开头)
-    return posts.filter(p => p.data.lang === 'zh' || (!p.data.lang && !p.id.startsWith('en/')));
+    return posts.filter(p => p.data.lang !== 'en');
   }
 };
 
@@ -54,7 +49,8 @@ const getTags = (lang?: string) => {
 const getRecommendArticles = (lang?: string) => {
   const targetPosts = filterPostsByLang(lang);
   const recommendList = targetPosts.filter(i => i.data.recommend);
-  return (recommendList.length ? recommendList : targetPosts.slice(0, 6)).map(i => ({ title: i.data.title, date: i.data.date, id: i.data.id }))
+  return (recommendList.length ? recommendList : targetPosts.slice(0, 6))
+    .map(i => ({ title: i.data.title, date: i.data.date, slug: i.data.slug }));
 };
 
 export { getCategories, getTags, getRecommendArticles, getCountInfo };

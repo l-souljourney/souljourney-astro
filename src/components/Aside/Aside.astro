@@ -123,7 +123,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 					<h3 class="w-full text-[0.68rem] font-normal text-primary/56">{t('aside.recommend')}</h3>
 					<div class="flex flex-col gap-2 w-full h-max overflow-hidden">
 						{recommendArticles.map((i, idx) => (
-						<a href={`${lang === 'en' ? '/en' : ''}/article/${i.id.replace('en/', '')}`} class="flex flex-col gap-1 w-full py-2 overflow-hidden group transition-transform duration-200 ease-out hover:translate-x-0.5">
+						<a href={`${lang === 'en' ? '/en' : ''}/article/${i.slug}`} class="flex flex-col gap-1 w-full py-2 overflow-hidden group transition-transform duration-200 ease-out hover:translate-x-0.5">
 							<span class="flex items-center gap-2.5 w-full">
 								{idx < 3 ? (
 									<i class={`shrink-0 w-5 h-5 flex items-center justify-center rounded text-white text-center text-[0.75rem] font-medium not-italic ${idx === 0 ? 'bg-success' : idx === 1 ? 'bg-warning' : 'bg-import'}`}>{idx + 1}</i>
