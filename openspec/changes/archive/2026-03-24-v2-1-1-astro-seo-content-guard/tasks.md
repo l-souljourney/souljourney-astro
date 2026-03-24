@@ -13,4 +13,4 @@
 
 - [x] 3.1 [H] 执行 `pnpm build`；AC: 构建通过
 - [x] 3.2 [H] 负向验证：临时注入重复 frontmatter 样例触发失败；AC: 构建失败且错误可读
-- [ ] 3.3 [H] 线上抽查 `obs-1e2bf5c7`：`hreflang=en` 不再指向 404；AC: 页面 SEO link 符合预期
+- [x] 3.3 [H] 线上抽查 `obs-1e2bf5c7`：`hreflang=en` 不再指向 404；AC: 页面 SEO link 符合预期
