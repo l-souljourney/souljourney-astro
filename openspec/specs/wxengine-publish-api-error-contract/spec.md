@@ -1,4 +1,7 @@
-## ADDED Requirements
+## Purpose
+定义 wxengine 发布 API 的校验与错误返回契约，保证调用方能稳定处理失败与成功响应。
+
+## Requirements
 
 ### Requirement: Publish API SHALL validate mandatory payload before write
 

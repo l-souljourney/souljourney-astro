@@ -1,4 +1,7 @@
-## ADDED Requirements
+## Purpose
+定义 Astro 分类与元数据渲染的规范化约束，确保分类键稳定、展示可本地化、元数据字段按类型消费。
+
+## Requirements
 
 ### Requirement: categories SHALL be canonical-only across all aggregations
 
@@ -35,3 +38,15 @@ When post-level `author` exists, article metadata and copyright MUST render that
 #### Scenario: Guest author is displayed
 - **WHEN** frontmatter contains `author: "Guest Writer"`
 - **THEN** article metadata displays `Guest Writer` instead of site-level default author
+
+### Requirement: Description metadata SHALL prefer explicit frontmatter description
+
+Article description resolution MUST prefer frontmatter `description` when present and non-empty.
+
+#### Scenario: frontmatter description exists
+- **WHEN** rendering article meta tags and list excerpts
+- **THEN** description text is sourced from frontmatter `description`
+
+#### Scenario: frontmatter description missing
+- **WHEN** `description` is absent in frontmatter
+- **THEN** system falls back to generated excerpt from sanitized body content

@@ -1,4 +1,7 @@
-## ADDED Requirements
+## Purpose
+定义 Astro 对发布入站 frontmatter 的字段契约，保证 Obsidian/wxengine 推送内容可稳定消费。
+
+## Requirements
 
 ### Requirement: Astro frontmatter SHALL enforce strict required fields
 
