@@ -1,5 +1,6 @@
 ---
 import SITE_CONFIG from "@/config";
+import { getAlternateArticlePath, parseArticleRoute } from "@/utils/articleI18n";
 // i18n
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 const lang = getLangFromUrl(Astro.url);
@@ -9,10 +10,20 @@ const t = useTranslations(lang);
 const canonicalData = new URL(Astro.url.pathname, Astro.site);
 const canonicalURL = canonicalData.href.replace(/\/+$/, "");
 
-// 生成语言切换链接（hreflang）
-const altLangURL = lang === 'zh' 
-  ? new URL(`/en${Astro.url.pathname}`, Astro.site).href.replace(/\/+$/, "")
-  : new URL(Astro.url.pathname.replace(/^\/en/, ''), Astro.site).href.replace(/\/+$/, "");
+const articleRoute = parseArticleRoute(Astro.url.pathname);
+const articleAltPath = articleRoute ? await getAlternateArticlePath(Astro.url) : null;
+
+const defaultAltLangURL = lang === 'zh'
+	? new URL(`/en${Astro.url.pathname}`, Astro.site).href.replace(/\/+$/, "")
+	: new URL(Astro.url.pathname.replace(/^\/en/, ''), Astro.site).href.replace(/\/+$/, "");
+const altLangURL = articleAltPath
+	? new URL(articleAltPath, Astro.site).href.replace(/\/+$/, "")
+	: defaultAltLangURL;
+
+const hasArticleAltLanguage = Boolean(articleAltPath);
+const renderZhAlt = !articleRoute || lang === 'zh' || hasArticleAltLanguage;
+const renderEnAlt = !articleRoute || lang === 'en' || hasArticleAltLanguage;
+const xDefaultHref = lang === 'zh' ? canonicalURL : (renderZhAlt ? altLangURL : canonicalURL);
 
 // 页面内容的元数据
 const { Title, Keywords, Description, PageCover } = Astro.props;
@@ -95,9 +106,9 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<!-- LINK 标签 -->
 	<link rel="canonical" href={canonicalURL} />
 	<!-- hreflang for SEO -->
-	<link rel="alternate" hreflang="zh" href={lang === 'zh' ? canonicalURL : altLangURL} />
-	<link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalURL : altLangURL} />
-	<link rel="alternate" hreflang="x-default" href={lang === 'zh' ? canonicalURL : altLangURL} />
+	{renderZhAlt && <link rel="alternate" hreflang="zh" href={lang === 'zh' ? canonicalURL : altLangURL} />}
+	{renderEnAlt && <link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalURL : altLangURL} />}
+	<link rel="alternate" hreflang="x-default" href={xDefaultHref} />
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 	<slot />
 </head>

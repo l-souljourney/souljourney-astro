@@ -14,10 +14,13 @@ import rehypeSlug from "rehype-slug";
 import rehypeKatex from "rehype-katex";
 import remarkDirective from "remark-directive";
 import { remarkNote, addClassNames } from './src/plugins/markdown.custom'
+import { validateMarkdownIntegrityInDir } from './src/utils/contentIntegrityFs'
 // Markdown 配置================
 import SITE_INFO from './src/config';
 
 import tailwind from "@astrojs/tailwind";
+
+validateMarkdownIntegrityInDir(path.resolve(__dirname, "./src/content/blog"));
 
 // https://astro.build/config
 export default defineConfig({

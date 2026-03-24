@@ -1,13 +1,27 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
+import { assertNoEmbeddedFrontmatterAtBodyStart } from "./contentIntegrity";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 // 设置中文语言环境
 import 'dayjs/locale/zh-cn'
 dayjs.locale('zh-cn');
 // 获取文章的描述
-const getDescription = (post: any, num: number = 150) => (post.rendered ? post.rendered.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "") : post.body.replace(/\n/g, "").replace(/#/g, "")).slice(0, num) || '暂无简介'
+const getDescription = (post: any, num: number = 150) => {
+  const explicitDescription = typeof post?.data?.description === "string" ? post.data.description.trim() : "";
+  if (explicitDescription) {
+    return explicitDescription.slice(0, num);
+  }
+  const body = String(post?.body || "");
+  if (body) {
+    assertNoEmbeddedFrontmatterAtBodyStart(body, post?.id || post?.data?.slug || "unknown-post");
+  }
+  const source = post.rendered
+    ? post.rendered.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "")
+    : body.replace(/\n/g, "").replace(/#/g, "");
+  return source.slice(0, num) || '暂无简介';
+}
 //处理时间
 const fmtTime = (time: any, fmt: string = 'MMMM D, YYYY') => dayjs(time).utc().format(fmt)
 // 处理日期 - 只显示总天数

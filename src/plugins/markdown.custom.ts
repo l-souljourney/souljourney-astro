@@ -2,10 +2,13 @@
 import { visit } from 'unist-util-visit';
 import getReadingTime from 'reading-time';
 import { toString } from 'mdast-util-to-string';
+import { assertNoEmbeddedFrontmatterAtBodyStart } from '../utils/contentIntegrity';
 
 // 处理标签
 const remarkNote = () => {
   return (tree: any, file: any) => {
+    const fileRef = file.path || file.history?.[0] || "unknown-markdown-file";
+    assertNoEmbeddedFrontmatterAtBodyStart(String(file.value || ""), fileRef);
     // 文章字数统计
     const textOnPage = toString(tree);
     const readingTime = getReadingTime(textOnPage);
