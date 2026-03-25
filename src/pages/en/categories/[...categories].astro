@@ -7,6 +7,7 @@ import Layout from "@/layouts/Layout/Layout.astro";
 import Archive from "@/components/Archive/Archive.astro";
 // 转换为 Archive 组件需要的格式
 import { getCategoriesList } from "@/utils/getArchive";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -22,9 +23,12 @@ export async function getStaticPaths() {
 }
 
 const { categories } = Astro.params;
-// const lang = getLangFromUrl(Astro.url);
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const categoryDisplayName = getCategoryDisplayName(categories, 'en');
 const articleList = await getCategoriesList(categories, 'en');
+const isEmptyCategory = articleList.length === 0;
+const pageRobots = isEmptyCategory ? "noindex, follow" : "index, follow";
   
 // 页面 Info
 const info = {
@@ -33,6 +37,22 @@ const info = {
 };
 ---
 
-<Layout title={info.title} description={info.description} activeNav={categories}>
-	<Archive articleList={articleList} />
+<Layout title={info.title} description={info.description} activeNav={categories} pageRobots={pageRobots}>
+	{
+		isEmptyCategory ? (
+			<section class="flex-1 p-8 md:p-8 max-md:p-0 max-md:bg-transparent rounded-2xl bg-white dark:bg-[#222]/60 overflow-hidden vh-animation vh-animation-init">
+				<div class="rounded-xl border border-dashed border-border p-6 bg-muted/20 dark:bg-muted/10">
+					<h1 class="text-lg font-semibold text-foreground">{t("category.empty.title")}</h1>
+					<p class="mt-2 text-sm text-muted-foreground">
+						{t("category.empty.desc")} <span class="font-medium">{categoryDisplayName}</span>.
+					</p>
+					<a href="/en/archives" class="inline-flex mt-4 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+						{t("category.empty.back")}
+					</a>
+				</div>
+			</section>
+		) : (
+			<Archive articleList={articleList} />
+		)
+	}
 </Layout>

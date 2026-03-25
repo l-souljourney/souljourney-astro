@@ -12,7 +12,7 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
 
 {
   toc.length > 0 && (
-    <aside class="sticky top-[calc(66px+0.68rem)] z-10 flex-shrink-0 w-[19rem] h-fit p-5 flex flex-col gap-3 rounded-2xl bg-white shadow-sm overflow-visible transition-[top] duration-300 max-xl:hidden dark:bg-[#252525]">
+    <aside class="toc sticky top-[calc(66px+0.68rem)] z-10 flex-shrink-0 w-[19rem] h-fit p-5 flex flex-col gap-3 rounded-2xl bg-white shadow-sm overflow-visible transition-[top] duration-300 max-xl:hidden dark:bg-[#252525]">
       <h3 class="w-full text-[0.68rem] font-normal text-primary/56 m-0">{t('aside.toc')}</h3>
       <nav class="h-auto overflow-visible">
         <ul class="list-none p-0 m-0">
@@ -32,15 +32,21 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
 <script>
   // 滚动高亮功能
   function initTocHighlight() {
+    const tocRoot = document.querySelector('.toc');
+    if (!tocRoot) return;
+
+    const tocLinks = tocRoot.querySelectorAll('a');
+    if (tocLinks.length === 0) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute('id');
-          const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
+          const tocLink = tocRoot.querySelector(`a[href="#${id}"]`);
           
           if (entry.isIntersecting) {
             // 移除所有 active 类
-            document.querySelectorAll('.toc a').forEach(link => {
+            tocLinks.forEach(link => {
               link.classList.remove('active');
             });
             // 添加 active 类到当前项
@@ -56,8 +62,8 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
       }
     );
 
-    // 监听所有标题元素
-    document.querySelectorAll('article h2, article h3, article h4').forEach((heading) => {
+    // 监听正文中的标题元素（排除侧边栏自身标题）
+    document.querySelectorAll('.prose h2[id], .prose h3[id], .prose h4[id]').forEach((heading) => {
       observer.observe(heading);
     });
   }
