@@ -45,7 +45,13 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 
 ---
 
-<Layout title={post.data.title} description={post.data.description} headings={headings}>
+<Layout
+	title={post.data.title}
+	description={description}
+	pageCover={ARTICLE_COVER}
+	pageType="article"
+	headings={headings}
+>
   <article class="flex flex-col gap-10">
     <header class="flex flex-col gap-6">
       <h1 class="text-4xl max-md:text-2xl font-bold text-primary dark:text-[#e8e8e8] leading-tight">
@@ -71,9 +77,9 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 						<Icon name="clock" class="w-4 h-4 text-primary/80" />
 						{t('post.readTime')} ≈ {Math.ceil(readingMinutes)} {t('post.readTime')}
 					</span>
-				</section>
+				</div>
 		</header>
-		<article
+		<main
 			class="
 			prose lg:prose-xl
 			prose-zinc
