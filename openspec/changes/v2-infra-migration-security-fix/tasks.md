@@ -56,9 +56,11 @@
 
 ## 7. Verification & Release
 
+> Note: v2.0 release was landed via multiple PRs instead of a single squashed commit, so completion is judged by merged PRs and deployment runs.
+
 - [x] 7.1 Full local build: `pnpm build` succeeds with zero errors
 - [x] 7.2 Local preview: `pnpm preview` — check Chinese homepage, English homepage, article pages, search, categories, tags
 - [x] 7.3 Bump version in `package.json` from `1.9.5` to `2.0.0`
-- [ ] 7.4 Commit all changes with message `feat: v2.0 infrastructure migration and security fixes`
-- [ ] 7.5 Push feature branch and create PR, verify merge to `main` triggers Actions build + COS deploy succeeds
+- [x] 7.4 Commit all changes with message `feat: v2.0 infrastructure migration and security fixes`
+- [x] 7.5 Push feature branch and create PR, verify merge to `main` triggers Actions build + COS deploy succeeds
 - [ ] 7.6 Verify Cloudflare Pages auto-build triggers (requires Dashboard binding to be done separately)

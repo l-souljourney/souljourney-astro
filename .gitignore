@@ -8,7 +8,9 @@ node_modules/
 # pnpm-lock.yaml - 需要提交以确保依赖版本一致
 
 # internal docs
-docs/
+docs/*
+!docs/plans/
+!docs/plans/**
 
 # logs
 npm-debug.log*
@@ -23,6 +25,9 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+.claude/
+.codex/
+.opencode/
 test/
 /public/hanplayer
 /public/MineWeb
