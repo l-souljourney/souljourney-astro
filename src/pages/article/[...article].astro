@@ -44,7 +44,14 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 
 ---
 
-<Layout title={post.data.title || Title} description={description} cover={ARTICLE_COVER} activeNav={post.data.categories} headings={headings}>
+<Layout
+	title={post.data.title || Title}
+	description={description}
+	pageCover={ARTICLE_COVER}
+	pageType="article"
+	activeNav={post.data.categories}
+	headings={headings}
+>
 	<article class="
 		w-full
 		bg-white dark:bg-[#252525]
@@ -77,7 +84,7 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 					</span>
 				</section>
 		</header>
-		<article
+		<main
 			class="
 			prose lg:prose-xl
 			prose-zinc

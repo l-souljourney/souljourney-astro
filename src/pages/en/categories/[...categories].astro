@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { getLangFromUrl, useTranslations } from '@/i18n/utils';
-import { getCategoryDisplayName } from "@/utils/categoryMapping";
+import { getAllCategoryPaths, getCategoryDisplayName } from "@/utils/categoryMapping";
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
 // 文章列表组件
@@ -12,11 +11,12 @@ import { getCategoriesList } from "@/utils/getArchive";
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   const enPosts = posts.filter((post: any) => post.data.lang === 'en');
-  
-  // Get unique categories from English posts
-  const categories = [...new Set(enPosts.map((post: any) => post.data.categories))];
-  
-  return categories.map((category) => ({
+
+  const usedCategories = new Set(enPosts.map((post: any) => post.data.categories));
+  const canonicalCategories = getAllCategoryPaths();
+  const allCategories = new Set([...usedCategories, ...canonicalCategories]);
+
+  return Array.from(allCategories).map((category: string) => ({
     params: { categories: category },
   }));
 }

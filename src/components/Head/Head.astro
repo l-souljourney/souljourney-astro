@@ -26,7 +26,7 @@ const renderEnAlt = !articleRoute || lang === 'en' || hasArticleAltLanguage;
 const xDefaultHref = lang === 'zh' ? canonicalURL : (renderZhAlt ? altLangURL : canonicalURL);
 
 // 页面内容的元数据
-const { Title, Keywords, Description, PageCover } = Astro.props;
+const { Title, Keywords, Description, PageCover, PageType } = Astro.props;
 // 使用 i18n 替换 Config 中的硬编码文本
 const SiteName = t('site.title');
 const Subtitle = t('site.subtitle');
@@ -39,6 +39,8 @@ const WebTitle = Title || SiteName;
 const SiteCover = Site + Cover;
 const WebCover = PageCover || SiteCover;
 const MetaDescription = Description || SiteDescription;
+const resolvedPageType = PageType === "article" ? "article" : "website";
+const isArticlePage = resolvedPageType === "article";
 
 // Schema.org 结构化数据（JSON-LD）
 const WebSiteData = { "@context": "https://schema.org", "@type": "WebSite", name: WebTitle, url: canonicalURL, description: MetaDescription, image: { "@type": "ImageObject", url: SiteCover } };
@@ -80,8 +82,8 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<meta name="robots" content="index, follow, max-image-preview:large" />
 	<meta itemprop="image" content={WebCover} />
 	<!-- Open Graph -->
-	<meta property="article:author" content={Author} />
-	<meta property="og:type" content={PageCover ? "article" : "website"} />
+	{isArticlePage && <meta property="article:author" content={Author} />}
+	<meta property="og:type" content={resolvedPageType} />
 	<meta property="og:site_name" content={SiteName} />
 	<meta property="og:title" content={WebTitle} />
 	<meta property="og:description" content={MetaDescription} />
@@ -97,7 +99,7 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<meta name="twitter:url" content={canonicalURL} />
 	<meta name="twitter:image" content={WebCover} />
 	<!-- 输出结构化数据 -->
-	<script type="application/ld+json" set:html={JSON.stringify(PageCover ? ArticleData : WebSiteData)} is:inline />
+	<script type="application/ld+json" set:html={JSON.stringify(isArticlePage ? ArticleData : WebSiteData)} is:inline />
 	<!-- Sitemap -->
 	<link rel="sitemap" href="/sitemap-index.xml" />
 	<!-- DNS预解析 -->

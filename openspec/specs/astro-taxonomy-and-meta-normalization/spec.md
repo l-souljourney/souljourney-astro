@@ -1,8 +1,6 @@
 ## Purpose
 定义 Astro 分类与元数据渲染的规范化约束，确保分类键稳定、展示可本地化、元数据字段按类型消费。
-
 ## Requirements
-
 ### Requirement: categories SHALL be canonical-only across all aggregations
 
 Category counting, grouping, filtering, and page generation MUST use canonical category keys only. Alias-based normalization MUST NOT be used in v2.1.
@@ -50,3 +48,15 @@ Article description resolution MUST prefer frontmatter `description` when presen
 #### Scenario: frontmatter description missing
 - **WHEN** `description` is absent in frontmatter
 - **THEN** system falls back to generated excerpt from sanitized body content
+
+### Requirement: English category core routes SHALL be generated for all canonical category keys
+English category page static path generation MUST include the full canonical category key set defined by site taxonomy configuration, even when no English article currently belongs to a specific category.
+
+#### Scenario: canonical category without en posts still resolves
+- **WHEN** a canonical category has zero English articles
+- **THEN** `/en/categories/{category}` is still generated and renders a valid empty archive page instead of 404
+
+#### Scenario: canonical category with en posts remains accessible
+- **WHEN** a canonical category has English articles
+- **THEN** `/en/categories/{category}` renders article list normally with localized display text
+

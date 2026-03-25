@@ -1,5 +1,17 @@
 ---
-const { title, keywords, description, pagecover, activeNav, Home, headings } = Astro.props;
+const {
+	title,
+	keywords,
+	description,
+	pagecover,
+	pageCover,
+	cover,
+	pageType,
+	activeNav,
+	Home,
+	headings
+} = Astro.props;
+const resolvedPageCover = pageCover || pagecover || cover;
 // 网站配置
 import SITE_INFO from "@/config";
 const { GoogleAds, Theme } = SITE_INFO;
@@ -28,7 +40,7 @@ const lang = getLangFromUrl(Astro.url);
 ---
 
 <html lang={lang}>
-	<Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
+	<Head Title={title} Keywords={keywords} Description={description} PageCover={resolvedPageCover} PageType={pageType}>
 		<!-- 谷歌广告JS加载项 -->
 		{ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}
 		<!-- 彩旗🎈 - 已禁用 -->
