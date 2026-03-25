@@ -2,7 +2,7 @@ schema: spec-driven
 
 context: |
   Project: Souljourney Blog (L-忠程个人博客)
-  Version: 1.9.5 → 2.x series migration
+  Version: 2.0.0 (runtime) + v2.1.x hardening completed
   Site: https://www.l-souljourney.cn
 
   Tech stack:
