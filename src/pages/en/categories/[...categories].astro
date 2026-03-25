@@ -28,7 +28,7 @@ const t = useTranslations(lang);
 const categoryDisplayName = getCategoryDisplayName(categories, 'en');
 const articleList = await getCategoriesList(categories, 'en');
 const isEmptyCategory = articleList.length === 0;
-const pageRobots = isEmptyCategory ? "noindex, follow" : "index, follow";
+const pageRobots = isEmptyCategory ? "noindex, follow" : undefined;
   
 // 页面 Info
 const info = {

@@ -23,6 +23,15 @@ test('english category page should define empty-state and robots strategy', () =
   assert.match(enCategoryPage, /pageRobots=\{pageRobots\}/, 'Layout is not passed pageRobots');
 });
 
+test('english category page should only set noindex for empty categories', () => {
+  assert.equal(/"index,\s*follow"/.test(enCategoryPage), false, 'non-empty categories should not override default robots');
+  assert.match(
+    enCategoryPage,
+    /isEmptyCategory\s*\?\s*"noindex,\s*follow"\s*:\s*undefined/,
+    'expected conditional robots override for empty categories only'
+  );
+});
+
 test('Head component should allow page-level robots override', () => {
   assert.match(headComponent, /PageRobots/, 'Head props missing PageRobots');
   assert.match(headComponent, /content=\{resolvedRobots\}/, 'robots meta does not use resolvedRobots');
@@ -35,6 +44,10 @@ test('TOC should expose toc class hooks for highlight selector', () => {
 test('mobile sidebar should resolve locale-aware labels and links', () => {
   assert.match(mobileSidebar, /useTranslations/, 'mobile sidebar missing translation helper');
   assert.match(mobileSidebar, /withLangPrefix/, 'mobile sidebar missing locale prefix helper');
+});
+
+test('mobile sidebar should avoid double /en prefix', () => {
+  assert.match(mobileSidebar, /path\.startsWith\(["']\/en["']\)/, 'mobile sidebar missing /en prefix guard');
 });
 
 test('search modal binding should be keyed by current trigger element', () => {
