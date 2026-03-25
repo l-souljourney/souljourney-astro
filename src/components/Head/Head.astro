@@ -26,7 +26,7 @@ const renderEnAlt = !articleRoute || lang === 'en' || hasArticleAltLanguage;
 const xDefaultHref = lang === 'zh' ? canonicalURL : (renderZhAlt ? altLangURL : canonicalURL);
 
 // 页面内容的元数据
-const { Title, Keywords, Description, PageCover, PageType } = Astro.props;
+const { Title, Keywords, Description, PageCover, PageType, PageRobots } = Astro.props;
 // 使用 i18n 替换 Config 中的硬编码文本
 const SiteName = t('site.title');
 const Subtitle = t('site.subtitle');
@@ -41,6 +41,7 @@ const WebCover = PageCover || SiteCover;
 const MetaDescription = Description || SiteDescription;
 const resolvedPageType = PageType === "article" ? "article" : "website";
 const isArticlePage = resolvedPageType === "article";
+const resolvedRobots = PageRobots || "index, follow, max-image-preview:large";
 
 // Schema.org 结构化数据（JSON-LD）
 const WebSiteData = { "@context": "https://schema.org", "@type": "WebSite", name: WebTitle, url: canonicalURL, description: MetaDescription, image: { "@type": "ImageObject", url: SiteCover } };
@@ -79,7 +80,7 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<meta name="site" content={Site} />
 	<meta name="author" content={Author} />
 	<meta name="generator" content={Astro.generator} />
-	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<meta name="robots" content={resolvedRobots} />
 	<meta itemprop="image" content={WebCover} />
 	<!-- Open Graph -->
 	{isArticlePage && <meta property="article:author" content={Author} />}

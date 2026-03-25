@@ -11,15 +11,34 @@ import PagefindSearch from "astro-pagefind/components/Search";
 </section>
 
 <script>
+    type SearchWindow = Window & {
+        __vhSearchCleanup?: () => void;
+        __vhSearchBoundButton?: string;
+        __vhSearchPageLoadBound?: boolean;
+    };
+
     const initSearchModal = () => {
-        const searchBtn = document.querySelector(".search-btn");
+        const win = window as SearchWindow;
+        const searchBtn = document.querySelector(".search-btn") as HTMLElement | null;
         const searchModal = document.querySelector(".vh-search") as HTMLElement | null;
         const searchMain = document.querySelector(".vh-search > main");
 
         if (!searchBtn || !searchModal || !searchMain) return;
-        if (searchModal.dataset.bound === "true") return;
 
-        const openModal = () => {
+        if (!searchBtn.dataset.searchBindId) {
+            searchBtn.dataset.searchBindId = `search-btn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        }
+
+        const buttonId = searchBtn.dataset.searchBindId;
+        if (!buttonId) return;
+
+        if (win.__vhSearchBoundButton === buttonId) return;
+        if (typeof win.__vhSearchCleanup === "function") {
+            win.__vhSearchCleanup();
+        }
+
+        const openModal = (e: Event) => {
+            e.stopPropagation();
             searchModal.classList.add("active");
             setTimeout(() => {
                 const input = searchModal.querySelector("input");
@@ -31,30 +50,37 @@ import PagefindSearch from "astro-pagefind/components/Search";
             searchModal.classList.remove("active");
         };
 
-        searchBtn.addEventListener("click", (e) => {
+        const stopPropagation = (e: Event) => {
             e.stopPropagation();
-            openModal();
-        });
+        };
 
-        searchModal.addEventListener("click", (e) => {
-            closeModal();
-        });
-
-        searchMain.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
-
-        document.addEventListener("keydown", (e) => {
+        const closeOnEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape" && searchModal.classList.contains("active")) {
                 closeModal();
             }
-        });
+        };
 
-        searchModal.dataset.bound = "true";
+        searchBtn.addEventListener("click", openModal);
+        searchModal.addEventListener("click", closeModal);
+        searchMain.addEventListener("click", stopPropagation);
+        document.addEventListener("keydown", closeOnEscape);
+
+        searchModal.dataset.boundButton = buttonId;
+        win.__vhSearchBoundButton = buttonId;
+        win.__vhSearchCleanup = () => {
+            searchBtn.removeEventListener("click", openModal);
+            searchModal.removeEventListener("click", closeModal);
+            searchMain.removeEventListener("click", stopPropagation);
+            document.removeEventListener("keydown", closeOnEscape);
+        };
     };
 
     initSearchModal();
-    document.addEventListener("astro:page-load", initSearchModal);
+    const searchWin = window as SearchWindow;
+    if (!searchWin.__vhSearchPageLoadBound) {
+        document.addEventListener("astro:page-load", initSearchModal);
+        searchWin.__vhSearchPageLoadBound = true;
+    }
 </script>
 
 <style>

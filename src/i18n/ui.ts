@@ -30,6 +30,9 @@ export const ui = {
         'pagination.next': '下一页',
         'pagination.first': '第一页',
         'pagination.page': '页',
+        'category.empty.title': '当前分类暂无英文文章',
+        'category.empty.desc': '当前分类下暂无英文文章：',
+        'category.empty.back': '查看英文归档',
 
         // Site Config
         'site.title': 'L-忠程丨生死看淡不服就淦',
@@ -100,6 +103,9 @@ export const ui = {
         'pagination.next': 'Next',
         'pagination.first': 'First Page',
         'pagination.page': 'Page',
+        'category.empty.title': 'No posts in this category yet',
+        'category.empty.desc': 'No English posts have been published under',
+        'category.empty.back': 'Browse English archive',
 
         // Site Config
         'site.title': 'L-SoulJourney', // English Title
