@@ -2,9 +2,10 @@
 import { getCategoriesList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
 import { getCategoryDisplayName, getAllCategoryPaths } from "@/utils/categoryMapping";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 export async function getStaticPaths(): Promise<any> {
 	const allPosts = await getCollection("blog");
-const zhPosts = allPosts.filter((post: any) => post.data.lang !== 'en');
+	const zhPosts = getPublishedEntriesByLang(allPosts, "zh");
 	// 获取所有文章使用的分类
 	const usedCategories = new Set(zhPosts.map((post: any) => post.data.categories));
 	// 获取所有配置的分类

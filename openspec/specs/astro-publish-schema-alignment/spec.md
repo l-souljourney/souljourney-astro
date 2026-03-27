@@ -1,14 +1,14 @@
 ## Purpose
-定义 Astro 对发布入站 frontmatter 的字段契约，保证 Obsidian/wxengine 推送内容可稳定消费。
+定义 Astro 对发布入站 frontmatter 的字段契约，保证双语镜像内容可稳定消费，并与公开发布集合规则保持一致。
 
 ## Requirements
 
-### Requirement: Astro frontmatter SHALL enforce strict required fields
+### Requirement: Astro frontmatter SHALL enforce strict required fields for publishable content
 
-The blog collection schema in `src/content.config.ts` MUST require the following fields for published articles: `title`, `date`, `categories`, `slug`, `source_id`.
+The blog collection schema for publishable content MUST require: `title`, `date`, `categories`, `slug`, `source_id`, `lang`.
 
 #### Scenario: Missing required field fails build
-- **WHEN** a published markdown file is missing one of `title/date/categories/slug/source_id`
+- **WHEN** a publishable markdown file is missing one of `title/date/categories/slug/source_id/lang`
 - **THEN** Astro content validation fails and `pnpm build` exits with an error
 
 ### Requirement: Astro frontmatter SHALL deprecate id as publish input
@@ -21,10 +21,10 @@ The blog collection schema in `src/content.config.ts` MUST require the following
 
 ### Requirement: categories SHALL be constrained to canonical enum
 
-`categories` MUST be one of: `investment`, `ai-era`, `zhejiang-business`, `philosophy`, `life`.
+`categories` MUST be one of the site canonical keys.
 
 #### Scenario: Non-canonical category fails validation
-- **WHEN** a markdown file sets `categories: market-review`
+- **WHEN** a markdown file sets `categories` outside the canonical category enum
 - **THEN** schema validation fails and build is blocked
 
 ### Requirement: recommend/top/hide SHALL be boolean-only
@@ -37,8 +37,16 @@ The blog collection schema in `src/content.config.ts` MUST require the following
 
 ### Requirement: Optional metadata fields SHALL remain available
 
-The following optional fields MUST be accepted when present: `updated`, `tags`, `description`, `cover`, `lang`, `author`, `word_count`, `reading_time`.
+The following optional fields MUST be accepted when present: `updated`, `tags`, `description`, `cover`, `author`, `word_count`, `reading_time`, `target`, `article_type`, `render_profile`, `cover_image_url`.
 
 #### Scenario: Optional metadata is accepted without affecting strict required fields
 - **WHEN** a markdown file includes valid required fields and any subset of optional fields
 - **THEN** schema validation succeeds
+
+### Requirement: Publishable mirror entries SHALL share source_id and slug across zh/en
+
+For entries intended to enter the public publish set, the zh/en mirror pair MUST share the same `source_id` and the same `slug`.
+
+#### Scenario: shared source_id and slug are preserved across mirror entries
+- **WHEN** zh and en entries describe the same logical article
+- **THEN** they keep identical `source_id` and `slug` values

@@ -1,6 +1,7 @@
 ---
 import { getDescription, fmtTime } from "@/utils/index";
 import { formatDate } from "@/utils/formatDate";
+import { buildPublishSet } from "@/utils/publishSet";
 // 分类映射功能
 import { getCategoryDisplayName } from "@/utils/categoryMapping";
 import { Icon } from 'astro-icon/components';
@@ -14,7 +15,8 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
-	const zhPosts = posts.filter((post: any) => post.data.lang !== "en");
+	const { publishedByLang } = buildPublishSet(posts);
+	const zhPosts = publishedByLang.zh;
 	return zhPosts.map((post: any) => ({ params: { article: post.data.slug }, props: post }));
 }
 // 处理文章内容

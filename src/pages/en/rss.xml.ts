@@ -2,16 +2,20 @@ import { ui } from '@/i18n/ui';
 import { getRssString } from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { getDescription } from '@/utils/index';
+import { getPublishedEntriesByLang } from '@/utils/publishSet';
 
 export async function GET(context: any) {
     const posts = await getCollection('blog');
-    const enPosts = posts.filter(i => !i.data.hide && i.data.lang === 'en');
+    const publishedByLang = {
+        zh: getPublishedEntriesByLang(posts, 'zh'),
+        en: getPublishedEntriesByLang(posts, 'en'),
+    };
 
     const res = await getRssString({
         title: `${ui.en['site.title']} (English)`,
         description: ui.en['site.description'],
         site: context.site,
-        items: enPosts.map((post) => ({
+        items: publishedByLang.en.map((post) => ({
             title: post.data.title,
             pubDate: post.data.updated || post.data.date,
             description: getDescription(post),

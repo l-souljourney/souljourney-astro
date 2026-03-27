@@ -2,15 +2,20 @@ import { getRssString } from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { getDescription } from '@/utils/index'
 import SITE_CONFIG from '@/config';
+import { getPublishedEntriesByLang } from '@/utils/publishSet';
 const { Title, Description } = SITE_CONFIG;
 
 export async function GET(context: any) {
 	const posts = await getCollection('blog');
+	const publishedByLang = {
+		zh: getPublishedEntriesByLang(posts, 'zh'),
+		en: getPublishedEntriesByLang(posts, 'en'),
+	};
 	const res = await getRssString({
 		title: Title,
 		description: Description,
 		site: context.site,
-		items: posts.filter(i => !i.data.hide && i.data.lang !== 'en').map((post) => ({
+		items: publishedByLang.zh.map((post) => ({
 			title: post.data.title,
 			pubDate: post.data.updated || post.data.date,
 			description: getDescription(post),

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 import moveTopToFirst from "@/utils/moveTopToFirst";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 
 // i18n
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
@@ -10,12 +11,12 @@ const t = useTranslations(lang);
 
 export async function getStaticPaths(options: GetStaticPathsOptions) {
 	const { paginate } = options;
-	const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+	const posts = await getCollection("blog");
+	const enPosts = getPublishedEntriesByLang(posts, "en")
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 	// 置顶文章功能
-	moveTopToFirst(posts);
+	moveTopToFirst(enPosts);
     // 注意：Search JSON 已在主页生成，这里不再重复生成
-
-    const enPosts = posts.filter(i => i.data.lang === 'en' && !i.data.hide);
 
 	return paginate(
 		enPosts,

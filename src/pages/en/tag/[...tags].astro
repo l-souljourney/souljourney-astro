@@ -1,6 +1,7 @@
 ---
 import { getTagsList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -8,7 +9,7 @@ const t = useTranslations(lang);
 
 export async function getStaticPaths(): Promise<any> {
 	const posts = await getCollection("blog");
-	const enPosts = posts.filter((post: any) => post.data.lang === 'en');
+	const enPosts = getPublishedEntriesByLang(posts, "en");
 	const allTags = new Set<string>();
 	enPosts.forEach((post: any) => {
 		if (post.data.tags) {
@@ -22,30 +23,7 @@ export async function getStaticPaths(): Promise<any> {
 }
 
 const { tags } = Astro.params;
-// 特殊处理：仅获取英文文章
-const allPosts = await getCollection("blog");
-const enPosts = allPosts.filter((post: any) => post.data.lang === 'en');
-const filteredPosts = enPosts
-  .filter((post: any) => post.data.tags && post.data.tags.includes(tags))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-// 按年份分组
-const articlesByYear = new Map<number, any[]>();
-filteredPosts.forEach(post => {
-  const year = post.data.date.getFullYear();
-  if (!articlesByYear.has(year)) {
-    articlesByYear.set(year, []);
-  }
-  articlesByYear.get(year)!.push(post);
-});
-
-// 转换为 Archive 组件需要的格式
-const articleList = Array.from(articlesByYear.entries())
-  .sort((a, b) => b[0] - a[0]) // 按年份降序
-  .map(([year, posts]) => ({
-    name: year,
-    data: posts.map(post => post.data)
-  }));
+const articleList = await getTagsList(tags, 'en');
 
 // 页面 Info
 import SITE_CONFIG from "@/config";

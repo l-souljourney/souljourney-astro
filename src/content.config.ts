@@ -28,7 +28,7 @@ const blog = defineCollection({
 		recommend: z.boolean().optional(),
 		hide: z.boolean().optional(),
 		top: z.boolean().optional(),
-		lang: z.enum(['zh', 'en']).optional(),
+		lang: z.enum(['zh', 'en']),
 		author: z.string().optional(),
 		word_count: z.number().int().nonnegative().optional(),
 		reading_time: z.number().nonnegative().optional(),

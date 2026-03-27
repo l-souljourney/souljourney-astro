@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import { getAllCategoryPaths, getCategoryDisplayName } from "@/utils/categoryMapping";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 // 公共 Layout
 import Layout from "@/layouts/Layout/Layout.astro";
 // 文章列表组件
@@ -11,7 +12,7 @@ import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  const enPosts = posts.filter((post: any) => post.data.lang === 'en');
+  const enPosts = getPublishedEntriesByLang(posts, "en");
 
   const usedCategories = new Set(enPosts.map((post: any) => post.data.categories));
   const canonicalCategories = getAllCategoryPaths();
