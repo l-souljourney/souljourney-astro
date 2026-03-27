@@ -24,9 +24,8 @@ const articleAltPath = articleRoute ? await getAlternateArticlePath(Astro.url) :
 // 简单的语言切换逻辑
 const nextLangLabel = lang === 'zh' ? 'EN' : '中';
 const defaultSwitchRoute = lang === 'zh' ? `/en${currentRoute}` : currentRoute?.replace(/^\/en/, '') || '/';
-const nextRoute = articleRoute
-	? (articleAltPath || (lang === 'zh' ? '/en' : '/'))
-	: defaultSwitchRoute;
+const nextRoute = articleRoute ? articleAltPath : defaultSwitchRoute;
+const showLanguageSwitch = !articleRoute || Boolean(articleAltPath);
 
 // 移除硬编码映射表
 // const navTextMap = ...
@@ -64,9 +63,11 @@ const nextRoute = articleRoute
 			}
             
             <!-- 语言切换按钮 -->
-            <a href={nextRoute} class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground relative z-10">
-                <span class="text-xs font-bold border border-current rounded px-1">{nextLangLabel}</span>
-            </a>
+            {showLanguageSwitch && (
+				<a href={nextRoute || undefined} class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground relative z-10">
+                	<span class="text-xs font-bold border border-current rounded px-1">{nextLangLabel}</span>
+            	</a>
+			)}
 
 			<ThemeIcon />
 			<button type="button" aria-label={t('header.search')} class="hidden md:flex items-center gap-[0.28rem] px-[0.36rem] py-[0.288rem] h-max text-[0.98rem] font-semibold select-none cursor-pointer transition-all duration-180 rounded-lg hover:bg-accent hover:text-accent-foreground text-foreground search-btn">

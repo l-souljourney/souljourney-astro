@@ -1,5 +1,6 @@
 
 import { getCollection } from "astro:content";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 
 // 格式化文章列表
 const fmtArticleList = (articleList: any) => {
@@ -15,38 +16,29 @@ const fmtArticleList = (articleList: any) => {
   return Object.keys(groupedByYear).map(year => ({ name: parseInt(year), data: groupedByYear[year] })).reverse();
 }
 
-// 统一过滤逻辑
-const filterPosts = (posts: any[], lang?: string) => {
-  if (lang === 'en') {
-    return posts.filter(p => p.data.lang === 'en');
-  } else {
-    return posts.filter(p => p.data.lang !== 'en');
-  }
+const getLocalePosts = async (lang: 'zh' | 'en' = 'zh') => {
+  const posts = await getCollection("blog");
+  return getPublishedEntriesByLang(posts, lang)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 };
 
 // 获取分类下的文章列表
 const getCategoriesList = async (categories: string, lang?: string) => {
-  const posts = await getCollection("blog");
-  const filteredPosts = filterPosts(posts, lang);
-
-  const articleList = filteredPosts.filter((i: any) => i.data.categories == categories).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
+  const filteredPosts = await getLocalePosts(lang === 'en' ? 'en' : 'zh');
+  const articleList = filteredPosts.filter((i: any) => i.data.categories == categories);
   return fmtArticleList(articleList);
 }
 
 // 获取标签下的文章列表
 const getTagsList = async (tags: string, lang?: string) => {
-  const posts = await getCollection("blog");
-  const filteredPosts = filterPosts(posts, lang);
-
-  const articleList = filteredPosts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
+  const filteredPosts = await getLocalePosts(lang === 'en' ? 'en' : 'zh');
+  const articleList = filteredPosts.filter((i: any) => (i.data.tags || []).map((_i: any) => (String(_i))).includes(tags));
   return fmtArticleList(articleList);
 }
 
 // 获取归档列表
 const getArchiveList = async (lang?: string) => {
-  const posts = await getCollection("blog");
-  const filteredPosts = filterPosts(posts, lang);
-  const articleList = filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());;
+  const articleList = await getLocalePosts(lang === 'en' ? 'en' : 'zh');
   return fmtArticleList(articleList);
 }
 

@@ -1,59 +1,24 @@
-import { getCollection } from "astro:content";
+import { type CollectionEntry, getCollection } from 'astro:content';
 
-type SiteLang = "zh" | "en";
+import { getAlternateArticlePathFromMirrorPairs, parseArticleRoute } from '@/utils/articleI18nCore';
+import { buildPublishSet, type PublishMirrorPair } from '@/utils/publishSet';
 
-type ArticleRoute = {
-	lang: SiteLang;
-	slug: string;
-};
+let cachedPublishedMirrorPairs: PublishMirrorPair<CollectionEntry<'blog'>>[] | null = null;
 
-const ARTICLE_PATH_RE = /^\/(?:(en)\/)?article\/([^/]+)\/?$/;
+const getPublishedMirrorPairs = async (): Promise<PublishMirrorPair<CollectionEntry<'blog'>>[]> => {
+  if (cachedPublishedMirrorPairs) {
+    return cachedPublishedMirrorPairs;
+  }
 
-let cachedArticleLangSlugSet: Set<string> | null = null;
-
-const normalizeLang = (value: unknown): SiteLang => (value === "en" ? "en" : "zh");
-
-const buildKey = (lang: SiteLang, slug: string) => `${lang}:${slug}`;
-
-export const parseArticleRoute = (pathname: string): ArticleRoute | null => {
-	const match = pathname.match(ARTICLE_PATH_RE);
-	if (!match) {
-		return null;
-	}
-	const [, enPrefix, slug] = match;
-	return {
-		lang: enPrefix ? "en" : "zh",
-		slug,
-	};
-};
-
-const getArticleLangSlugSet = async (): Promise<Set<string>> => {
-	if (cachedArticleLangSlugSet) {
-		return cachedArticleLangSlugSet;
-	}
-	const posts = await getCollection("blog");
-	const set = new Set<string>();
-	for (const post of posts) {
-		const lang = normalizeLang(post.data.lang);
-		const slug = post.data.slug;
-		if (!slug) {
-			continue;
-		}
-		set.add(buildKey(lang, slug));
-	}
-	cachedArticleLangSlugSet = set;
-	return set;
+  const posts = await getCollection('blog');
+  const { mirrorPairs } = buildPublishSet(posts);
+  cachedPublishedMirrorPairs = mirrorPairs;
+  return mirrorPairs;
 };
 
 export const getAlternateArticlePath = async (url: URL): Promise<string | null> => {
-	const parsed = parseArticleRoute(url.pathname);
-	if (!parsed) {
-		return null;
-	}
-	const targetLang: SiteLang = parsed.lang === "zh" ? "en" : "zh";
-	const set = await getArticleLangSlugSet();
-	if (!set.has(buildKey(targetLang, parsed.slug))) {
-		return null;
-	}
-	return targetLang === "en" ? `/en/article/${parsed.slug}` : `/article/${parsed.slug}`;
+  const mirrorPairs = await getPublishedMirrorPairs();
+  return getAlternateArticlePathFromMirrorPairs(url.pathname, mirrorPairs);
 };
+
+export { parseArticleRoute };

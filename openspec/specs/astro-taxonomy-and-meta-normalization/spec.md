@@ -1,9 +1,11 @@
 ## Purpose
-定义 Astro 分类与元数据渲染的规范化约束，确保分类键稳定、展示可本地化、元数据字段按类型消费。
+定义 Astro 分类与元数据渲染的规范化约束，确保分类键稳定、双语聚合可镜像、元数据字段按类型消费。
+
 ## Requirements
+
 ### Requirement: categories SHALL be canonical-only across all aggregations
 
-Category counting, grouping, filtering, and page generation MUST use canonical category keys only. Alias-based normalization MUST NOT be used in v2.1.
+Category counting, grouping, filtering, and page generation MUST use canonical category keys only.
 
 #### Scenario: Category list does not auto-map aliases
 - **WHEN** content includes a non-canonical category value
@@ -16,6 +18,14 @@ All category links MUST use canonical keys in URL, and display text MUST be loca
 #### Scenario: English page displays localized text but keeps canonical URL
 - **WHEN** an English article has `categories: ai-era`
 - **THEN** category text is rendered in English and link remains `/en/categories/ai-era`
+
+### Requirement: Public category, tag, and archive aggregations SHALL consume the public publish set
+
+公开聚合页 MUST 只消费完整镜像对构成的 public publish set，而不是所有原始内容文件。
+
+#### Scenario: pending translation content is excluded from public aggregation
+- **WHEN** a content entry has no complete zh/en mirror pair
+- **THEN** it is excluded from category, tag, and archive public aggregation output
 
 ### Requirement: Metadata rendering SHALL use strict typed frontmatter fields
 
@@ -49,17 +59,10 @@ Article description resolution MUST prefer frontmatter `description` when presen
 - **WHEN** `description` is absent in frontmatter
 - **THEN** system falls back to generated excerpt from sanitized body content
 
-### Requirement: English category core routes SHALL be generated for all canonical category keys
-English category page static path generation MUST include the full canonical category key set defined by site taxonomy configuration, even when no English article currently belongs to a specific category. For categories with zero English articles, the page MUST render an explicit empty-state message and MUST output `robots` meta as `noindex, follow` to avoid thin-content indexing. For categories with content, page-level robots override MUST be omitted and Head default robots policy MUST be used.
+### Requirement: Canonical category routes SHALL still be generated for navigation-level categories
 
-#### Scenario: canonical category without en posts still resolves
-- **WHEN** a canonical category has zero English articles
-- **THEN** `/en/categories/{category}` is still generated and renders a valid empty-state page instead of 404
+导航中的 canonical category 路由 SHOULD 可稳定访问；若某语言下暂无公开文章，则页面可输出 empty-state 与合适的 noindex 策略，而不是 404。
 
-#### Scenario: empty english category uses noindex strategy
-- **WHEN** rendering `/en/categories/{category}` with no article items
-- **THEN** page output includes empty-state guidance text and `robots` meta is `noindex, follow`
-
-#### Scenario: canonical category with en posts remains accessible
-- **WHEN** a canonical category has English articles
-- **THEN** `/en/categories/{category}` renders article list normally with localized display text and does not hardcode page-level `index, follow`
+#### Scenario: canonical category without published entries still resolves
+- **WHEN** a canonical category has zero published entries for the current locale
+- **THEN** the category route still resolves to a valid empty-state page instead of 404

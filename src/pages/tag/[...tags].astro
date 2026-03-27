@@ -1,10 +1,12 @@
 ---
 import { getTagsList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
+import { getPublishedEntriesByLang } from "@/utils/publishSet";
 export async function getStaticPaths(): Promise<any> {
 	const posts = await getCollection("blog");
+	const zhPosts = getPublishedEntriesByLang(posts, "zh");
 	let tagList: any = [];
-	posts.forEach(post => (tagList = [...tagList, ...(post.data.tags || [])]));
+	zhPosts.forEach(post => (tagList = [...tagList, ...(post.data.tags || [])]));
 	return [...new Set(tagList)].map(tags => ({ params: { tags } }));
 }
 // 获取分类列表

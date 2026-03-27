@@ -16,14 +16,16 @@ const articleAltPath = articleRoute ? await getAlternateArticlePath(Astro.url) :
 const defaultAltLangURL = lang === 'zh'
 	? new URL(`/en${Astro.url.pathname}`, Astro.site).href.replace(/\/+$/, "")
 	: new URL(Astro.url.pathname.replace(/^\/en/, ''), Astro.site).href.replace(/\/+$/, "");
-const altLangURL = articleAltPath
+const articleAltURL = articleAltPath
 	? new URL(articleAltPath, Astro.site).href.replace(/\/+$/, "")
-	: defaultAltLangURL;
-
-const hasArticleAltLanguage = Boolean(articleAltPath);
-const renderZhAlt = !articleRoute || lang === 'zh' || hasArticleAltLanguage;
-const renderEnAlt = !articleRoute || lang === 'en' || hasArticleAltLanguage;
-const xDefaultHref = lang === 'zh' ? canonicalURL : (renderZhAlt ? altLangURL : canonicalURL);
+	: null;
+const zhAltURL = articleRoute
+	? (articleAltURL ? (lang === 'zh' ? canonicalURL : articleAltURL) : null)
+	: (lang === 'zh' ? canonicalURL : defaultAltLangURL);
+const enAltURL = articleRoute
+	? (articleAltURL ? (lang === 'en' ? canonicalURL : articleAltURL) : null)
+	: (lang === 'en' ? canonicalURL : defaultAltLangURL);
+const xDefaultHref = articleRoute ? canonicalURL : (lang === 'zh' ? canonicalURL : defaultAltLangURL);
 
 // 页面内容的元数据
 const { Title, Keywords, Description, PageCover, PageType, PageRobots } = Astro.props;
@@ -109,8 +111,8 @@ const ArticleData = { "@context": "https://schema.org", "@type": "BlogPosting", 
 	<!-- LINK 标签 -->
 	<link rel="canonical" href={canonicalURL} />
 	<!-- hreflang for SEO -->
-	{renderZhAlt && <link rel="alternate" hreflang="zh" href={lang === 'zh' ? canonicalURL : altLangURL} />}
-	{renderEnAlt && <link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalURL : altLangURL} />}
+	{zhAltURL && <link rel="alternate" hreflang="zh" href={zhAltURL} />}
+	{enAltURL && <link rel="alternate" hreflang="en" href={enAltURL} />}
 	<link rel="alternate" hreflang="x-default" href={xDefaultHref} />
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 	<slot />

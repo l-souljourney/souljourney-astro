@@ -1,19 +1,18 @@
 import { getCollection } from "astro:content";
-const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+import { getPublishedEntries, getPublishedEntriesByLang } from "@/utils/publishSet";
 
-// 辅助函数：根据语言过滤文章
-const filterPostsByLang = (lang?: string) => {
-  if (!lang) return posts;
-  if (lang === 'en') {
-    return posts.filter(p => p.data.lang === 'en');
-  } else {
-    return posts.filter(p => p.data.lang !== 'en');
-  }
+const posts = await getCollection("blog");
+
+// 基于 publish-set 获取公开文章集合
+const getScopedPosts = (lang?: string) => {
+  if (!lang) return getPublishedEntries(posts).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return getPublishedEntriesByLang(posts, lang === 'en' ? 'en' : 'zh')
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 };
 
 // 获取文章分类
 const getCategories = (lang?: string) => {
-  const targetPosts = filterPostsByLang(lang);
+  const targetPosts = getScopedPosts(lang);
   const categoriesList = targetPosts.reduce((acc: any, i: any) => {
     acc[i.data.categories] = (acc[i.data.categories] || 0) + 1;
     return acc;
@@ -23,7 +22,7 @@ const getCategories = (lang?: string) => {
 
 // 获取统计数据
 const getCountInfo = (lang?: string) => {
-  const targetPosts = filterPostsByLang(lang);
+  const targetPosts = getScopedPosts(lang);
   // 注意：这里复用已过滤的 getCategories/getTags 逻辑会有循环依赖或重复计算问题
   // 简单起见，直接基于 targetPosts 重新计算，或者让这些函数独立
   // 为了性能，这里简单实现：
@@ -35,7 +34,7 @@ const getCountInfo = (lang?: string) => {
 
 // 获取文章标签
 const getTags = (lang?: string) => {
-  const targetPosts = filterPostsByLang(lang);
+  const targetPosts = getScopedPosts(lang);
   const tagList = targetPosts.reduce((acc: any, i: any) => {
     (i.data.tags || []).forEach((tag: string) => {
       acc[tag] = (acc[tag] || 0) + 1;
@@ -47,7 +46,7 @@ const getTags = (lang?: string) => {
 
 // 获取推荐文章 (给文章添加 recommend: true 字段)
 const getRecommendArticles = (lang?: string) => {
-  const targetPosts = filterPostsByLang(lang);
+  const targetPosts = getScopedPosts(lang);
   const recommendList = targetPosts.filter(i => i.data.recommend);
   return (recommendList.length ? recommendList : targetPosts.slice(0, 6))
     .map(i => ({ title: i.data.title, date: i.data.date, slug: i.data.slug }));
