@@ -36,6 +36,7 @@
     "autoprefixer": "^10.4.22",
     "cheerio": "^1.0.0",
     "dayjs": "^1.11.13",
+    "devalue": "^5.7.0",
     "less": "^4.3.0",
     "mdast-util-to-string": "^4.0.0",
     "postcss": "^8.5.6",
