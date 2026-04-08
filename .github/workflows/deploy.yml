@@ -31,6 +31,14 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Publish health guard
+        env:
+          MIN_MIRROR_PAIRS: "1"
+          MIN_ARTICLE_ROUTES: "1"
+          MIN_RSS_ITEMS: "1"
+          MAX_DUPLICATE_IDS: "0"
+        run: pnpm check:publish-health
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
