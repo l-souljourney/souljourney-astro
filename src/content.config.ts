@@ -13,7 +13,17 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	loader: glob({
+		base: './src/content/blog',
+		pattern: '**/*.{md,mdx}',
+		// Use language + source_id + slug as a stable unique ID for bilingual entries.
+		generateId: ({ entry, data }) => {
+			const lang = String(data.lang ?? 'unknown');
+			const sourceId = String(data.source_id ?? entry);
+			const slug = String(data.slug ?? entry);
+			return `${lang}::${sourceId}::${slug}`;
+		},
+	}),
 	// Type-check frontmatter using a schema
 	schema: z.object({
 		title: z.string(),
