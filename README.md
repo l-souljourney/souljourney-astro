@@ -1,102 +1,68 @@
-# L-忠程丨生死看淡不服就淦
+# L-Souljourney Blog
 
-> 一个基于 Astro 5.0 构建的现代化个人博客，记录投资感悟、AI探索、商业思考与人生哲学
+基于 Astro 5.x + TypeScript 构建的中英双语个人博客。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Astro](https://img.shields.io/badge/Astro-5.16.0-orange.svg)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
+## 项目概览
 
-## 🌟 项目简介
+- 框架：Astro 5.x
+- 语言：TypeScript
+- 样式：Tailwind CSS + 自定义样式
+- 内容：Markdown/MDX（`src/content/blog/`）
+- 部署：GitHub Actions 构建后发布到 COS + CDN
 
-这是执笔忠程的个人博客网站，采用 **Astro 5.16 + View Transitions** 的现代化架构构建。博客秉承"生死看淡，不服就淦"的人生态度，记录一个80后在投资路上、商业思考中的点点滴滴。
+当前文档口径已对齐到 `v2.2.1`（2026-04-08）事故修复版本。
 
-### 🎯 内容定位
+## v2.2.1 关键修复
 
-- **投资路** - 投资心得、市场分析、实盘笔记
-- **AI时代** - 人工智能探索、技术思考、未来展望  
-- **浙商** - 商业思维、创业感悟、浙商精神
-- **天问** - 人生哲学、深度思考、价值观探讨
-- **活着** - 生活感悟、中年思考、人生体验
+`v2.2.1` 主要修复的是双语内容在加载阶段被同 `slug` 覆盖，导致公开集合归零的问题。
 
-### 🌍 国际化支持 (v1.9.0)
+- 在 `src/content.config.ts` 显式定义 `generateId`：`lang::source_id::slug`
+- 新增发布健康检查：`script/publish-health.js`
+- 在 CI build 阶段接入 `pnpm check:publish-health`，异常直接阻断部署
+- 删除误推稿件：`src/content/blog/zh/1723-4k.md`
 
-本博客支持**中英双语**，实现了完整的国际化架构：
-- **中文版**: `https://www.l-souljourney.cn/`
-- **英文版**: `https://www.l-souljourney.cn/en/`
-- **智能切换**: Header右上角一键切换语言
-- **SEO优化**: 完整的hreflang标签支持，告诉搜索引擎语言版本关系
+参考文档：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
 
-## 🚀 技术特性
-
-- **核心框架**: [Astro 5.16](https://astro.build/) - 极致性能的静态站点生成器
-- **页面转场**: **View Transitions** - 浏览器原生级无刷新页面切换
-- **搜索系统**: **Pagefind** - 静态索引搜索，支持中文分词
-- **图标系统**: **astro-icon** - 基于 SVG 的高性能图标解决方案
-- **样式系统**: 
-    - **Tailwind CSS 3.4.18** - 现代化 Utility-first CSS 框架
-    - **@tailwindcss/typography (prose-zinc)** - 零配置极简排版方案
-    - **Shadcn UI (Zinc)** - 统一的设计系统与 CSS Variables
-    - **Starlight 设计语言** - 提取 Starlight 核心设计规范（v1.8.5 集成）
-- **字体系统** (v1.8.5):
-    - **Inter** - 正文字体，支持 OpenType 特性（cv02/cv03/cv04/cv11）
-    - **JetBrains Mono** - 代码字体，支持编程连字（liga + calt）
-    - **本地托管** - 通过 Fontsource 自托管，离线可用
-- **排版系统** (v1.8.6):
-    - **Starlight Typography** - 100% 对齐 Starlight 文档级排版规范
-    - **精细化调优** - 优化段落间距 (1.25em)、列表缩进与引用块样式
-- **组件系统**:
-    - **代码高亮** - Shiki GitHub Light/Dark Dimmed 主题 (v1.8.5)
-    - **ArticleCard** - 统一 Starlight 设计风格 (v1.8.6)
-- **动画规范** (v1.8.5):
-    - **统一时长** - 所有动画 200ms（Starlight 标准）
-    - **统一缓动** - ease-out 自然流畅
-    - **性能优化** - scaleX 替代 width，提升 20-30%
-- **性能优化** (v1.8.6):
-    - **依赖瘦身** - 移除 @astrojs/starlight 完整依赖 (-10MB)
-    - **构建优化** - 零外部依赖，轻量化构建
-- **内容管理**: Markdown/MDX + Content Layer - 类型安全的内容集合
-- **交互体验**: 
-    - 图片懒加载与灯箱效果
-    - 智能目录 (TOC) 与平滑滚动
-    - 完美适配的暗黑模式(零FOUC)
-    - 响应式布局与微交互动效
-- **国际化 (i18n)** (v1.9.5):
-    - **双语支持**: 中文 + 英文全栈支持
-    - **智能路由**: 中文 `/`, 英文 `/en/`
-    - **翻译系统**: 强类型检查的 UI 翻译字典 (`UIKeys`)
-    - **SEO优化**: hreflang标签 + og:locale动态设置
-    - **统一错误页**: 基于组件的自适应 404 页面
-
-
-## 🛠️ 快速开始
+## 快速开始
 
 ```bash
-# 安装依赖
 pnpm install
-
-# 启动开发服务器
 pnpm dev
-
-# 构建生产版本
-pnpm build
 ```
 
-## 🚀 部署方案
+常用命令：
 
-本项目配置了 **GitHub Actions** 自动化部署流水线：
+```bash
+pnpm dev                 # 本地开发
+pnpm build               # 生产构建
+pnpm preview             # 预览构建产物
+pnpm newpost             # 新建文章
+pnpm check:publish-health # 发布健康检查
+```
 
-1. **自动构建**: 代码推送到 `main` 分支自动触发构建
-2. **双平台部署**: 
-   - 腾讯云 COS + CDN（国内访问）
-   - Cloudflare Pages（海外访问）
-3. **构建产物**: 静态 HTML 文件，自动同步到云存储
+## 内容发布约束
 
----
+为避免“构建成功但公开内容为空”的静默故障，当前发布约束如下：
 
-## 📄 许可证
+- frontmatter 必填：`title/date/categories/slug/source_id/lang`
+- 公开集合仅包含完整 `zh/en` 镜像对
+- 单语稿件允许入库，但不会进入 article/RSS/搜索公开面
+- CI 必须通过 `check:publish-health` 后才会进入部署步骤
 
-本项目采用 [MIT 许可证](LICENSE)。
+## CI/CD 说明
 
----
+工作流：`.github/workflows/deploy.yml`
 
-**生死看淡，不服就淦！** 🚀
+- `build`：安装依赖、执行 `pnpm build`、执行发布健康门禁
+- `deploy-cos`：仅在 `main` 分支 push 时运行
+- 支持可选 CDN 刷新步骤
+
+## 文档索引
+
+- 版本变更记录：`update.md`
+- 事故复盘：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
+- OpenSpec 变更：`openspec/changes/v2-2-1-content-id-stability-guard/`
+
+## 许可证
+
+MIT

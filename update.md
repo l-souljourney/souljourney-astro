@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.2.1 (2026-04-08) - 内容 ID 稳定性与发布健康门禁
+
+### 🐛 核心故障修复
+- **双语内容覆盖修复**: 修复 Astro content loader 在 zh/en 同 `slug` 场景下的 entry id 覆盖问题。`blog` collection 显式使用 `lang::source_id::slug` 生成唯一 ID，避免公开集合异常塌缩。
+- **公开集合归零防护**: 新增发布健康检查脚本 `script/publish-health.js`，校验 `blogSize`、`mirrorPairs`、`articleRoutes`、`rssItems`、`duplicateIds` 指标。
+- **CI 部署门禁**: 在 `.github/workflows/deploy.yml` 的 build 阶段接入 `pnpm check:publish-health`，指标异常时阻断部署，避免“构建成功但公开面为空”的静默上线。
+
+### 🧹 内容治理与文档回写
+- **误推内容清理**: 删除误推稿件 `src/content/blog/zh/1723-4k.md`。
+- **RCA 文档补齐**: 新增事故复盘文档 `docs/2026-04-08-v2-2-1-content-id-incident-rca.md`，记录根因、修复、回滚与排查命令。
+
+### ✅ 验证
+- `node --test tests/v2.2.1-content-entry-id.test.mjs tests/v2.2.1-publish-health.test.mjs` 通过（5/5）
+- `pnpm build` 后执行 `pnpm check:publish-health` 可输出 PASS（阈值默认：`MIN_MIRROR_PAIRS=1`、`MIN_ARTICLE_ROUTES=1`、`MIN_RSS_ITEMS=1`、`MAX_DUPLICATE_IDS=0`）
+
+---
+
 ## v2.1.4 (2026-03-25) - robots 策略与英文前缀幂等补丁
 
 ### 🛡️ SEO & 路由守卫
