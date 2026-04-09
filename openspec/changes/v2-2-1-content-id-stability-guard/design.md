@@ -3,6 +3,8 @@
 `v2.2.0` 把公开内容统一收敛到 `publishSet` 后，公开页是否有内容取决于“镜像对是否完整”。这次线上事故证明当前实现还缺一层加载稳定性约束：Astro `glob` loader 默认以 frontmatter `slug` 生成 entry id，导致同 slug 的 zh/en 稿件在 content store 中发生覆盖。  
 覆盖发生后，`publishSet` 只能看到单语条目，最终 article route、首页、RSS、搜索索引都会被强镜像规则排空，但构建流程本身仍返回成功。
 
+状态（2026-04-09）：本设计已落地到 `main`，并作为 `v2.2.1` 事故修复基线持续生效。
+
 受影响范围：
 - 内容加载层：`src/content.config.ts`
 - 构建发布层：`.github/workflows/deploy.yml`
@@ -19,7 +21,7 @@
 **Non-Goals:**
 - 不改变 `v2.2.0` 的“完整镜像对才公开”业务策略
 - 不改 Astro 公开路由形态（继续 `/article/{slug}` 与 `/en/article/{slug}`）
-- 不做模板层重构与搜索架构升级
+- 不做模板层重构与搜索架构升级（路由/模板/查询收敛另行处理）
 - 不改 Engine 接口与外部发布链路
 
 ## Decisions
@@ -58,7 +60,7 @@ loader: glob({
 ### Decision 2: 增加发布健康检查脚本并接入 CI
 
 **选择：**
-- 新增脚本（`scripts/`）读取 `node_modules/.astro/data-store.json` 与 `dist` 产物，校验：
+- 新增脚本（`script/`）读取 `node_modules/.astro/data-store.json` 与 `dist` 产物，校验：
   - `mirrorPairs >= 1`（可通过环境变量覆盖）
   - article routes 数量与 RSS items 不为 0
 - 在 `.github/workflows/deploy.yml` 的 build 阶段执行该检查，失败即阻断部署
