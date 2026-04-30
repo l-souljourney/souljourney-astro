@@ -49,38 +49,51 @@ pnpm newpost      # 创建新博客文章
 - 禁止以"任务简单"为由跳过 skill。
 - 若 skill 不可用，必须说明原因并执行等价降级流程，不得停在解释层。
 
-## 5. Git 与 GitHub 协议（gh-only，强制）
+### 4.1 Trellis 默认工作流（项目特有，强制）
+
+- 正式开发任务默认走 Trellis；允许自然语言入口，如：`用 Trellis 开始 vX.Y.Z`、`继续当前 Trellis 任务`、`用 Trellis 检查并收尾`。
+- OpenSpec 自本规则生效后仅作为历史参考与归档材料；禁止再为新任务创建 OpenSpec change。存量 OpenSpec 仅允许做回读、收口、归档。
+- Codex 在本仓库默认使用**主会话执行** Trellis 流程；仅当用户明确要求`并行`、`子代理`、`分工`、`delegate`时，才允许派生 sub-agent。
+- 正式 Trellis 任务的最小流程：建/续 task → 写/改 `prd.md` → Change → Verify → 必要时更新 `.trellis/spec/` → 按 Trellis 任务记录收尾；GitHub 事项按需附加，不再是完成前置条件。
+- 在无自动 hook 继承的 shell 中执行 `.trellis/scripts/task.py` 时，显式传入稳定 `TRELLIS_CONTEXT_ID`，避免 current task 丢失。
+
+## 5. Git 与 GitHub 协议（Trellis-first，GitHub 可选）
 
 ### 5.1 远程与分支
 
 - GitHub 远程名：`github`
 - `main` 上游必须是：`github/main`
-- 禁止直接提交到 `main`，必须走 Issue → 分支 → PR → 合并
+- 默认不直接提交到 `main`；正式版本和多步改动优先使用 `feature/<short>` 分支
+- 是否创建 GitHub Issue / PR / Milestone / Project 由用户决定；它们不是 Trellis 任务完成的强制前置条件
 
 ### 5.2 gh 操作要求
 
+- 仅当本轮确实要读写 GitHub 实体时，才进入 `gh` 流程
 - GitHub 实体变更（Issue/PR/Milestone/Project/Release）必须用 `gh`
 - 全程非交互；命令显式带 `--repo l-souljourney/souljourney-astro`
 - 建议：`export GH_PAGER=cat`
 - 写操作必须遵循：Read -> Write -> Verify（写后回读）
 - 若 `gh` 因权限/能力不足无法完成 Project/Milestone 字段操作：必须在 Report 附失败证据与缺失 scope，并允许人工仅做字段补齐（禁止代替内容改写、合并或发布）。
 
-### 5.3 Issue/PR 最小字段闭环
+### 5.3 Trellis / GitHub 最小记录闭环
 
-- Issue：
+- Trellis task（强制）：
+  - `title` 或 `id` 可对应版本，如 `<v2.2.2>` / `v2-2-2-*`
+  - `prd.md` 必须记录目标、范围、验收和验证口径
+  - 关键 research / 约束 / 风险必须回写到 `.trellis/tasks/<task>/`，不能只留在对话里
+- Issue（可选）：
+  - 若创建，标题包含 `<version>`
+  - Milestone / label / project 仅在当前版本确实采用 GitHub 跟踪时再维护
+- PR（可选）：
   - 标题包含 `<version>`
-  - 关联 Milestone（若存在）或 `version/<x.y.z>` label（二选一）
-  - 加入 Project（若启用）
-- PR：
-  - 标题包含 `<version>`
-  - 描述包含 `Fixes #<issue>`
+  - 若存在对应 Issue，可写 `Fixes #<issue>`；若无，则直接写版本范围摘要
   - 包含 verification 命令和结果摘要
 
 ### 5.4 Checkpoints（必须执行）
 
-- IssueReady：Issue 的 version/milestone/project 归属完整
-- PRReady：PR 的 Fixes/version/verification 完整
-- BranchCleanupReady：PR 合并后执行分支收尾
+- TaskReady：Trellis task / `prd.md` / 验证记录完整
+- PRReady：仅当本轮使用 PR 时，要求 version / verification 完整
+- BranchCleanupReady：仅当本轮走分支合并路径时，执行分支收尾
 - ReleaseReady：仅在版本聚合完整时允许 release/tag
 
 分支收尾命令：

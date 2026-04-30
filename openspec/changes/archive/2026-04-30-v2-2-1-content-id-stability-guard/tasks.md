@@ -17,4 +17,4 @@
 ## 4. Verification And Release Closure [H]
 
 - [x] 4.1 [H] 执行最小完整验证（build + tests + health-check + publish-set 指标）；验收：命令与关键输出可在 PR 描述中回读
-- [ ] 4.2 [H] 完成 `v2.2.1` 分支提交、PR 合并到 `main` 并回读 GitHub Actions 构建结果；验收：`main` 上 deploy workflow 成功触发
+- [x] 4.2 [H] 完成 `v2.2.1` 分支提交、PR 合并到 `main` 并回读 GitHub Actions 构建结果；验收：`main` 上 deploy workflow 成功触发
