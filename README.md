@@ -1,6 +1,15 @@
 # L-Souljourney Blog
 
-基于 Astro 5.x + TypeScript 构建的中英双语个人博客。
+基于 Astro 5.x + TypeScript 构建的中英双语静态博客。
+
+## 当前状态
+
+当前仓库口径已对齐到 `v2.3.0` 收敛版本：
+
+- 工作流：Trellis-first，OpenSpec 只保留历史归档
+- 内容治理：公开集合仅包含完整 `zh/en` 镜像对
+- 发布门禁：构建后必须通过 `publish-health`
+- 目标定位：为后续功能迭代与 Obsidian 持续推送提供更干净、更稳定的基础
 
 ## 项目概览
 
@@ -10,18 +19,17 @@
 - 内容：Markdown/MDX（`src/content/blog/`）
 - 部署：GitHub Actions 构建后发布到 COS + CDN
 
-当前文档口径已对齐到 `v2.2.1`（2026-04-08）事故修复版本。
+## `v2.3.0` 收敛重点
 
-## v2.2.1 关键修复
-
-`v2.2.1` 主要修复的是双语内容在加载阶段被同 `slug` 覆盖，导致公开集合归零的问题。
-
-- 在 `src/content.config.ts` 显式定义 `generateId`：`lang::source_id::slug`
-- 新增发布健康检查：`script/publish-health.js`
-- 在 CI build 阶段接入 `pnpm check:publish-health`，异常直接阻断部署
-- 删除误推稿件：`src/content/blog/zh/1723-4k.md`
-
-参考文档：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
+- 统一版本与文档口径，消除 `README` / `package.json` / 历史计划漂移
+- 对历史文档做物理归档，保留活跃索引
+- 规范当前最小公开内容基线：
+  - 保留 `souljourney` zh/en 镜像对
+  - 规范 Cursor zh/en 镜像对
+  - 将测试性质较强的 Astro 双语参考稿移出公开 blog 基线
+- 收敛 Astro 侧遗留技术点，包括：
+  - 公开内容查询 helper 复用
+  - 初始化脚本与页面切换场景下的事件绑定去重
 
 ## 快速开始
 
@@ -33,10 +41,10 @@ pnpm dev
 常用命令：
 
 ```bash
-pnpm dev                 # 本地开发
-pnpm build               # 生产构建
-pnpm preview             # 预览构建产物
-pnpm newpost             # 新建文章
+pnpm dev                  # 本地开发
+pnpm build                # 生产构建
+pnpm preview              # 预览构建产物
+pnpm newpost              # 新建文章
 pnpm check:publish-health # 发布健康检查
 ```
 
@@ -60,8 +68,10 @@ pnpm check:publish-health # 发布健康检查
 ## 文档索引
 
 - 版本变更记录：`update.md`
+- 当前文档入口：`docs/README.md`
+- 路线图：`docs/plans/2026-03-10-v2.x-roadmap.md`
 - 事故复盘：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
-- OpenSpec 变更：`openspec/changes/v2-2-1-content-id-stability-guard/`
+- OpenSpec 历史归档：`openspec/changes/archive/`
 
 ## 许可证
 
