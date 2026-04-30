@@ -7,10 +7,7 @@ dist/
 node_modules/
 # pnpm-lock.yaml - 需要提交以确保依赖版本一致
 
-# internal docs
-docs/*
-!docs/plans/
-!docs/plans/**
+# tracked docs
 
 # logs
 npm-debug.log*

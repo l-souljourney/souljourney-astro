@@ -1,5 +1,34 @@
 # Changelog
 
+## v2.3.0 (2026-04-30) - 文档收敛、历史整理与 Astro 技术收敛
+
+### 🧭 版本与文档口径统一
+- **版本统一**: 将仓库对外版本口径统一到 `v2.3.0`，同步更新 `package.json`、`README.md`、路线图和 Trellis 任务记录。
+- **文档索引补齐**: 新增 `docs/README.md` 与 `docs/archive/README.md`，将活跃文档与历史归档分层管理。
+- **OpenSpec 历史化**: `README.md` 明确改为引用 `openspec/changes/archive/`，不再指向不存在的 active change 路径。
+
+### 🧹 历史归档与内容基线整理
+- **物理归档**: 将旧迁移记录、旧审计、旧计划文档迁入 `docs/archive/`，保留参考价值但移出当前活跃面。
+- **测试参考稿退场**: 将 `astro 中英文站点生成的参考方案` 从 `src/content/blog/` 移至 `docs/archive/reference/`，不再纳入公开 blog 基线。
+- **Cursor 镜像对规范化**: 对齐 Cursor 英文稿的 `slug` 与 `source_id`，使其与中文稿构成稳定公开镜像对。
+
+### ⚙️ Astro 技术收敛
+- **共享查询 helper**: 新增 `src/utils/publishedBlog.ts`，统一“按语言取公开文章 + 按日期排序”的共享逻辑，收敛首页、RSS、归档和统计 util 的重复实现。
+- **页面切换幂等化**: 收紧 `ThemeIcon.astro`、`TOC.astro`、`Init.ts` 的事件绑定与 cleanup 逻辑，避免 Astro 页面切换后重复注册全局监听。
+- **发布门禁抬升**: 将 `publish-health` 默认阈值与 CI 门禁提升到 `2` 组镜像对 / `4` 条 article route / `4` 条 RSS item，更贴近新的公开基线。
+
+### ✅ 验证
+- `node --test tests/v2.1.3-regression.test.mjs tests/v2.2.0-public-aggregation.test.mjs tests/v2.2.1-publish-health.test.mjs` 通过（18/18）
+- `pnpm build` 通过，构建 `34` 个页面
+- `pnpm check:publish-health` 输出 PASS，关键指标：
+  - `blogSize=4`
+  - `mirrorPairs=2`
+  - `duplicateIds=0`
+  - `articleRoutes=4`
+  - `rssItems=4`
+
+---
+
 ## v2.2.1 (2026-04-08) - 内容 ID 稳定性与发布健康门禁
 
 ### 🐛 核心故障修复

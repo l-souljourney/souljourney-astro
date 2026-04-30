@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 1
+- **Total Sessions**: 2
 - **Last Active**: 2026-04-30
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~42 | Active |
+| `journal-1.md` | ~79 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 2 | 2026-04-30 | <v2.3.0> close docs cleanup and astro convergence | `b838ba2`, `c1826cf`, `740731e`, `f28dd89`, `c5a857a` | `feature/v2.3.0-docs-cleanup-astro-convergence` |
 | 1 | 2026-04-30 | <v2.2.2> migrate openspec to trellis | `026a545`, `80ab67c`, `1dfaa55` | `feature/v2.2.2-adopt-trellis` |
 <!-- @@@/auto:session-history -->
 

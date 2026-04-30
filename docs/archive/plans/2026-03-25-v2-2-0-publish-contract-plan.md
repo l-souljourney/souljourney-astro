@@ -1,7 +1,5 @@
 # v2.2.0 Publish Contract Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** 为 `v2-2-0-bilingual-publishing-governance` 落地首个实现切片，先收紧发布字段契约，再建立双语镜像 `publish-set` 规则与最小验证样例。
 
 **Architecture:** 本轮先把跨语言治理抽成纯函数 helper，避免一开始就把 `astro:content` 读取、路由层和聚合层耦合在一起。验证分两层：`node --test` 覆盖配对规则，`pnpm build` 覆盖 Astro schema 的构建期失败行为。

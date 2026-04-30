@@ -4,7 +4,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { collectPublishHealth, validatePublishHealth } from '../script/publish-health.js';
+import {
+	collectPublishHealth,
+	resolveThresholdsFromEnv,
+	validatePublishHealth,
+} from '../script/publish-health.js';
 
 const createTempDist = () => {
 	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'publish-health-'));
@@ -77,4 +81,15 @@ test('publish health should fail when duplicate entry ids appear', () => {
 
 	assert.equal(metrics.duplicateIds, 1);
 	assert.ok(failures.some((item) => item.includes('duplicateIds=')));
+});
+
+test('publish health should use the v2.3.0 default thresholds', () => {
+	const thresholds = resolveThresholdsFromEnv({});
+
+	assert.deepEqual(thresholds, {
+		minMirrorPairs: 2,
+		minArticleRoutes: 4,
+		minRssItems: 4,
+		maxDuplicateIds: 0,
+	});
 });

@@ -33,9 +33,9 @@ jobs:
 
       - name: Publish health guard
         env:
-          MIN_MIRROR_PAIRS: "1"
-          MIN_ARTICLE_ROUTES: "1"
-          MIN_RSS_ITEMS: "1"
+          MIN_MIRROR_PAIRS: "2"
+          MIN_ARTICLE_ROUTES: "4"
+          MIN_RSS_ITEMS: "4"
           MAX_DUPLICATE_IDS: "0"
         run: pnpm check:publish-health
 

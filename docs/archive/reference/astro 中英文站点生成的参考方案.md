@@ -20,6 +20,8 @@ hide: false
 lang: zh
 created: 2025-07-28
 ---
+> 归档说明：该文档在 `v2.3.0` 中从公开 blog 基线移出，作为历史参考材料保留在 `docs/archive/reference/`。
+
 做一下测试
 
 你计划将 Astro 博客打造成**中英文双语站点**，并通过**国内（腾讯 COS + CDN）+ 国际（Cloudflare Pages）双部署**，实现：
