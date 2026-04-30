@@ -11,6 +11,8 @@ const headComponent = read('src/components/Head/Head.astro');
 const tocComponent = read('src/components/TOC/TOC.astro');
 const mobileSidebar = read('src/components/MobileSidebar/MobileSidebar.astro');
 const searchComponent = read('src/components/Search/Search.astro');
+const themeIcon = read('src/components/ThemeIcon/ThemeIcon.astro');
+const initScript = read('src/scripts/Init.ts');
 
 test('article templates should not use nested main containers', () => {
   assert.equal(/<main\b/.test(zhArticlePage), false, 'zh article template still contains <main>');
@@ -39,6 +41,8 @@ test('Head component should allow page-level robots override', () => {
 
 test('TOC should expose toc class hooks for highlight selector', () => {
   assert.match(tocComponent, /class=\"toc/, 'TOC root class hook is missing');
+  assert.match(tocComponent, /astro:page-load/, 'TOC should rebind on astro:page-load');
+  assert.match(tocComponent, /__vhTocCleanup/, 'TOC should keep an observer cleanup handle');
 });
 
 test('mobile sidebar should resolve locale-aware labels and links', () => {
@@ -52,4 +56,14 @@ test('mobile sidebar should avoid double /en prefix', () => {
 
 test('search modal binding should be keyed by current trigger element', () => {
   assert.match(searchComponent, /boundButton/, 'search modal does not track bound button identity');
+});
+
+test('theme toggle listeners should only bind once across page transitions', () => {
+  assert.match(themeIcon, /__themePageLoadBound/, 'theme toggle missing page-load guard');
+  assert.match(themeIcon, /__themeBeforeSwapBound/, 'theme toggle missing before-swap guard');
+  assert.match(themeIcon, /__themeAfterSwapBound/, 'theme toggle missing after-swap guard');
+});
+
+test('global init should only register router hooks once', () => {
+  assert.match(initScript, /__vhGlobalInitBound/, 'global init missing idempotent guard');
 });

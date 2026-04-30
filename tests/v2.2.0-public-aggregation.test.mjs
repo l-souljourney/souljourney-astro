@@ -17,13 +17,13 @@ const zhRssPage = read('src/pages/rss.xml.ts');
 const enRssPage = read('src/pages/en/rss.xml.ts');
 
 test('home pages should paginate only the published locale set', () => {
-  assert.match(zhHomePage, /getPublishedEntriesByLang\(posts,\s*"zh"\)/, 'zh home page should use published zh entries');
-  assert.match(enHomePage, /getPublishedEntriesByLang\(posts,\s*"en"\)/, 'en home page should use published en entries');
+  assert.match(zhHomePage, /getSortedPublishedBlogEntriesByLang\(posts,\s*"zh"\)/, 'zh home page should use sorted published zh entries');
+  assert.match(enHomePage, /getSortedPublishedBlogEntriesByLang\(posts,\s*"en"\)/, 'en home page should use sorted published en entries');
 });
 
 test('archive and post info utilities should derive data from publish-set helper', () => {
-  assert.match(archiveUtils, /getPublishedEntriesByLang/, 'getArchive should derive locale data from publish set');
-  assert.match(postInfoUtils, /getPublishedEntriesByLang/, 'getPostInfo should derive locale data from publish set');
+  assert.match(archiveUtils, /getSortedPublishedBlogEntriesByLang/, 'getArchive should derive locale data from shared published blog helper');
+  assert.match(postInfoUtils, /getSortedPublishedBlogEntriesByLang/, 'getPostInfo should derive locale data from shared published blog helper');
   assert.doesNotMatch(archiveUtils, /filterPosts\s*=\s*/, 'legacy raw post filter should be removed from getArchive');
   assert.doesNotMatch(postInfoUtils, /filterPostsByLang\s*=\s*/, 'legacy raw post filter should be removed from getPostInfo');
 });
@@ -36,6 +36,6 @@ test('category and tag pages should stop sourcing paths from raw locale filters'
 });
 
 test('rss feeds should emit items only from the published locale set', () => {
-  assert.match(zhRssPage, /publishedByLang\.zh/, 'zh rss feed should use published zh entries');
-  assert.match(enRssPage, /publishedByLang\.en/, 'en rss feed should use published en entries');
+  assert.match(zhRssPage, /getSortedPublishedBlogEntriesByLang/, 'zh rss feed should use shared sorted published entries');
+  assert.match(enRssPage, /getSortedPublishedBlogEntriesByLang/, 'en rss feed should use shared sorted published entries');
 });

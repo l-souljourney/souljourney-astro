@@ -125,9 +125,9 @@ export const resolveThresholdsFromEnv = (env = process.env) => {
 	};
 
 	return {
-		minMirrorPairs: readInt('MIN_MIRROR_PAIRS', 1),
-		minArticleRoutes: readInt('MIN_ARTICLE_ROUTES', 1),
-		minRssItems: readInt('MIN_RSS_ITEMS', 1),
+		minMirrorPairs: readInt('MIN_MIRROR_PAIRS', 2),
+		minArticleRoutes: readInt('MIN_ARTICLE_ROUTES', 4),
+		minRssItems: readInt('MIN_RSS_ITEMS', 4),
 		maxDuplicateIds: readInt('MAX_DUPLICATE_IDS', 0),
 	};
 };
