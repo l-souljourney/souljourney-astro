@@ -40,3 +40,40 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 2: <v2.3.0> close docs cleanup and astro convergence
+
+**Date**: 2026-04-30
+**Task**: <v2.3.0> close docs cleanup and astro convergence
+**Branch**: `feature/v2.3.0-docs-cleanup-astro-convergence`
+
+### Summary
+
+Closed the v2.3.0 cleanup branch with docs/version alignment, Astro published-set/runtime convergence, publish-health/test baseline updates, Trellis task artifacts, and retired the obsolete superpowers rule from repo-local guidance.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `b838ba2` | (see git log) |
+| `c1826cf` | (see git log) |
+| `740731e` | (see git log) |
+| `f28dd89` | (see git log) |
+| `c5a857a` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
