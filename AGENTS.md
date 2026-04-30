@@ -43,7 +43,6 @@ pnpm newpost      # 创建新博客文章
 
 ## 4. Skills 约束（通用，强制）
 
-- 若存在 Skills 体系，会话开始先调用 `using-superpowers`。
 - 用户点名 skill 或任务类型匹配 skill 时，必须调用。
 - 顺序：先流程型（如 brainstorming / debugging / TDD），再实现型。
 - 禁止以"任务简单"为由跳过 skill。
