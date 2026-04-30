@@ -56,12 +56,24 @@
 </style>
 
 <script is:inline>
+	type ThemeWindow = Window & {
+		getInitialTheme?: () => string;
+		applyTheme?: (theme: string) => void;
+		handleToggleClick?: () => void;
+		bindThemeToggle?: () => void;
+		__themePageLoadBound?: boolean;
+		__themeBeforeSwapBound?: boolean;
+		__themeAfterSwapBound?: boolean;
+	};
+
+	const themeWin = window as ThemeWindow;
+
 	// 主题初始化和切换逻辑
 	// 修复 Swup 页面切换后事件监听器丢失的问题
 	
 	// 1. 获取初始主题
-	if (!window.getInitialTheme) {
-		window.getInitialTheme = () => {
+	if (!themeWin.getInitialTheme) {
+		themeWin.getInitialTheme = () => {
 			const localStorageTheme = localStorage?.getItem("theme") ?? '';
 			if (['dark', 'light'].includes(localStorageTheme)) {
 				return localStorageTheme;
@@ -74,8 +86,8 @@
 	}
 
 	// 2. 应用主题
-	if (!window.applyTheme) {
-		window.applyTheme = (theme) => {
+	if (!themeWin.applyTheme) {
+		themeWin.applyTheme = (theme) => {
 			if (theme === 'light') {
 				document.documentElement.classList.remove('dark');
 			} else {
@@ -86,8 +98,8 @@
 	}
 
 	// 3. 切换按钮点击事件处理函数
-	if (!window.handleToggleClick) {
-		window.handleToggleClick = () => {
+	if (!themeWin.handleToggleClick) {
+		themeWin.handleToggleClick = () => {
 			const element = document.documentElement;
 			element.classList.toggle("dark");
 			const isDark = element.classList.contains("dark");
@@ -97,32 +109,45 @@
 
 	// 4. 绑定事件监听器
 	// 关键修复:每次都先移除旧的监听器,再添加新的,避免重复绑定
-	if (!window.bindThemeToggle) {
-		window.bindThemeToggle = () => {
+	if (!themeWin.bindThemeToggle) {
+		themeWin.bindThemeToggle = () => {
 			const toggleBtn = document.getElementById("themeToggle");
 			if (toggleBtn) {
-				toggleBtn.removeEventListener("click", window.handleToggleClick);
-				toggleBtn.addEventListener("click", window.handleToggleClick);
+				toggleBtn.removeEventListener("click", themeWin.handleToggleClick!);
+				toggleBtn.addEventListener("click", themeWin.handleToggleClick!);
 			}
 		};
 	}
 
+	themeWin.bindThemeToggle();
+
 	// 5. 页面加载时绑定按钮事件
 	// 注意：初始主题应用已在 Head.astro 中完成，这里只需绑定事件
-	document.addEventListener('astro:page-load', window.bindThemeToggle);
-	
+	if (!themeWin.__themePageLoadBound) {
+		document.addEventListener('astro:page-load', themeWin.bindThemeToggle);
+		themeWin.__themePageLoadBound = true;
+	}
+
 	// 6. View Transitions: 在内容交换前应用主题
 	// 确保新页面内容交换到 DOM 前就有正确的主题类
-	document.addEventListener('astro:before-swap', (e) => {
-		const theme = window.getInitialTheme();
-		if (theme === 'dark') {
-			e.newDocument.documentElement.classList.add('dark');
-		}
-	});
-	
+	if (!themeWin.__themeBeforeSwapBound) {
+		document.addEventListener('astro:before-swap', (e) => {
+			const theme = themeWin.getInitialTheme?.();
+			if (theme === 'dark') {
+				e.newDocument.documentElement.classList.add('dark');
+			}
+		});
+		themeWin.__themeBeforeSwapBound = true;
+	}
+
 	// 7. View Transitions: 内容交换后确保主题正确（双保险）
-	document.addEventListener('astro:after-swap', () => {
-		const theme = window.getInitialTheme();
-		window.applyTheme(theme);
-	});
+	if (!themeWin.__themeAfterSwapBound) {
+		document.addEventListener('astro:after-swap', () => {
+			const theme = themeWin.getInitialTheme?.();
+			if (theme) {
+				themeWin.applyTheme?.(theme);
+			}
+		});
+		themeWin.__themeAfterSwapBound = true;
+	}
 </script>

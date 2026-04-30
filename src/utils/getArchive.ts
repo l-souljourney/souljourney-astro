@@ -1,6 +1,6 @@
 
 import { getCollection } from "astro:content";
-import { getPublishedEntriesByLang } from "@/utils/publishSet";
+import { getSortedPublishedBlogEntriesByLang } from "@/utils/publishedBlog";
 
 // 格式化文章列表
 const fmtArticleList = (articleList: any) => {
@@ -18,8 +18,7 @@ const fmtArticleList = (articleList: any) => {
 
 const getLocalePosts = async (lang: 'zh' | 'en' = 'zh') => {
   const posts = await getCollection("blog");
-  return getPublishedEntriesByLang(posts, lang)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return getSortedPublishedBlogEntriesByLang(posts, lang);
 };
 
 // 获取分类下的文章列表

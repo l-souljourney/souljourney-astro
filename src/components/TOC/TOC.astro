@@ -30,8 +30,20 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
 }
 
 <script>
+  type TocWindow = Window & {
+    __vhTocCleanup?: () => void;
+    __vhTocPageLoadBound?: boolean;
+    __vhTocBeforeSwapBound?: boolean;
+  };
+
+  const tocWin = window as TocWindow;
+
   // 滚动高亮功能
   function initTocHighlight() {
+    if (typeof tocWin.__vhTocCleanup === 'function') {
+      tocWin.__vhTocCleanup();
+    }
+
     const tocRoot = document.querySelector('.toc');
     if (!tocRoot) return;
 
@@ -66,15 +78,21 @@ const toc = headings?.filter((heading) => heading.depth === 3) || [];
     document.querySelectorAll('.prose h2[id], .prose h3[id], .prose h4[id]').forEach((heading) => {
       observer.observe(heading);
     });
+
+    tocWin.__vhTocCleanup = () => observer.disconnect();
   }
 
-  // 页面加载时初始化
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTocHighlight);
-  } else {
-    initTocHighlight();
+  initTocHighlight();
+
+  if (!tocWin.__vhTocPageLoadBound) {
+    document.addEventListener('astro:page-load', initTocHighlight);
+    tocWin.__vhTocPageLoadBound = true;
   }
 
-  // Astro View Transitions 会自动重新执行脚本
-  // 无需手动监听页面切换事件
+  if (!tocWin.__vhTocBeforeSwapBound) {
+    document.addEventListener('astro:before-swap', () => {
+      tocWin.__vhTocCleanup?.();
+    });
+    tocWin.__vhTocBeforeSwapBound = true;
+  }
 </script>

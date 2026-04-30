@@ -1,13 +1,15 @@
 import { getCollection } from "astro:content";
-import { getPublishedEntries, getPublishedEntriesByLang } from "@/utils/publishSet";
+import {
+  getSortedPublishedBlogEntries,
+  getSortedPublishedBlogEntriesByLang,
+} from "@/utils/publishedBlog";
 
 const posts = await getCollection("blog");
 
 // 基于 publish-set 获取公开文章集合
 const getScopedPosts = (lang?: string) => {
-  if (!lang) return getPublishedEntries(posts).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return getPublishedEntriesByLang(posts, lang === 'en' ? 'en' : 'zh')
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  if (!lang) return getSortedPublishedBlogEntries(posts);
+  return getSortedPublishedBlogEntriesByLang(posts, lang === 'en' ? 'en' : 'zh');
 };
 
 // 获取文章分类

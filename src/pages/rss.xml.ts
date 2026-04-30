@@ -2,14 +2,14 @@ import { getRssString } from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { getDescription } from '@/utils/index'
 import SITE_CONFIG from '@/config';
-import { getPublishedEntriesByLang } from '@/utils/publishSet';
+import { getSortedPublishedBlogEntriesByLang } from '@/utils/publishedBlog';
 const { Title, Description } = SITE_CONFIG;
 
 export async function GET(context: any) {
 	const posts = await getCollection('blog');
 	const publishedByLang = {
-		zh: getPublishedEntriesByLang(posts, 'zh'),
-		en: getPublishedEntriesByLang(posts, 'en'),
+		zh: getSortedPublishedBlogEntriesByLang(posts, 'zh'),
+		en: getSortedPublishedBlogEntriesByLang(posts, 'en'),
 	};
 	const res = await getRssString({
 		title: Title,

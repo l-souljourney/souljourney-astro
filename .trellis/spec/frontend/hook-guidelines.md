@@ -49,6 +49,31 @@
   - `astro:after-swap`
 - 当脚本需要跨导航保留一次性状态时，可用 `window.__...` 标记，但只限去重/cleanup 之类的轻量用途
 
+### Convention: Global DOM init must be idempotent across navigations
+
+**What**:
+- 页面级初始化（如 `Init.ts`）只注册一次全局 router hook
+- 组件级浏览器脚本若跨页面保留，应使用 `window.__...` 标记避免重复绑定
+- 使用 `IntersectionObserver`、`keydown` 或类似持久监听时，优先保留 cleanup 句柄，并在 `astro:before-swap` 或重绑前先清理
+
+**Why**:
+- `Layout.astro` 下的全局脚本和组件内 `<script>` 会在页面切换场景里重复进入执行路径
+- 如果没有幂等保护，很容易出现重复事件监听、重复 observer、重复 console side effect
+
+**Example**:
+```ts
+type InitWindow = Window & {
+  __vhGlobalInitBound?: boolean;
+};
+
+const win = window as InitWindow;
+
+if (!win.__vhGlobalInitBound) {
+  document.addEventListener('astro:page-load', initSomething);
+  win.__vhGlobalInitBound = true;
+}
+```
+
 ---
 
 ## Common Mistakes
