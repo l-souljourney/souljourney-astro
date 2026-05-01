@@ -21,7 +21,7 @@ src/
 └── type/            # 少量 ambient types
 
 tests/               # node:test 回归测试
-script/              # Node 级发布/检查脚本（当前有 publish-health.js）
+script/              # Node 级发布/检查脚本（如 publish-health.js；由 package.json 暴露健康检查命令）
 .github/workflows/   # CI/CD 工作流
 ```
 

@@ -36,6 +36,74 @@
   - `pnpm build`
   - `node --test tests/*.test.*` 的相关用例
   - `node script/publish-health.js` 或 `pnpm check:publish-health`（当改动涉及发布集合时）
+  - 若变更与外部双语推送工作流有关，再执行 `pnpm check:publish-bilingual-readiness`
+
+### Scenario: Publish Health vs Bilingual Readiness
+
+#### 1. Scope / Trigger
+- Trigger: 修改 `publishSet`、content schema、`script/publish-health.js`、发布门禁脚本，或为 Obsidian / wxengine / Git 推送链路提供 Astro 侧验证口径。
+
+#### 2. Signatures
+- 默认健康检查命令：`pnpm check:publish-health`
+- 严格双语就绪命令：`pnpm check:publish-bilingual-readiness`
+- 底层脚本入口：`node ./script/publish-health.js`
+
+#### 3. Contracts
+- 基础阈值 env：
+  - `MIN_MIRROR_PAIRS`
+  - `MIN_ARTICLE_ROUTES`
+  - `MIN_RSS_ITEMS`
+  - `MAX_DUPLICATE_IDS`
+- 双语治理阈值 env：
+  - `MAX_PENDING_TRANSLATIONS`（可选；未设置表示默认不阻断 standalone 稿件）
+  - `MAX_SOURCE_ID_CONFLICTS`
+  - `MAX_SLUG_CONFLICTS`
+  - `MAX_DUPLICATE_LOCALE_CONFLICTS`
+  - `MAX_CATEGORY_CONFLICTS`
+- 指标输出至少包含：
+  - `mirrorPairs`
+  - `pendingTranslations`
+  - `sourceIdConflicts`
+  - `slugConflicts`
+  - `duplicateLocaleConflicts`
+  - `categoryConflicts`
+  - `duplicateIds`
+  - `articleRoutes`
+  - `rssItems`
+
+#### 4. Validation & Error Matrix
+- 完整 zh/en 镜像对不足 -> fail `minMirrorPairs`
+- 路由 / RSS 公开面低于阈值 -> fail `minArticleRoutes` / `minRssItems`
+- entry id 冲突 -> fail `maxDuplicateIds`
+- `source_id` 对应多个 pair key -> fail `maxSourceIdConflicts`
+- `slug` 对应多个 pair key -> fail `maxSlugConflicts`
+- 同 pair key 下出现重复 locale -> fail `maxDuplicateLocaleConflicts`
+- 同 pair key 下分类不一致 -> fail `maxCategoryConflicts`
+- 只存在单语稿件且开启严格双语模式 -> fail `maxPendingTranslations`
+
+#### 5. Good / Base / Bad Cases
+- Good: 当前公开集合只有完整镜像对，所有 conflict 指标为 `0`
+- Base: 仓库允许保留单语草稿，但默认健康检查不因此阻断构建
+- Bad: 外部双语发布工作流仍推入 standalone 中文稿，却没有执行严格双语就绪检查
+
+#### 6. Tests Required
+- `tests/v2.2.1-publish-health.test.mjs`
+  - 断言默认阈值
+  - 断言 `pendingTranslations` 可被严格阈值阻断
+  - 断言 `sourceIdConflicts` / `categoryConflicts` 被检测并 fail
+- 修改脚本后至少再跑：
+  - `pnpm build`
+  - `pnpm check:publish-health`
+  - `pnpm check:publish-bilingual-readiness`
+
+#### 7. Wrong vs Correct
+##### Wrong
+- 认为 `pnpm check:publish-health` 通过，就等于“外部双语推送已完整落地”
+- 只检查 `mirrorPairs/articleRoutes/rssItems`，忽略 `pendingTranslations` 和镜像冲突指标
+
+##### Correct
+- 默认健康检查负责“站点公开面不归零”
+- 严格双语就绪检查负责“外部双语推送工作流没有留下 standalone / conflict 数据”
 
 ---
 
