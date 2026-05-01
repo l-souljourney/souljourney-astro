@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.3.1 (2026-05-01) - Obsidian / Astro 双语发布工作流收敛
+
+### 🧭 文档治理与版本收敛
+- **新增 v2.3.1 活跃计划**: 新增 `docs/plans/2026-05-01-v2-3-1-astro-obsidian-bilingual-workflow.md`，明确 Astro / Obsidian 双仓协同边界、版本目标与验收标准。
+- **活跃文档去冲突**: `docs/README.md` 移除过期 `v3.8` 接口草案的活跃状态，明确当前唯一有效消费契约为 `docs/astro-wxengine-publish-contract-v2.2.md`。
+- **旧规格失效标记**: `docs/2026-03-09-v3-8-frontend-integration-spec.md` 标记为 `legacy`，不再作为当前实现依据。
+- **路线图补丁版本化**: `docs/plans/2026-03-10-v2.x-roadmap.md` 新增 `v2.3.1` 阶段，承接 Obsidian / Astro 双语发布工作流收敛。
+
+### ⚙️ 双语发布就绪守卫
+- **发布健康检查增强**: `script/publish-health.js` 新增 `pendingTranslations`、`sourceIdConflicts`、`slugConflicts`、`duplicateLocaleConflicts`、`categoryConflicts` 指标，避免外部双语推送留下静默脏数据。
+- **严格双语就绪检查**: 新增 `pnpm check:publish-bilingual-readiness`，用于验证外部双语推送链路是否完整落地，而不只是站点公开面是否未归零。
+- **Spec 回写**: 将 `publish-health` 与严格双语就绪检查的边界、env 阈值、错误矩阵和测试要求写回 `.trellis/spec/frontend/quality-guidelines.md`。
+
+### 🌐 部署链路口径澄清
+- **双部署口径统一**: README 与 `v2.3.1` 计划文档明确当前真实部署拓扑为：
+  - GitHub push 后 Cloudflare 自动拉取部署
+  - GitHub Actions 构建产物同步到腾讯云 COS/CDN
+
+### ✅ 验证
+- `node --test tests/v2.2.1-publish-health.test.mjs` 通过（6/6）
+- `pnpm build` 通过，构建 `34` 个页面
+- `pnpm check:publish-health` 输出 PASS
+- `pnpm check:publish-bilingual-readiness` 输出 PASS
+
+---
+
 ## v2.3.0 (2026-04-30) - 文档收敛、历史整理与 Astro 技术收敛
 
 ### 🧭 版本与文档口径统一

@@ -17,7 +17,7 @@
 - 语言：TypeScript
 - 样式：Tailwind CSS + 自定义样式
 - 内容：Markdown/MDX（`src/content/blog/`）
-- 部署：GitHub Actions 构建后发布到 COS + CDN
+- 部署：GitHub push 后由 Cloudflare 自动拉取部署，同时 GitHub Actions 构建产物同步到腾讯云 COS/CDN
 
 ## `v2.3.0` 收敛重点
 
@@ -46,6 +46,7 @@ pnpm build                # 生产构建
 pnpm preview              # 预览构建产物
 pnpm newpost              # 新建文章
 pnpm check:publish-health # 发布健康检查
+pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 ```
 
 ## 内容发布约束
@@ -56,14 +57,18 @@ pnpm check:publish-health # 发布健康检查
 - 公开集合仅包含完整 `zh/en` 镜像对
 - 单语稿件允许入库，但不会进入 article/RSS/搜索公开面
 - CI 必须通过 `check:publish-health` 后才会进入部署步骤
+- 若要验证“外部双语推送已经完整落地”，可执行 `pnpm check:publish-bilingual-readiness`
 
 ## CI/CD 说明
 
 工作流：`.github/workflows/deploy.yml`
 
-- `build`：安装依赖、执行 `pnpm build`、执行发布健康门禁
-- `deploy-cos`：仅在 `main` 分支 push 时运行
-- 支持可选 CDN 刷新步骤
+- Cloudflare 线：
+  - GitHub `main` 分支 push 后，由 Cloudflare Pages / GitHub 集成自动拉取并部署一版
+- GitHub Actions -> 腾讯云线：
+  - `build`：安装依赖、执行 `pnpm build`、执行发布健康门禁
+  - `deploy-cos`：仅在 `main` 分支 push 时运行，将构建产物同步到腾讯云 COS
+  - 支持可选 CDN 刷新步骤
 
 ## 文档索引
 

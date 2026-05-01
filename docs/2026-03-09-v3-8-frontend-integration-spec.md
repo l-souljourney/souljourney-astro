@@ -1,12 +1,18 @@
 ---
 title: "L-Engine v3.8 对外接口规格 — Astro 博客 & 小程序对接"
 date: "2026-03-09"
-status: active
+status: legacy
 scope: "Engine v3.8 多渠道分发的前端对接契约"
 audience: "前端开发者 / AI 辅助开发"
 ---
 
 # L-Engine v3.8 对外接口规格
+
+> 失效说明（2026-05-01）：
+> 本文档保留为历史草案，不再作为当前 Astro / Obsidian 对接依据。
+> 当前实现请改读：
+> - `docs/astro-wxengine-publish-contract-v2.2.md`
+> - `docs/plans/2026-05-01-v2-3-1-astro-obsidian-bilingual-workflow.md`
 
 ## 0. 文档用途
 
