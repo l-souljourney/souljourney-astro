@@ -77,3 +77,38 @@ Closed the v2.3.0 cleanup branch with docs/version alignment, Astro published-se
 ### Next Steps
 
 - None - task complete
+
+
+## Session 3: v2.3.1 Astro 双语发布工作流收口
+
+**Date**: 2026-05-01
+**Task**: v2.3.1 Astro 双语发布工作流收口
+**Branch**: `main`
+
+### Summary
+
+完成 Astro 侧 v2.3.1 文档治理、双语发布健康检查增强、Trellis 规范回写，并归档当前版本任务。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c9936cc` | (see git log) |
+| `7ce2528` | (see git log) |
+| `631c1bc` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
