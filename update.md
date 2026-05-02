@@ -8,7 +8,7 @@
 - **EdgeOne 刷新默认收敛**: CNB 侧 `TEO_PURGE_TYPE` 未显式设置时默认回退 `purge_all`，避免因目标域名不匹配导致刷新失败。
 
 ### ⚙️ Workflow 运行时治理
-- **Node 24 兼容处理**: workflow 顶层新增 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`，并将 `actions/checkout`、`actions/setup-node` 升级到 Node 24 兼容 major，处理 GitHub Actions 的 Node 20 runtime 退役告警。
+- **Node 24 兼容处理**: 将 `actions/checkout`、`pnpm/action-setup`、`actions/setup-node` 统一升级到 Node 24 兼容 major，处理 GitHub Actions 的 Node 20 runtime 退役告警。
 
 ### 🧭 文档与审计入口
 - **新增稳定发布链路文档**: 新增 `docs/deploy/github-main-cnb-cos-release-chain.md`，固定记录当前真实生产链路、配置边界、故障判断口径。

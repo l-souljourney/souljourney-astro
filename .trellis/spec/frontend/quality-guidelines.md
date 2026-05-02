@@ -135,8 +135,6 @@
 - GitHub workflow:
   - `build`
   - `sync-cnb`
-- GitHub workflow env:
-  - `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
 - GitHub repo secret:
   - `CNB_TOKEN`
 - CNB production trigger:
@@ -148,8 +146,11 @@
 ### 3. Contracts
 - GitHub 是唯一代码源；GitHub 不再直接执行 `deploy-cos`
 - GitHub Actions runtime 必须保持 Node 24 兼容：
-  - 官方 Actions 使用 Node 24 兼容 major
-  - 若第三方 JS action 还没完成 runtime 升级，workflow 需显式设置 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
+  - `actions/checkout`
+  - `pnpm/action-setup`
+  - `actions/setup-node`
+  都应停留在 Node 24 兼容 major
+  - 只有在上游第三方 action 尚未提供 Node 24 版本时，才使用 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` 作为临时过渡
 - GitHub `build` job 至少执行：
   - `pnpm install --frozen-lockfile`
   - `pnpm build`
