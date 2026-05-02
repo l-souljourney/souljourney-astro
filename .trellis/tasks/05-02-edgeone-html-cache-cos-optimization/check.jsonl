@@ -1,0 +1,4 @@
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/prd.md","reason":"verify task scope, acceptance criteria, and out-of-scope remain aligned before implementation"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/edgeone-cache-policy.md","reason":"verify cache-rule rollout follows official EdgeOne behavior and repository-specific needs"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/cos-sync-root-cause.md","reason":"verify future optimizations target the measured churn sources instead of reintroducing slow side paths"}
+{"file":".trellis/tasks/05-02-astro-cos-incremental-deploy/research/cos-deploy-analysis.md","reason":"cross-check new findings against first-round production deployment evidence"}

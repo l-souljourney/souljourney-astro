@@ -1,0 +1,4 @@
+{"file":".trellis/spec/guides/index.md","reason":"shared Trellis engineering checklist for scoped change, verification, and reporting"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/prd.md","reason":"current task source of truth for scope, assumptions, and acceptance"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/edgeone-cache-policy.md","reason":"official EdgeOne cache-rule research and recommended control-plane policy"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/cos-sync-root-cause.md","reason":"measured COS sync slowdown evidence and optimization directions"}

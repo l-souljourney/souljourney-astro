@@ -1,0 +1,8 @@
+{"file":".trellis/spec/frontend/index.md","reason":"frontend task baseline and required quality checks"}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Astro component structure and prop/style conventions for article page edits"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"search/publish related verification rules and regression expectations"}
+{"file":".trellis/spec/frontend/hook-guidelines.md","reason":"browser script guardrails while keeping existing search UI stable"}
+{"file":".trellis/spec/guides/index.md","reason":"shared thinking guides for config changes and reuse decisions"}
+{"file":".trellis/tasks/05-02-v2-3-3-pagefind-cos-speed/prd.md","reason":"current task scope, acceptance, and out-of-scope"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/cos-sync-root-cause.md","reason":"measured root cause evidence for pagefind churn and delete amplification"}
+{"file":".trellis/tasks/05-02-edgeone-html-cache-cos-optimization/research/edgeone-cache-policy.md","reason":"document-only EdgeOne follow-up reference kept out of this implementation"}

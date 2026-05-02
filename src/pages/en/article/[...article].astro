@@ -55,59 +55,61 @@ import GoogleAd from "@/components/GoogleAd/GoogleAd.astro";
 	headings={headings}
 >
   <article class="flex flex-col gap-10">
-    <header class="flex flex-col gap-6">
-      <h1 class="text-4xl max-md:text-2xl font-bold text-primary dark:text-[#e8e8e8] leading-tight">
-        {post.data.title}
-      </h1>
-      <div class="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
-        <span class="flex items-center gap-1">
-          <i class="iconfont icon-calendar text-lg"></i>
-          {t('post.published')} {formatDate(post.data.date, 'en', 'short')}
-        </span>
-        <span class="flex items-center gap-1">
-          <i class="iconfont icon-folder text-lg"></i>
-          {t('post.category')} 
-          <a href={`/en/categories/${post.data.categories}`} class="hover:text-primary transition-colors">
-            {getCategoryDisplayName(post.data.categories, 'en')}
-          </a>
-        </span>
-				<span class="inline-flex items-center gap-1.5">
-					<Icon name="file-text" class="w-4 h-4 text-primary/80" />
-						{t('post.words')} {articleWordCount} {t('post.words')}
-					</span>
+    <section data-pagefind-body>
+      <header class="flex flex-col gap-6">
+        <h1 class="text-4xl max-md:text-2xl font-bold text-primary dark:text-[#e8e8e8] leading-tight">
+          {post.data.title}
+        </h1>
+        <div class="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <span class="flex items-center gap-1">
+            <i class="iconfont icon-calendar text-lg"></i>
+            {t('post.published')} {formatDate(post.data.date, 'en', 'short')}
+          </span>
+          <span class="flex items-center gap-1">
+            <i class="iconfont icon-folder text-lg"></i>
+            {t('post.category')} 
+            <a href={`/en/categories/${post.data.categories}`} class="hover:text-primary transition-colors">
+              {getCategoryDisplayName(post.data.categories, 'en')}
+            </a>
+          </span>
 					<span class="inline-flex items-center gap-1.5">
-						<Icon name="clock" class="w-4 h-4 text-primary/80" />
-						{t('post.readTime')} ≈ {Math.ceil(readingMinutes)} {t('post.readTime')}
-					</span>
-				</div>
-		</header>
-		<section
-			class="
-				prose lg:prose-xl
-				prose-zinc
-				dark:prose-invert
-				max-w-none
-				px-8 pb-8
-			"
-		>	<Content />
-			<section class="flex flex-wrap gap-2 mt-6 not-prose">
-				{
-					(post.data.tags || []).map((i: any) => (
-						<a 
-							href={`/en/tag/${i}`}
-							class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors duration-180"
-						>
-							<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-								<path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-								<path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />
-							</svg>
-							{i}
-						</a>
-					))
-				}
-			</section>
-			</section>
+						<Icon name="file-text" class="w-4 h-4 text-primary/80" />
+							{t('post.words')} {articleWordCount} {t('post.words')}
+						</span>
+						<span class="inline-flex items-center gap-1.5">
+							<Icon name="clock" class="w-4 h-4 text-primary/80" />
+							{t('post.readTime')} ≈ {Math.ceil(readingMinutes)} {t('post.readTime')}
+						</span>
+					</div>
+			</header>
+			<section
+				class="
+					prose lg:prose-xl
+					prose-zinc
+					dark:prose-invert
+					max-w-none
+					px-8 pb-8
+				"
+			>	<Content />
+				<section data-pagefind-ignore class="flex flex-wrap gap-2 mt-6 not-prose">
+					{
+						(post.data.tags || []).map((i: any) => (
+							<a 
+								href={`/en/tag/${i}`}
+								class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors duration-180"
+							>
+								<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+									<path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />
+								</svg>
+								{i}
+							</a>
+						))
+					}
+				</section>
+				</section>
+    </section>
 		<footer>
 			<!-- 公众号引流组件 -->
 			<Reward />
