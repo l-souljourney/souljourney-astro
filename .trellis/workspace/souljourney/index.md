@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 3
-- **Last Active**: 2026-05-01
+- **Total Sessions**: 4
+- **Last Active**: 2026-05-02
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~114 | Active |
+| `journal-1.md` | ~150 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 4 | 2026-05-02 | GitHub CNB release chain wrap-up | `ba7bf6f`, `15a53d1`, `c750b29`, `69ccd8a` | `main` |
 | 3 | 2026-05-01 | v2.3.1 Astro 双语发布工作流收口 | `c9936cc`, `7ce2528`, `631c1bc` | `main` |
 | 2 | 2026-04-30 | <v2.3.0> close docs cleanup and astro convergence | `b838ba2`, `c1826cf`, `740731e`, `f28dd89`, `c5a857a` | `feature/v2.3.0-docs-cleanup-astro-convergence` |
 | 1 | 2026-04-30 | <v2.2.2> migrate openspec to trellis | `026a545`, `80ab67c`, `1dfaa55` | `feature/v2.2.2-adopt-trellis` |

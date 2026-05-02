@@ -112,3 +112,39 @@ Closed the v2.3.0 cleanup branch with docs/version alignment, Astro published-se
 ### Next Steps
 
 - None - task complete
+
+
+## Session 4: GitHub CNB release chain wrap-up
+
+**Date**: 2026-05-02
+**Task**: GitHub CNB release chain wrap-up
+**Branch**: `main`
+
+### Summary
+
+完成 GitHub -> CNB -> COS 发布链路文档收口、Node 24 workflow 升级、发布契约与 Trellis/spec 回写，并验证 GitHub workflow 与 CNB mirror 同步成功。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `ba7bf6f` | (see git log) |
+| `15a53d1` | (see git log) |
+| `c750b29` | (see git log) |
+| `69ccd8a` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
