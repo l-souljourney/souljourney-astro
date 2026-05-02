@@ -1,4 +1,4 @@
-name: Deploy to COS + CDN
+name: Build + Sync to CNB
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
 
   pull_request:
     branches: [main]
+
+env:
+  CNB_MIRROR_REPO_URL: https://cnb.cool/l-souljourney/souljourney-astro.git
 
 jobs:
   build:
@@ -23,7 +26,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -39,86 +42,37 @@ jobs:
           MAX_DUPLICATE_IDS: "0"
         run: pnpm check:publish-health
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 1
-
-  deploy-cos:
+  sync-cnb:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          fetch-depth: 0
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Validate COS secrets
+      - name: Validate CNB sync secret
         run: |
-          if [ -z "${{ secrets.TENCENT_CLOUD_SECRET_ID }}" ] || [ -z "${{ secrets.TENCENT_CLOUD_SECRET_KEY }}" ] || [ -z "${{ secrets.COS_BUCKET }}" ] || [ -z "${{ secrets.COS_REGION }}" ]; then
-            echo "❌ COS secrets are incomplete"
+          if [ -z "${{ secrets.CNB_TOKEN }}" ]; then
+            echo "❌ missing secret: CNB_TOKEN"
             exit 1
           fi
-          echo "✅ COS secrets check passed"
+          echo "✅ CNB_TOKEN is configured"
 
-      - name: Deploy to COS via coscli
+      - name: Sync repository to CNB mirror
+        uses: docker://tencentcom/git-sync
         env:
-          COS_SECRET_ID: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          COS_SECRET_KEY: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-          COS_BUCKET: ${{ secrets.COS_BUCKET }}
-          COS_REGION: ${{ secrets.COS_REGION }}
+          PLUGIN_TARGET_URL: ${{ env.CNB_MIRROR_REPO_URL }}
+          PLUGIN_AUTH_TYPE: https
+          PLUGIN_BRANCH: main
+          PLUGIN_USERNAME: cnb
+          PLUGIN_PASSWORD: ${{ secrets.CNB_TOKEN }}
+          PLUGIN_SYNC_MODE: rebase
+          PLUGIN_FORCE: "true"
+
+      - name: Show sync target
         run: |
-          if [ ! -d "dist" ]; then
-            echo "❌ dist directory not found"
-            exit 1
-          fi
-          echo "✅ dist exists: $(du -sh dist/ | cut -f1)"
-
-          COS_ENDPOINT="cos.${COS_REGION}.myqcloud.com"
-          echo "📦 COS endpoint: ${COS_ENDPOINT}"
-          START_TS=$(date +%s)
-
-          docker run --rm \
-            -v "$PWD/dist:/workspace/dist" \
-            --entrypoint /bin/sh \
-            tencentcom/coscli:latest \
-            -lc "
-              coscli config set --secret_id \"${COS_SECRET_ID}\" --secret_key \"${COS_SECRET_KEY}\" &&
-              coscli config add --init-skip=true -b \"${COS_BUCKET}\" -r \"${COS_REGION}\" &&
-              coscli sync /workspace/dist/ \"cos://${COS_BUCKET}/\" --force --disable-crc64 --recursive --endpoint \"${COS_ENDPOINT}\"
-            "
-
-          END_TS=$(date +%s)
-          echo "⏱️ COS sync duration: $((END_TS - START_TS))s"
-
-      - name: Purge EdgeOne cache
-        env:
-          TENCENT_CLOUD_SECRET_ID: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          TENCENT_CLOUD_SECRET_KEY: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-          TEO_ZONE_ID: ${{ vars.TEO_ZONE_ID }}
-          TEO_ZONE_ID_SECRET: ${{ secrets.TEO_ZONE_ID }}
-          PRIMARY_DOMAIN: ${{ vars.PRIMARY_DOMAIN }}
-          CDN_DOMAIN: ${{ secrets.CDN_DOMAIN }}
-          TEO_PURGE_TYPE: purge_host
-        run: |
-          node ./script/edgeone-purge.js
-
-      - name: Show deployment info
-        run: |
-          echo "✅ COS deployment completed"
-          if [ -n "${{ secrets.CDN_DOMAIN }}" ]; then
-            echo "🌐 Website: https://${{ secrets.CDN_DOMAIN }}"
-          fi
+          echo "✅ Synced current main to CNB mirror"
+          echo "🔁 Target: ${CNB_MIRROR_REPO_URL}"
