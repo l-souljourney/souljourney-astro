@@ -25,13 +25,18 @@
    - commit title: `build: switch CNB pipeline to mirror deploy only [ci skip]`
 6. 已通过 CNB OpenAPI 回读确认：
    - 该次提交的流水线被正确 `skipped`
+7. 已实跑 GitHub workflow `25247700460`
+   - `build` 成功
+   - `sync-cnb` 表面成功，但 `rebase` 实际未推送任何 branch
+   - 根因是目标仓库独有 `.cnb.yml` 与源仓库缺失 `.cnb.yml` 发生 rebase 冲突
 
 当前还没完成的动作：
 
-1. 将本仓库这轮改动提交并推到 GitHub `main`
-2. 观察 GitHub `sync-cnb`
-3. 观察 CNB `main.push`
-4. 核对 COS / EdgeOne 的首次正式切换结果
+1. 将根目录 `.cnb.yml` 并入 GitHub 源仓库
+2. 将 `sync-cnb` 从 `rebase` 改为 `push`
+3. 再次推送 GitHub `main`
+4. 观察 CNB `main.push`
+5. 核对 COS / EdgeOne 的首次正式切换结果
 
 ---
 
@@ -124,9 +129,9 @@ Local / Obsidian / wxengine
 特点：
 
 - 复用现有 CNB repo
-- `.cnb.yml` 第一阶段先留在 CNB repo
-- GitHub 通过 `tencentcom/git-sync` 的 `rebase` 模式同步业务代码
-- `rebase` 的目的是保留 CNB 仓库上的 `.cnb.yml`
+- GitHub 源仓库正式包含根目录 `.cnb.yml`
+- GitHub 通过 `tencentcom/git-sync` 的 `push` 模式同步业务代码
+- CNB mirror 仓库与 GitHub `main` 保持一致
 
 ### 3.2 Phase 2：治理加强版本
 
@@ -150,30 +155,36 @@ GitHub main push
 
 ---
 
-## 4. 为什么 Phase 1 先用 rebase + main.push
+## 4. 为什么 Phase 1 改成 push + main.push
 
 你们现在已经有一个历史 CNB repo，它的 `main` 里包含旧 `.cnb.yml`，但代码非常老。
 
-因此第一阶段最省事的做法是：
+一开始的设想是：
 
 1. 不先把 `.cnb.yml` 放回 GitHub 主仓库
-2. 直接在 GitHub Actions 里把业务代码同步到现有 CNB repo
-3. 保留 `.cnb.yml`
-4. 让 CNB 的 `main.push` 先把国内构建/发布重新跑起来
+2. GitHub Actions 用 `rebase` 模式同步到现有 CNB repo
+3. 通过 `rebase` 保留目标仓库里的 `.cnb.yml`
+
+但真实运行 `25247700460` 后，`git-sync` 日志证明这条路不成立：
+
+- `CONFLICT (modify/delete): .cnb.yml deleted in HEAD and modified in c417061`
+- `No branches were successfully rebased, nothing to push`
+
+因此第一阶段改为：
+
+1. 把生产 `.cnb.yml` 正式纳入 GitHub 源仓库根目录
+2. GitHub Actions 用 `push` 模式同步到 CNB mirror repo
+3. 让 CNB 的 `main.push` 跑国内构建/发布
 
 这样做的收益：
 
-- 手动改动最少
-- 可以最快验证“是不是只要把构建和发 COS 搬回 CNB 就明显变快”
-- 避免一开始就同时引入：
-  - SHA 精确触发
-  - API 联调
-  - `.cnb.yml` 回迁 GitHub
+- 同步结果确定，不依赖 `rebase` 的冲突处理
+- CNB `main` 与 GitHub `main` 一致
+- 以后进入 `api_trigger + sha` 也更自然
 
 代价：
 
-- Phase 1 的 Git 形态更偏“实用落地”，不是最优治理形态
-- 因为 `rebase` 保留 `.cnb.yml`，CNB 侧 commit 可能与 GitHub SHA 不完全一一对应
+- 生产 `.cnb.yml` 进入 GitHub 主仓库，需要按正式配置管理
 
 这也是为什么建议后续进入 Phase 2。
 
@@ -200,7 +211,7 @@ GitHub 侧保留：
    - 同步到：
      - `https://cnb.cool/l-souljourney/souljourney-astro.git`
    - 第一阶段建议：
-     - `sync_mode: rebase`
+     - `sync_mode: push`
 
 ### GitHub 侧当前状态
 
@@ -317,6 +328,7 @@ CNB 只负责：
 
 已产出并落地：
 
+- 本仓库实际文件：`.cnb.yml`
 - 本仓库模板：`docs/deploy/cnb-mirror-main.cnb.yml`
 - CNB 仓库实际文件：`.cnb.yml`
 
@@ -329,10 +341,10 @@ CNB 只负责：
 
 当前剩余需要继续推进的是：
 
-- 先改 GitHub
-- 再更新 CNB
-- 再做一次 test commit
-- 最后停掉 GitHub deploy-cos
+- 把根目录 `.cnb.yml` 并入 GitHub
+- 把 `sync-cnb` 从 `rebase` 改为 `push`
+- 再做一次正式 push
+- 观察 CNB 是否开始真实构建与发布
 
 ### 4. 回滚手册
 
@@ -343,27 +355,19 @@ CNB 只负责：
 
 ---
 
-## 9. 推荐推进顺序
+## 9. 当前剩余执行顺序
 
 ### Step 1
 
-你先手动完成：
-
-- CNB 仓库备份
-- CNB Secrets/变量确认
-- CNB 写入凭据准备
+我把根目录 `.cnb.yml` 并入 GitHub 源仓库。
 
 ### Step 2
 
-我来改 GitHub workflow 和出新的 `.cnb.yml` 模板。
+我把 GitHub `sync-cnb` 从 `rebase` 改成 `push`。
 
 ### Step 3
 
-你把新 `.cnb.yml` 放到 CNB repo 并确认构建开启。
-
-### Step 4
-
-我协助你做一次最小测试提交，观察：
+再次推送 GitHub `main`，观察：
 
 - GitHub 检查
 - GitHub -> CNB sync
@@ -371,9 +375,12 @@ CNB 只负责：
 - COS 部署耗时
 - EdgeOne 刷新
 
-### Step 5
+### Step 4
 
-确认稳定后，停掉 GitHub 当前的 `deploy-cos`。
+如果这轮跑通，再考虑是否进入：
+
+- `api_trigger + sha`
+- Node 24 Actions 升级
 
 ---
 
@@ -382,12 +389,11 @@ CNB 只负责：
 当前不建议第一步就做：
 
 - `api_trigger + sha`
-- `.cnb.yml` 回迁 GitHub
 - CNB / GitHub 双端同时大改
 
 更稳的路径是：
 
-1. 先用现有 CNB repo 跑通 mirror 同步与国内部署
+1. 先用 GitHub 根目录 `.cnb.yml` + CNB mirror 跑通国内部署
 2. 再决定要不要升级到严格 SHA 发布模型
 
 这样做更符合“逐步推动”的目标。

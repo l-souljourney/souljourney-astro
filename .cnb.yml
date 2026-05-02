@@ -1,10 +1,3 @@
-# GitHub source repo -> CNB mirror repo 第一阶段生产流水线
-# 说明：
-# 1. 此文件是本仓库对根目录 `.cnb.yml` 的说明性镜像，便于审计和回滚。
-# 2. 当前实际生效文件同时存在于：
-#    - GitHub 源仓库根目录 `.cnb.yml`
-#    - CNB mirror 仓库根目录 `.cnb.yml`
-
 main:
   push:
     - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml

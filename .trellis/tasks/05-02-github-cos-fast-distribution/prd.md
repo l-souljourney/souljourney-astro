@@ -6,7 +6,7 @@
 
 `GitHub main push -> GitHub build + publish-health -> sync 到 CNB mirror repo -> CNB 在腾讯云侧 build/deploy COS/purge EdgeOne`
 
-目标不是再做一轮抽象分析，而是在本轮直接完成第一阶段可上线的实现骨架，并把 CNB 侧需要的 `.cnb.yml` 同步到现有仓库。
+目标不是再做一轮抽象分析，而是在本轮直接完成第一阶段可上线的实现骨架，并把 CNB 侧需要的 `.cnb.yml` 纳入 GitHub 源仓库后同步到现有仓库。
 
 ## Why now
 
@@ -42,6 +42,9 @@
   - `cnb repositories get-by-id --repo l-souljourney/souljourney-astro`
   - 当前账号对 CNB 仓库权限为 `Owner`
   - 通过 HTTPS Git + token 可进行 `git push --dry-run`
+- GitHub `sync-cnb` 首次实跑日志已确认：
+  - `rebase` 模式在目标仓库独有 `.cnb.yml` 上产生冲突
+  - 结果是 `No branches were successfully rebased, nothing to push`
 
 ## Scope
 
@@ -52,10 +55,10 @@
    - 保留 `pnpm check:publish-health`
    - 删除 GitHub 侧 `deploy-cos`
    - 改为 `sync-cnb`
-2. 产出并校对新的 CNB `.cnb.yml`
+2. 在 GitHub 源仓库根目录维护 `.cnb.yml`
    - 删除 `deploy to github`
    - 保留 `build -> publish-health -> deploy to cos -> refresh edgeone cache`
-3. 将新的 `.cnb.yml` 推送到现有 CNB 仓库
+3. 将 GitHub 仓库通过 `push` 模式同步到现有 CNB 仓库
 4. 记录需要用户在 GitHub/CNB 平台补齐的配置项
 
 ## Explicit non-goals
@@ -74,7 +77,7 @@
 GitHub main push
   -> GitHub Actions build
   -> GitHub Actions publish-health
-  -> GitHub Actions git-sync(rebase) 到 CNB repo
+  -> GitHub Actions git-sync(push) 到 CNB repo
   -> CNB main.push
   -> CNB build
   -> CNB publish-health
@@ -82,22 +85,30 @@ GitHub main push
   -> CNB purge EdgeOne
 ```
 
-### Why `rebase`
+### Why `push`
 
-第一阶段继续使用现有 CNB 仓库，并保留 `.cnb.yml` 在 CNB 仓库内。
+首次实跑已经证明：
 
-这样做的原因：
+- `rebase` 模式在“源仓库没有 `.cnb.yml`、目标仓库独有 `.cnb.yml` 提交”的情况下会冲突
+- GitHub workflow 虽显示成功，但实际上不会把新的 `main` 推到 CNB
 
-- 不需要把 `.cnb.yml` 立即并回 GitHub 主仓库
-- 能最快验证“腾讯云侧构建 + COS 发布”是否恢复到可接受速度
-- 兼容当前已有的 CNB 仓库与触发模型
+因此第一阶段切换为：
+
+- GitHub 源仓库正式维护根目录 `.cnb.yml`
+- GitHub `sync-cnb` 使用 `push` 模式强制镜像到 CNB
+
+这样做的收益：
+
+- 同步语义直接、可验证
+- CNB `main` 与 GitHub `main` 一致
+- 不再依赖 `rebase` 对平台特有文件的保留行为
 
 ## Requirements
 
 - GitHub 仍是唯一代码源
 - GitHub push 到 `main` 后，仍必须先过 `pnpm build` 与 `pnpm check:publish-health`
 - CNB 只负责 mirror + 国内构建发布，不再回推 GitHub
-- CNB `.cnb.yml` 必须能直接构建当前仓库主分支内容
+- GitHub 根目录 `.cnb.yml` 必须能直接构建当前仓库主分支内容
 - CNB 侧 COS 上传命令继续保持：
   - 无 `--delete`
   - 显式 `--endpoint "cos.${COS_REGION}.myqcloud.com"`
@@ -107,7 +118,7 @@ GitHub main push
 
 - [x] `.github/workflows/deploy.yml` 不再包含 GitHub 侧 `deploy-cos`
 - [x] `.github/workflows/deploy.yml` 新增 `sync-cnb`
-- [x] 本仓库保留一份可审计的 CNB `.cnb.yml` 目标配置
+- [x] 本仓库保留可审计的 CNB `.cnb.yml` 配置
 - [x] CNB 仓库中的 `.cnb.yml` 已更新，不再反推 GitHub
 - [x] 本地已完成最小相关验证：
   - `pnpm build`
@@ -116,8 +127,8 @@ GitHub main push
 
 ## Risks
 
-- GitHub 仓库和 CNB 仓库在第一阶段不是完全同构：
-  - `.cnb.yml` 仍只保留在 CNB
+- 生产发布配置进入 GitHub 源仓库后：
+  - 后续改动必须同时考虑 GitHub Actions 和 CNB pipeline 兼容性
 - 如果 GitHub Secret 未补齐：
   - `sync-cnb` 会失败
 - 如果 CNB `env.yml` 或 COS/EdgeOne 变量失效：

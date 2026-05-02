@@ -69,7 +69,7 @@ jobs:
           PLUGIN_BRANCH: main
           PLUGIN_USERNAME: cnb
           PLUGIN_PASSWORD: ${{ secrets.CNB_TOKEN }}
-          PLUGIN_SYNC_MODE: rebase
+          PLUGIN_SYNC_MODE: push
           PLUGIN_FORCE: "true"
 
       - name: Show sync target
