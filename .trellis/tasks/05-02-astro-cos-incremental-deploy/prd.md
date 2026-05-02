@@ -65,6 +65,11 @@
 当前决策：
 
 * 采用 A 的第一阶段落地：不改主发布面，先修复主域缓存刷新链路。
+* 2026-05-02 线上联调追加结论：
+  * `coscli sync` 后再用 `coscli cp` 覆写 `html/xml/txt` metadata 的方案已验证过
+  * 第一轮失败点是 `coscli cp` 不支持 `--force`
+  * 去掉 `--force` 后第二轮不再报参数错误，但 metadata 覆写步骤耗时过长，不适合作为当前生产方案
+  * 当前回退策略：保留官方 EdgeOne purge，移除 metadata 覆写，先验证 CDN 刷新是否已经足够解决首页陈旧问题
 
 ## Requirements (evolving)
 
@@ -84,8 +89,10 @@
   * 给 HTML 输出显式缓存控制，避免浏览器长期持有旧首页
 * 当前实现先收敛为：
   * 新增官方 EdgeOne `CreatePurgeTask` Node 脚本
-  * workflow 在 `coscli sync` 后二次覆盖 `html/xml/txt` 的 `Cache-Control`
+  * workflow 先仅保留 `coscli sync` + EdgeOne purge
   * purge 目标默认取 `PRIMARY_DOMAIN`，缺失时回退 `CDN_DOMAIN`
+* HTML 缓存控制的最终方案后续单独处理：
+  * 需要避免在发布路径里增加一条明显放大发布耗时的二次上传
 * 明确真实上线联调所需最小额外配置：
   * `TEO_ZONE_ID`（repo variable 优先；secret 兼容）
 * 形成一个新的 Trellis 版本范围，明确：
