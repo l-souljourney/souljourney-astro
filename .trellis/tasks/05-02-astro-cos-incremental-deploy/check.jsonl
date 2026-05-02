@@ -1,0 +1,2 @@
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"对照最小验证口径确认脚本测试与构建都已执行。"}
+{"file":".trellis/tasks/05-02-astro-cos-incremental-deploy/research/cos-deploy-analysis.md","reason":"验证结果需要回扣到先前确认的缓存与发布现象，不脱离分析结论。"}

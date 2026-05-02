@@ -1,0 +1,6 @@
+{"file":".trellis/spec/frontend/index.md","reason":"实现前按 Trellis 前端规范核对最小验证和目录边界。"}
+{"file":".trellis/spec/frontend/directory-structure.md","reason":"新增 Node 发布脚本放在 script/，测试放在 tests/，沿用仓库既有结构。"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"确认发布相关改动至少执行 pnpm build 和最小相关 node:test。"}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"新脚本保持 ESM + 显式参数校验，不引入裸 any。"}
+{"file":".trellis/spec/guides/index.md","reason":"修改配置和新增 helper 前先检查复用与联动点。"}
+{"file":".trellis/tasks/05-02-astro-cos-incremental-deploy/research/cos-deploy-analysis.md","reason":"实现直接承接分析结论：补主域缓存控制与 EdgeOne purge。"}

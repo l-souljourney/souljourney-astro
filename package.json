@@ -13,6 +13,7 @@
     "newpost": "node ./script/newpost.js",
     "check:publish-health": "node ./script/publish-health.js",
     "check:publish-bilingual-readiness": "MAX_PENDING_TRANSLATIONS=0 node ./script/publish-health.js",
+    "purge:edgeone": "node ./script/edgeone-purge.js",
     "offdev": "astro preferences disable devToolbar",
     "ondev": "astro preferences enable devToolbar"
   },
