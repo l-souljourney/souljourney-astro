@@ -64,6 +64,7 @@
    - 保留 `build -> publish-health -> deploy to cos -> refresh edgeone cache`
 3. 将 GitHub 仓库通过 `push` 模式同步到现有 CNB 仓库
 4. 记录需要用户在 GitHub/CNB 平台补齐的配置项
+5. 处理 GitHub Actions Node 24 runtime 告警，并把当前真实发布链路写入稳定文档
 
 ## Explicit non-goals
 
@@ -127,6 +128,8 @@ GitHub main push
 - [x] 本地已完成最小相关验证：
   - `pnpm build`
   - `pnpm check:publish-health`
+- [x] GitHub workflow 已补 Node 24 兼容处理
+- [x] 当前生产发布链路已有稳定文档入口
 - [x] 输出用户仍需手动补齐的平台配置清单
 
 ## Risks

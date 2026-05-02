@@ -135,6 +135,8 @@
 - GitHub workflow:
   - `build`
   - `sync-cnb`
+- GitHub workflow env:
+  - `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
 - GitHub repo secret:
   - `CNB_TOKEN`
 - CNB production trigger:
@@ -145,6 +147,9 @@
 
 ### 3. Contracts
 - GitHub 是唯一代码源；GitHub 不再直接执行 `deploy-cos`
+- GitHub Actions runtime 必须保持 Node 24 兼容：
+  - 官方 Actions 使用 Node 24 兼容 major
+  - 若第三方 JS action 还没完成 runtime 升级，workflow 需显式设置 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
 - GitHub `build` job 至少执行：
   - `pnpm install --frozen-lockfile`
   - `pnpm build`
@@ -174,6 +179,7 @@
 - CNB 缺少 `COS_*` 变量 -> `deploy to cos` fail
 - CNB 缺少 `TEO_ZONE_ID` -> `script/edgeone-purge.js` 警告并跳过刷新
 - 使用 `rebase` 模式且源仓库缺少 `.cnb.yml` -> 目标仓库 `.cnb.yml` 可能产生 modify/delete 冲突，最终“workflow 成功但没有任何 branch 被推送”
+- GitHub 再次出现 `Node.js 20 actions are deprecated` 警告 -> 视为 workflow 运行时治理回退
 - 单独更新 CNB `.cnb.yml` 但未同步当前业务代码 -> 可能触发旧代码构建失败；需要用 `[ci skip]` 或等价手段避免中间态误触发
 
 ### 5. Good / Base / Bad Cases
@@ -188,6 +194,10 @@
   - `pnpm build`
   - `pnpm check:publish-health`
   - YAML 语法校验：`.github/workflows/deploy.yml`、`.cnb.yml`、`docs/deploy/cnb-mirror-main.cnb.yml`
+- 推送后至少回读一条新的 GitHub workflow run，确认：
+  - `build`
+  - `sync-cnb`
+  - Node 24 兼容处理未引入新的运行时错误
 - 平台侧至少回读：
   - GitHub `CNB_TOKEN` secret 已存在
   - CNB `.cnb.yml` 已更新
