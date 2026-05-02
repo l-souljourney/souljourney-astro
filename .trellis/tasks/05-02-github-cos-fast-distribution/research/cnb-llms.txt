@@ -1,0 +1,133 @@
+# CNB 文档
+
+云原生构建文档
+
+## Table of Contents
+
+### 指南
+
+- [创建你的第一个仓库](/zh/guide/first-repo.md): 引导用户在 CNB 平台完成创建组织、创建仓库和初始化仓库的全流程快速入门操作。
+- [Git 地址与认证说明](/zh/guide/git-access.md): 说明 CNB 平台 Git 仓库地址格式规范及认证方式，介绍如何使用访问令牌通过 HTTPS 进行 Git 操作认证。
+- [迁移工具](/zh/guide/migration-tools.md): 介绍 CNB 平台提供的迁移工具，包括代码仓库批量迁移、Git 跨平台同步、制品迁移及项目协同数据迁移工具。
+- [角色权限](/zh/guide/role-permissions.md): 介绍 CNB 平台的五种成员角色（访客、助手、开发者、管理员、负责人）及各角色对仓库资源的详细权限对照表。
+- [访问令牌](/zh/guide/access-token.md): 介绍 CNB 平台访问令牌的创建方法及使用场景，包括访问代码仓库、制品库和 Open API 时的认证配置。
+- [部署令牌](/zh/guide/deploy-key.md): 介绍 CNB 平台部署令牌的概念和用途，说明如何创建只读访问凭证，适用于 CI/CD 和自动化脚本中安全拉取代码或制品。
+
+### 代码托管
+
+- [产品介绍](/zh/repo/intro.md): CNB 代码托管产品介绍，涵盖高可用仓库、在线代码浏览、代码评审（PR）、问题跟踪（Issue）、版本管理和分支保护等核心功能概述。
+- [密钥仓库](/zh/repo/secret.md): 介绍密钥仓库的功能与使用方式，这是专用于存储密码、API 密钥等敏感信息的高安全等级仓库，具有严格的访问控制、禁止本地克隆等安全限制。
+- [元数据](/zh/repo/annotations.md): 介绍仓库元数据功能，支持为 Tag 和 Commit 存储和查看 key-value 形式的注解数据，以及如何通过 API 进行增删改查操作。
+- [ISSUE 模板](/zh/repo/issue-template.md): 介绍如何在仓库中配置 Issue 模板，支持 YAML 和 Markdown 两种格式，字段规范与 GitHub 保持一致，模板需放置在 .cnb/ISSUE_TEMPLATE 目录下。
+- [分类标签](/zh/repo/label.md): 介绍仓库分类标签的管理功能，包括如何从 CNB 公开仓库导入标签（增量导入，不覆盖已有标签）。
+- [UI 定制](/zh/repo/settings.md): 介绍通过在仓库根目录创建 .cnb/settings.yml 配置文件对页面 UI 进行定制，涵盖云原生开发按钮、Issue 按钮、Fork 按钮、抄作业按钮、NPC、点赞图片、Tag 自动生成等功能配置总览。
+- [云原生开发按钮定制](/zh/repo/settings-workspace.md): 介绍如何通过 .cnb/settings.yml 定制云原生开发启动按钮的名称、描述、悬浮图片、CPU 配置及禁用选项，个性化开发环境入口。
+- [Issue 按钮定制](/zh/repo/settings-issue.md): 介绍如何通过 .cnb/settings.yml 定制仓库创建 Issue 按钮的描述文字和悬浮图片，为仓库社区营造个性化的贡献氛围。
+- [Fork 按钮定制](/zh/repo/settings-fork.md): 介绍如何通过 .cnb/settings.yml 定制仓库 Fork 按钮的描述文字和鼠标悬浮图片，为开源项目营造个性化的 Fork 体验。
+- [抄作业按钮定制](/zh/repo/settings-copy-repo.md): 介绍如何通过 .cnb/settings.yml 定制模板仓库的"抄作业"按钮外观（描述文字和悬浮图片），需先为仓库添加 example 标签才会显示该按钮。
+- [点赞功能自定义图片](/zh/repo/settings-reaction.md): 介绍如何通过 .cnb/settings.yml 替换仓库点赞功能中的默认图片，支持使用项目吉祥物等自定义图片提升互动个性。
+- [Tag 自动生成配置](/zh/repo/settings-tag.md): 介绍如何通过 .cnb/settings.yml 配置自动打 Tag 的触发分支，实现代码推送时自动创建版本标签，规范化版本管理流程。
+- [NPC 配置](/zh/repo/settings-npc.md): 介绍如何通过 .cnb/settings.yml 为仓库配置专属 AI 助手（NPC），包括角色定义、知识库引入、提示词设置和知识库按钮定制。
+
+### 制品库
+
+- [制品库介绍](/zh/artifact/intro.md): 介绍 CNB 制品库的基本概念，包括支持的制品类型（Docker、Helm、Maven、npm 等）、页面管理、权限控制、存储容量计费和制品迁移等内容。
+- [Docker 制品库](/zh/artifact/docker.md): 介绍如何登录和使用 CNB Docker 镜像制品库，包括制品路径规则、推送和拉取容器镜像的方法。
+- [Helm 制品库](/zh/artifact/helm.md): 介绍如何登录和使用 CNB Helm 制品库（OCI 格式），包括制品路径规则、推送和拉取 Helm Chart 的方法。
+- [Docker Model 制品库](/zh/artifact/docker-model.md): 介绍如何登录和使用 CNB Docker Model 制品库，包括制品路径规则、推送和拉取 AI 模型制品的方法。
+- [Maven 制品库](/zh/artifact/maven.md): 介绍如何配置和使用 CNB Maven 制品库，包括本地开发凭证配置、包的推送和拉取，以及在流水线中集成 Maven 制品库的方法。
+- [npm 制品库](/zh/artifact/npm.md): 介绍如何配置和使用 CNB npm 制品库，包括本地开发凭证配置、包的发布和安装，以及在流水线中集成 npm 制品库的方法。
+- [ohpm 制品库](/zh/artifact/ohpm.md): 介绍如何配置和使用 CNB ohpm 制品库，用于存储和分发鸿蒙（HarmonyOS）OpenHarmony 包，包括凭证配置和包的推送、安装方法。
+- [Nuget 制品库](/zh/artifact/nuget.md): 介绍如何配置和使用 CNB NuGet 制品库，包括 dotnet CLI 和 nuget.exe 两种客户端的凭证配置、包的推送和安装方法。
+- [Composer 制品库](/zh/artifact/composer.md): 介绍如何配置和使用 CNB Composer 制品库，包括推送凭据配置和通过 REST API 上传 PHP 包的方法。
+- [PyPI 制品库](/zh/artifact/pypi.md): 介绍如何配置和使用 CNB PyPI 制品库，用于存储和分发 Python 软件包，包括凭证配置、包的上传和安装，以及在流水线中集成的方法。
+- [Cargo 制品库](/zh/artifact/cargo.md): 介绍如何配置和使用 CNB Cargo 制品库，包括凭据配置、本地开发和流水线中推送/拉取 Rust 包的方法。
+- [Conan 制品库](/zh/artifact/conan.md): 介绍如何配置和使用 CNB Conan 制品库，用于存储和分发 C/C++ 软件包，包括本地开发和流水线集成方法。
+
+### AI 助手
+
+- [AI 助手简介](/zh/ai/intro.md): 介绍 CNB 平台内置的 AI 功能，包括腾讯云代码助手、AI 问答、知识库、构建报错分析和代码变更分析等功能。
+- [知识库](/zh/ai/knowledge-base.md): 介绍如何通过代码仓库快速搭建企业或个人知识库，配置知识库流水线插件，构建 RAG（检索增强生成）应用，并通过 Open API 进行知识检索。
+- [MCP Server](/zh/ai/mcp-server.md): 介绍 CNB 支持的 MCP 协议服务，包括 Streamable 和 SSE 两种接入方式的配置方法。
+- [Code Wiki](/zh/ai/codewiki.md): 介绍如何通过配置 codewiki 流水线插件，自动根据代码仓库内容生成 Wiki 文档，快速构建文档中心。
+
+### 云原生开发
+
+- [云原生开发介绍](/zh/workspaces/intro.md): 介绍基于云原生构建的远程开发解决方案，支持 WebIDE、VSCode、Cursor 等客户端连接，具备声明式环境、快速启动和按需使用等特点。
+- [默认开发环境](/zh/workspaces/default-dev-env.md): 介绍云原生开发的默认环境镜像 cnbcool/default-dev-env，以及如何通过环境变量 CNB_WELCOME_CMD 配置开发环境启动时自动执行的命令。
+- [自定义开发环境](/zh/workspaces/custom-dev-env.md): 介绍如何通过指定 Docker 镜像或自定义 Dockerfile 来配置云原生开发环境，包括单容器和双容器两种启动模式的选择。
+- [业务端口预览](/zh/workspaces/business-preview.md): 介绍如何在云原生开发环境中通过 WebIDE 或 VSCode/Cursor 客户端访问和预览业务端口，包括端口映射和端口转发两种方式。
+- [云原生开发工作区回收机制](/zh/workspaces/workspace-recycling.md): 介绍云原生开发工作区的自动回收机制，包括心跳检测触发的自动回收条件、最大保持时间（默认 18 小时）和凌晨强制回收策略。
+- [代码备份和文件漫游](/zh/workspaces/file-keeper.md): 介绍云原生开发环境的代码备份与文件漫游策略，包括环境销毁时的工作区代码自动备份、恢复机制，以及 VS Code 插件配置和漫游目录的持久化说明。
+- [云原生开发推荐用法](/zh/workspaces/working-principle.md): 介绍云原生开发的推荐工作流程，包括创建开发分支、编码提交、发起合并请求、环境回收及多需求并行开发的最佳实践。
+- [与云原生构建的区别](/zh/workspaces/workspace-vs-build.md): 介绍云原生开发与云原生构建的本质关系和核心区别，说明两者底层运行机制相同但用途、节点分配和计费方式不同。
+- [常见问题解答](/zh/workspaces/question.md): 解答云原生开发使用中的常见问题，包括安装指定版本 code-server、SSH 连接问题排查等实用解决方案。
+- [自定义环境创建流程](/zh/workspaces/custom-dev-pipeline.md): 介绍如何通过 `.cnb.yml` 配置文件自定义云原生开发流水线，包括自定义镜像、资源规格（CPU/内存）以及环境创建时自动执行的任务。
+- [自定义云原生开发启动按钮](/zh/workspaces/custom-dev-button.md): 介绍如何通过 `.cnb/settings.yml` 配置文件自定义云原生开发启动按钮的名称、描述、禁用状态及 CPU 核数等属性。
+- [单/双容器模式](/zh/workspaces/double-container.md): 介绍云原生开发的单容器模式（开发环境与 code-server 在同一容器）和双容器模式（分两个容器运行）的区别及各自适用场景与配置方式。
+- [使用技巧](/zh/workspaces/usage-tips.md): 介绍云原生开发的实用技巧，包括 WebIDE 剪贴板授权、系统字体弹窗、快捷键冲突的解决方法，以及 VSCode 客户端的配置和使用建议。
+- [仅预览模式](/zh/workspaces/only-preview.md): 介绍云原生开发的仅预览模式（beta），该模式下点击云原生开发按钮将直接启动并打开预览页面而非 WebIDE，适用于快速预览业务效果的场景。
+- [VSCode/Cursor 客户端](/zh/workspaces/vscode-likes.md): 介绍如何在自定义云原生开发环境中配置 openssh-server 以支持 VSCode、Cursor、CodeBuddy 客户端远程连接，以及解决窗口覆盖等常见问题。
+- [JetBrains 客户端](/zh/workspaces/jetbrains.md): 介绍如何配置云原生开发环境以支持 JetBrains Gateway 连接，包括 IDEA、GoLand、PyCharm 等多款 IDE 的准备工作和连接方式。
+- [云原生开发 SSH 密钥指纹验证](/zh/workspaces/fingerprint.md): 介绍如何验证云原生开发 SSH 连接的密钥指纹，包括查看官方指纹值以及通过本地 known_hosts 文件进行核对的方法。
+
+### 云原生构建
+
+- [云原生构建介绍](/zh/build/intro.md): 介绍 CNB 云原生构建的核心特性，包括声明式语法、Docker 构建环境、构建缓存和插件生态。
+- [快速开始](/zh/build/quick-start.md): 云原生构建快速入门指南，手把手引导用户创建并运行第一条流水线，以及编写用于代码质量守护的 PR 流水线。
+- [触发规则](/zh/build/trigger-rule.md): 介绍云原生构建的触发机制，包括 Git 操作事件、页面操作事件、API 请求、定时任务、Issue 事件和 NPC 事件等多种触发方式及其配置说明。
+- [配置文件](/zh/build/configuration.md): 介绍云原生构建配置文件 .cnb.yml 的作用、规范及示例，说明如何通过 YAML 格式定义自动化构建流程。
+- [语法手册](/zh/build/grammar.md): CNB 流水线 .cnb.yml 配置文件的完整语法参考，详细说明 Pipeline、Stage、Job 三层结构的所有配置项。
+- [构建环境](/zh/build/build-env.md): 介绍云原生构建中基于 Docker 容器的构建环境配置方式，包括使用现有镜像和动态构建镜像两种方法。
+- [构建节点](/zh/build/build-node.md): 介绍 SAAS 版云原生构建的构建节点配置，包括 amd64 和 arm64/v8 架构节点的 tags 标识、cpus 核数范围及单次最大可用时间限制。
+- [环境变量](/zh/build/env.md): 介绍云原生构建中环境变量的声明、导入、导出和使用方法，涵盖 Pipeline 和 Job 级别的配置。
+- [默认环境变量](/zh/build/build-in-env.md): 列出云原生构建内置的默认只读环境变量，涵盖基础变量、Git 信息、合并请求等场景下的变量说明。
+- [超时策略](/zh/build/timeout.md): 介绍云原生构建的超时策略，包括流水线最长执行时间（20h）和 Job 任务的无输出超时（10min）与最大超时时间（默认 1h，最大 12h）配置说明。
+- [权限说明](/zh/build/permission.md): 介绍云原生构建的角色权限体系，包括触发构建和查看构建日志所需的权限要求。
+- [内置任务](/zh/build/internal-steps.md): 列举云原生构建提供的所有内置任务，包括 Docker 缓存、CNB 流水线协作、Git 操作、测试覆盖率上报等常用功能。
+- [插件市场](/zh/plugins.md): CNB 云原生构建插件市场，列出所有可用的官方和社区插件，供流水线配置时选用。
+- [插件制作](/zh/build/create-plugin.md): 介绍如何从零开发一个云原生构建 Docker 镜像插件，包括参数设计、Dockerfile 编写和插件发布流程。
+- [贡献插件](/zh/build/contribute-plugin.md): 说明如何将自制的通用插件贡献到 CNB 插件市场，供更多开发者使用。
+- [简化配置文件](/zh/build/simplify-configuration.md): 介绍如何利用 YAML 锚点、别名和对象合并语法，以及 include 文件引用机制来简化和复用 .cnb.yml 流水线配置文件。
+- [文件引用](/zh/build/file-reference.md): 说明流水线配置中的四种文件引用方式（include、imports、optionsFrom、settingsFrom）及其权限控制机制。
+- [流水线可视化](/zh/build/pipeline-visualization.md): 介绍如何通过编写、预览、Flow 和事件追踪四个步骤实现流水线配置的"所见即所得"，帮助开发者验证流水线语法和触发逻辑是否符合预期。
+- [流水线缓存](/zh/build/pipeline-cache.md): 介绍云原生构建流水线的缓存机制，包括节点缓存（代码缓存、文件缓存）和跨节点缓存的配置与使用方法。
+- [定时任务](/zh/build/crontab.md): 介绍如何在云原生构建中通过 cron 表达式配置定时触发流水线，适用于夜间构建、定期测试等自动化场景。
+- [跳过流水线](/zh/build/skip-pipeline.md): 介绍如何主动跳过 CNB 流水线执行，包括在 commit message 中使用 [ci skip] 标记和通过 git push 选项跳过，以及事件忽略配置。
+- [登录调试](/zh/build/login-debug.md): 介绍如何在流水线构建过程中或构建结束后登录 Docker 容器进行调试，解决本地与 CI 环境不一致的问题。
+- [手动触发流水线](/zh/build/web-trigger.md): 介绍如何在 CNB 页面上配置自定义按钮来手动触发流水线，包括 web_trigger.yml 配置文件的语法说明及支持传入自定义环境变量的功能。
+- [自定义部署流程](/zh/build/deploy.md): 介绍如何通过云原生构建配置自定义部署环境、审批流程和部署流水线，实现自动化发布。
+- [NPC 事件](/zh/build/npc.md): 介绍云原生构建中的 NPC（自动化角色）概念及其触发的事件类型，支持在 Issue 和 PR 评论中通过 @ 提及触发自动化任务。
+- [从 GitHub Actions 迁移到 CNB](/zh/build/migrate-to-cnb/migrate-from-github-actions.md): 对比 GitHub Actions 与 CNB 的工作流配置差异，帮助开发者将现有 GitHub Actions 工作流迁移到 CNB 平台。
+- [构建Docker镜像并上传](/zh/build/showcache/docker-build-and-push-to-cnb-artifact.md): 介绍如何在 CNB 流水线中构建 Docker 镜像并推送到 CNB Docker 制品库或第三方镜像仓库，包含完整的配置示例。
+- [AI 评审](/zh/build/showcase/ai-review.md): 介绍如何在 CNB 流水线中集成 AI 代码评审能力，支持通过 AI 评审插件自动触发或通过 NPC 事件按需触发两种方式，帮助提升代码质量。
+- [ISSUE通知到企业微信群](/zh/build/showcase/issue-notice-group.md): 介绍如何配置流水线，在 Issue 创建、重新开启或关闭时自动发送通知到企业微信群，包含完整的 Webhook 配置示例。
+- [Monorepo按需构建](/zh/build/showcase/monorepo.md): 介绍在 Monorepo 场景下如何通过 ifModify 配置实现按需构建，仅在特定目录修改时触发对应服务的流水线，避免全量构建的资源浪费。
+- [PR通知到企业微信群](/zh/build/showcase/pr-notice-group.md): 介绍如何配置流水线，在 PR 创建、更新或评审状态变更时自动发送通知到企业微信群，包含完整的 Webhook 配置示例。
+
+### 开发者
+
+- [徽章](/zh/develops/badge.md): 介绍 CNB 平台的徽章功能，包括云原生构建徽章的访问路径、徽章类型及如何在 README 中嵌入构建状态等指标徽章。
+- [Open API](/zh/develops/openapi.md): 介绍 CNB 平台 Open API 的服务地址、API 文档入口及调用方式，包括 Authorization Header 格式和 curl 请求示例。
+- [SKILLS](/zh/develops/skills.md): 介绍基于 CNB OpenAPI 的 Skills 能力，提供 AI 与云原生构建平台完整交互的技能集合。
+
+### oauth 授权
+
+- [如何使用 OAuth 授权](/zh/oauth/user.md): 介绍 CNB 平台 OAuth 授权的使用方法，说明如何安全地将 CNB 账号与第三方工具连接，以及如何查看和撤销已授权的应用。
+- [创建 OAuth 应用](/zh/oauth/developer.md): 面向第三方开发者介绍 CNB OAuth 2.0 应用的接入流程，包括应用登记、用户授权、临时票据获取及 API 访问控制的详细说明。
+
+### Others
+
+- [脚本任务 vs 插件任务](/zh/build/script-vs-plugin.md): 详细对比 CNB 流水线中脚本任务和插件任务的区别，包括执行方式、参数传递、环境变量等核心差异，帮助开发者根据场景选择合适的任务类型。
+- [仓库动态](/zh/develops/openapi-event.md): 介绍 CNB 仓库动态 API，包括各类仓库事件类型（push、PR、issue 等）及按时间查询仓库操作记录的接口使用方法。
+- [云原生构建-企业版](/zh/enterprise.md): 介绍 CNB 企业版部署方案，支持部署至企业腾讯云 VPC 专有网络，满足内网互通和合规要求，适用于对数据安全有较高要求的企业。
+- [FAQ 常见问题](/zh/faq.md): 收录 CNB 平台常见问题与解答，涵盖流水线未触发、CI 与本地环境差异、构建错误排查等典型场景。
+- [Logo](/zh/logo.md): 提供 CNB 平台官方 Logo 资源下载，包含黑色、彩色、白色等多种图标和完整 Logo 的不同尺寸（PNG/SVG）版本。
+- [任务集介绍](/zh/missions/intro.md): 介绍 CNB 任务集项目协同工具，包括创建任务集、跨组织/跨仓库管理 Issue/PR，以及表格、看板、甘特视图的使用方法。
+- [定价](/zh/pricing.md): 介绍云原生构建 SAAS 社区版的计费模式，包括仓库存储、对象存储、CPU 等资源的免费额度与超额计费标准，按量计费，月初结算。
+- [关于我们](/zh/saas/about.md): 云原生构建（CNB）SAAS 版的联系方式页面，包含官方邮箱、电话、地址、微信公众号及当前版本信息。
+- [云原生构建隐私保护声明](/zh/saas/privacy.md): 腾讯云云原生构建 SAAS 版的隐私保护声明，说明服务如何收集、使用和保护用户个人信息及用户权利。
+- [云原生构建服务等级协议](/zh/saas/sla.md): 腾讯云云原生构建 SAAS 版的 SLA 协议，定义服务可用性指标、赔偿方案及免责条款。
+- [TAPD](/zh/saas/tapd.md): 介绍 SAAS 版 CNB 与 TAPD 项目管理工具的集成配置步骤，包括在公司管理平台和项目设置中启用关联，实现代码提交与 TAPD 工作项双向追踪。
+- [云原生构建服务协议](/zh/saas/terms.md): 腾讯云云原生构建 SAAS 版的用户服务协议，规定服务使用条款、权利义务及违约处理，是对腾讯云服务协议的补充协议。
+- [平台赞赏](/zh/sponsor.md): 介绍 CNB 平台赞赏功能，用户可上传微信赞赏码，支持在个人主页和仓库页展示，让他人扫码直接赞赏。
