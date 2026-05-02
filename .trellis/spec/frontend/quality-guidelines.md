@@ -124,3 +124,78 @@
 - 构建成功但公开集合归零的问题，后来通过 publish-health 门禁补上
 
 这些都是需要持续防回归的高优先级风险点。
+
+## Scenario: GitHub -> CNB mirror production deploy
+
+### 1. Scope / Trigger
+- Trigger: 修改 `.github/workflows/deploy.yml`、`docs/deploy/cnb-mirror-main.cnb.yml`、CNB `.cnb.yml`、生产发布 secrets，或重新设计 GitHub/CNB/COS/EdgeOne 发布链路。
+- 这是 infra integration，不是普通前端页面改动；必须按 code-spec 深度处理。
+
+### 2. Signatures
+- GitHub workflow:
+  - `build`
+  - `sync-cnb`
+- GitHub repo secret:
+  - `CNB_TOKEN`
+- CNB production trigger:
+  - `main.push`
+- Versioned CNB pipeline mirror:
+  - `docs/deploy/cnb-mirror-main.cnb.yml`
+
+### 3. Contracts
+- GitHub 是唯一代码源；GitHub 不再直接执行 `deploy-cos`
+- GitHub `build` job 至少执行：
+  - `pnpm install --frozen-lockfile`
+  - `pnpm build`
+  - `pnpm check:publish-health`
+- GitHub `sync-cnb` 必须：
+  - 使用 `tencentcom/git-sync`
+  - `PLUGIN_TARGET_URL=https://cnb.cool/l-souljourney/souljourney-astro.git`
+  - `PLUGIN_AUTH_TYPE=https`
+  - `PLUGIN_BRANCH=main`
+  - `PLUGIN_SYNC_MODE=rebase`
+- CNB `.cnb.yml` 必须：
+  - 删除 `deploy to github`
+  - 保留 `build -> publish-health -> deploy to cos -> refresh edgeone cache`
+  - COS 同步不得恢复 `--delete`
+- CNB 侧环境变量最少包含：
+  - `COS_SECRET_ID`
+  - `COS_SECRET_KEY`
+  - `COS_BUCKET`
+  - `COS_REGION`
+  - `CDN_DOMAIN`
+  - `TEO_ZONE_ID`
+
+### 4. Validation & Error Matrix
+- 缺少 `CNB_TOKEN` -> GitHub `sync-cnb` fail
+- GitHub workflow 中恢复 `deploy-cos` -> 违反单写约束，视为错误设计
+- CNB 缺少 `COS_*` 变量 -> `deploy to cos` fail
+- CNB 缺少 `TEO_ZONE_ID` -> `script/edgeone-purge.js` 警告并跳过刷新
+- 单独更新 CNB `.cnb.yml` 但未同步当前业务代码 -> 可能触发旧代码构建失败；需要用 `[ci skip]` 或等价手段避免中间态误触发
+
+### 5. Good / Base / Bad Cases
+- Good: GitHub `main` push 只做 build/health/sync，CNB `main.push` 完成构建、COS 发布和 EdgeOne 刷新
+- Base: 本仓库保留 `docs/deploy/cnb-mirror-main.cnb.yml` 作为 CNB 实际 `.cnb.yml` 的版本化镜像
+- Bad: 为了图省事，把 GitHub 直传 COS 和 CNB deploy 同时保留，形成双写
+
+### 6. Tests Required
+- 修改发布链路后至少执行：
+  - `pnpm build`
+  - `pnpm check:publish-health`
+  - YAML 语法校验：`.github/workflows/deploy.yml` 与 `docs/deploy/cnb-mirror-main.cnb.yml`
+- 平台侧至少回读：
+  - GitHub `CNB_TOKEN` secret 已存在
+  - CNB `.cnb.yml` 已更新
+  - CNB build logs / status 符合预期
+
+### 7. Wrong vs Correct
+#### Wrong
+- 把 GitHub Actions 继续当成 COS 上传器，只在参数层面继续调 `coscli`
+- 修改了 CNB `.cnb.yml`，却没有在本仓库保留对应的版本化镜像
+
+#### Correct
+- GitHub 负责质量门与镜像同步，CNB 负责腾讯云侧构建和发布
+- 发布链路改动同时更新：
+  - `.github/workflows/deploy.yml`
+  - `docs/deploy/cnb-mirror-main.cnb.yml`
+  - 必要的任务研究/切换文档
