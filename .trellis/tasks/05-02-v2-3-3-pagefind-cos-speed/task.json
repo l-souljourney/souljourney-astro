@@ -1,0 +1,32 @@
+{
+  "id": "v2-3-3-pagefind-cos-speed",
+  "name": "v2-3-3-pagefind-cos-speed",
+  "title": "v2.3.3 pagefind scope and cos deploy speed",
+  "description": "Keep Pagefind, index article pages only, and remove delete from the main COS deployment path to cut publish latency.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": "frontend+deploy",
+  "package": null,
+  "priority": "P2",
+  "creator": "souljourney",
+  "assignee": "souljourney",
+  "createdAt": "2026-05-02",
+  "completedAt": null,
+  "branch": "feature/v2-3-3-pagefind-cos-speed",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "astro.config.mjs",
+    ".github/workflows/deploy.yml",
+    "src/pages/article/[...article].astro",
+    "src/pages/en/article/[...article].astro",
+    "src/components/Search/Search.astro"
+  ],
+  "notes": "EdgeOne rule tuning stays documented only; this version focuses on Pagefind churn and COS sync speed.",
+  "meta": {}
+}

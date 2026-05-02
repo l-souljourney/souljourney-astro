@@ -98,7 +98,7 @@ jobs:
             -lc "
               coscli config set --secret_id \"${COS_SECRET_ID}\" --secret_key \"${COS_SECRET_KEY}\" &&
               coscli config add --init-skip=true -b \"${COS_BUCKET}\" -r \"${COS_REGION}\" &&
-              coscli sync /workspace/dist/ \"cos://${COS_BUCKET}/\" --delete --force --disable-crc64 --recursive --endpoint \"${COS_ENDPOINT}\"
+              coscli sync /workspace/dist/ \"cos://${COS_BUCKET}/\" --force --disable-crc64 --recursive --endpoint \"${COS_ENDPOINT}\"
             "
 
           END_TS=$(date +%s)
