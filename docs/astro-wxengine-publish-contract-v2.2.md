@@ -1,6 +1,6 @@
 # Astro 发布契约 v2.2（Obsidian / wxengine / Astro）
 
-更新时间：2026-03-25
+更新时间：2026-05-02
 
 ## 1. 发布链路
 
@@ -99,3 +99,14 @@
 - 中文链接：`/article/{slug}`；英文链接：`/en/article/{slug}`。
 - 文章级语言切换和 `hreflang` 只指向同 `source_id + slug` 的公开镜像稿件。
 - 不再允许“缺失镜像时回首页”或“只按 `lang + slug` 猜测对稿”的宽松策略。
+
+## 5. 发布后的下游链路
+
+- `wxengine` 或本地 Git 只负责把内容写入 GitHub 仓库。
+- 成功写入 GitHub 后，真实公开发布链路为：
+  - `GitHub main push -> Cloudflare Pages 自动拉取部署`
+  - `GitHub main push -> GitHub Actions build + publish-health -> sync 到 CNB mirror`
+  - `CNB main.push -> build + publish-health -> deploy COS -> purge EdgeOne`
+- 因此“接口返回成功”只代表内容已入库，不代表 `www.l-souljourney.cn` 已经完成国内公开发布。
+- 当前稳定发布链路说明见：
+  - [`docs/deploy/github-main-cnb-cos-release-chain.md`](./deploy/github-main-cnb-cos-release-chain.md)

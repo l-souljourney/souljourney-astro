@@ -1,42 +1,43 @@
 # GitHub -> CNB Mirror -> COS 发布链路设计
 
 **日期：** 2026-05-02  
-**状态：** active  
+**状态：** completed  
 **目标：** 在保留 GitHub 作为唯一代码源的前提下，复用现有 CNB Astro 仓库作为腾讯云侧 mirror / deploy repo，让国内构建与 COS 发布重新回到 CNB 执行，以消除 GitHub-hosted runner 到国内 COS 的长尾慢问题。
 
 ---
 
-## 0. 实施状态（2026-05-02）
+## 0. 最终状态（2026-05-02）
 
-当前已经完成的动作：
+本轮切换已经完成，当前生产口径为：
 
-1. 本仓库 `.github/workflows/deploy.yml` 已改为：
+`GitHub main push -> Cloudflare Pages 自动拉取 -> GitHub Actions build + publish-health -> sync 到 CNB mirror -> CNB main.push -> build + publish-health -> deploy COS -> purge EdgeOne`
+
+本轮已完成的关键动作：
+
+1. GitHub workflow 改为：
    - `build`
    - `sync-cnb`
    - 不再由 GitHub 直接 `deploy-cos`
-2. 本仓库新增版本化 CNB 流水线镜像：
+2. GitHub 源仓库正式纳入根目录 `.cnb.yml`
+3. `sync-cnb` 已从 `rebase` 改为 `push`
+4. CNB 默认 EdgeOne 刷新已收敛为：
+   - `TEO_PURGE_TYPE=purge_all`
+5. 稳定文档入口已补齐：
+   - `docs/deploy/github-main-cnb-cos-release-chain.md`
    - `docs/deploy/cnb-mirror-main.cnb.yml`
-3. GitHub 仓库 Secret 已写入：
-   - `CNB_TOKEN`
-4. CNB 仓库已创建回滚分支：
-   - `backup/pre-github-mirror-cutover-20260502`
-5. CNB `main` 已写入新的 `.cnb.yml`
-   - commit: `c4170614cf27b4a81079da7d0474b474e70c2a44`
-   - commit title: `build: switch CNB pipeline to mirror deploy only [ci skip]`
-6. 已通过 CNB OpenAPI 回读确认：
-   - 该次提交的流水线被正确 `skipped`
-7. 已实跑 GitHub workflow `25247700460`
-   - `build` 成功
-   - `sync-cnb` 表面成功，但 `rebase` 实际未推送任何 branch
-   - 根因是目标仓库独有 `.cnb.yml` 与源仓库缺失 `.cnb.yml` 发生 rebase 冲突
 
-当前还没完成的动作：
+已验证证据：
 
-1. 将根目录 `.cnb.yml` 并入 GitHub 源仓库
-2. 将 `sync-cnb` 从 `rebase` 改为 `push`
-3. 再次推送 GitHub `main`
-4. 观察 CNB `main.push`
-5. 核对 COS / EdgeOne 的首次正式切换结果
+1. GitHub Secrets：
+   - `CNB_TOKEN` 已存在（`gh secret list --repo l-souljourney/souljourney-astro`）
+2. GitHub Variables：
+   - `TEO_ZONE_ID` 已存在（`gh variable list --repo l-souljourney/souljourney-astro`）
+3. GitHub workflow：
+   - `25247840220` success：`sync-cnb` 改为 `push` 后通过
+   - `25247908000` success：EdgeOne 默认 `purge_all` 后通过
+4. CNB 构建：
+   - `cnb-4bo-1jnjsttc3` success
+   - `build -> publish-health -> deploy to cos -> refresh edgeone cache` 全部通过
 
 ---
 
@@ -258,22 +259,24 @@ CNB 只负责：
 
 ---
 
-## 7. 你需要手动处理的内容
+## 7. 平台侧配置清单
 
-下面这些是平台侧、权限侧、密钥侧的手动项，我不能直接替你完成。
+### A. GitHub 仓库
 
-### A. CNB 仓库确认与备份
+当前主链路必需项：
 
-这一项已经处理：
+1. Secret：
+   - `CNB_TOKEN`
+2. 当前已存在但不再参与主发布链路的历史 Secret：
+   - `TENCENT_CLOUD_SECRET_ID`
+   - `TENCENT_CLOUD_SECRET_KEY`
+   - `COS_BUCKET`
+   - `COS_REGION`
+   - `CDN_DOMAIN`
 
-1. 目标仓库已确认：
-   - `l-souljourney/souljourney-astro`
-2. 已创建回滚分支：
-   - `backup/pre-github-mirror-cutover-20260502`
+### B. CNB 项目 / env 仓库
 
-### B. CNB 环境变量 / Secrets
-
-你需要在 CNB 项目里确认或补齐：
+当前主链路必需项：
 
 1. `COS_SECRET_ID`
 2. `COS_SECRET_KEY`
@@ -281,119 +284,51 @@ CNB 只负责：
 4. `COS_REGION`
 5. `CDN_DOMAIN`
 6. `TEO_ZONE_ID`
+7. `TEO_PURGE_TYPE`（可选；默认回退 `purge_all`）
 
-如果 `imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml` 还在使用，也要确认：
+如果继续使用 `imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml`，还需保证该 env 仓库本身可读且变量有效。
 
-7. `l-souljourney/env` 仓库仍存在且变量内容有效
+### C. CNB 触发与权限
 
-### C. CNB 仓库写入凭据
+需要保持：
 
-这一项已经处理：
-
-1. 已验证 CNB token 可用于 HTTPS Git push
-2. GitHub Actions 所需仓库 Secret 已写入：
-   - `CNB_TOKEN`
-
-### D. CNB 构建触发
-
-你需要在 CNB 平台确认：
-
-1. `main.push` 事件仍然允许自动构建
-2. 构建资源和运行时没被禁用
-3. 若项目曾被停用或冻结，需要重新启用构建
-
-### E. EdgeOne 刷新权限
-
-旧 `.cnb.yml` 用的是腾讯云 Python SDK 直接调刷新接口。
-
-你需要确认：
-
-1. `COS_SECRET_ID / COS_SECRET_KEY` 这组凭据对 EdgeOne 刷新也有权限
-2. `TEO_ZONE_ID` 对应的站点仍是当前生产站点
+1. `main.push` 自动构建开启
+2. COS 凭据同时具备 EdgeOne 刷新权限
+3. `TEO_ZONE_ID` 指向当前生产站点
 
 ---
 
-## 8. 我可以继续自动处理的内容
+## 8. 本轮已完成内容
 
-这些已经完成：
-
-### 1. GitHub workflow 改造
-
-已直接改 `.github/workflows/deploy.yml`，现在是：
-
-- `build + publish-health`
-- `sync-cnb`
-
-### 2. CNB `.cnb.yml` 新版本模板
-
-已产出并落地：
-
-- 本仓库实际文件：`.cnb.yml`
-- 本仓库模板：`docs/deploy/cnb-mirror-main.cnb.yml`
-- CNB 仓库实际文件：`.cnb.yml`
-
-当前版本已经：
-
-- 去掉 `deploy to github`
-- 保留 `build -> publish-health -> deploy to cos -> purge EdgeOne`
-
-### 3. 切换手册
-
-当前剩余需要继续推进的是：
-
-- 把根目录 `.cnb.yml` 并入 GitHub
-- 把 `sync-cnb` 从 `rebase` 改为 `push`
-- 再做一次正式 push
-- 观察 CNB 是否开始真实构建与发布
-
-### 4. 回滚手册
-
-我可以补：
-
-- 如何把 GitHub 恢复为直接 deploy-cos
-- 如何把 CNB repo 回滚到 cutover 前 tag
+1. GitHub workflow 收敛为 `build + sync-cnb`
+2. GitHub 源仓库纳入生产 `.cnb.yml`
+3. CNB mirror 仓库不再反推 GitHub
+4. CNB 构建链路补上 `publish-health`
+5. EdgeOne 刷新默认回退为整站 `purge_all`
+6. 文档层补齐：
+   - 当前生产链路说明
+   - `.cnb.yml` 审计镜像
+   - 切换设计与验证记录
 
 ---
 
-## 9. 当前剩余执行顺序
+## 9. 后续可选优化
 
-### Step 1
+当前不再建议回到 GitHub 直传 COS。更合理的后续顺序是：
 
-我把根目录 `.cnb.yml` 并入 GitHub 源仓库。
-
-### Step 2
-
-我把 GitHub `sync-cnb` 从 `rebase` 改成 `push`。
-
-### Step 3
-
-再次推送 GitHub `main`，观察：
-
-- GitHub 检查
-- GitHub -> CNB sync
-- CNB build
-- COS 部署耗时
-- EdgeOne 刷新
-
-### Step 4
-
-如果这轮跑通，再考虑是否进入：
-
-- `api_trigger + sha`
-- Node 24 Actions 升级
+1. 用 `api_trigger + sha` 把 CNB 发布与 GitHub commit SHA 绑定
+2. 单独设计 EdgeOne HTML / RSS / Sitemap 缓存规则
+3. 视需要清理 GitHub 中已不参与主链路的腾讯云历史 Secret
+4. 如果将来第三方 action 正式稳定完成 Node 24 升级，再移除兼容 env
 
 ---
 
-## 10. 关键决策
+## 10. 当前结论
 
-当前不建议第一步就做：
+这次切换已经把“代码源”和“国内部署执行器”分开：
 
-- `api_trigger + sha`
-- CNB / GitHub 双端同时大改
+1. GitHub 继续做唯一代码源与质量门
+2. CNB 只做腾讯云侧构建、COS 发布和 EdgeOne 刷新
+3. Cloudflare Pages 继续独立自动拉取 GitHub `main`
 
-更稳的路径是：
-
-1. 先用 GitHub 根目录 `.cnb.yml` + CNB mirror 跑通国内部署
-2. 再决定要不要升级到严格 SHA 发布模型
-
-这样做更符合“逐步推动”的目标。
+这条链路比旧的 `CNB -> GitHub` 更干净，也比 GitHub 直传 COS 更接近你们之前的速度目标。

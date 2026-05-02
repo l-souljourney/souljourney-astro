@@ -1,5 +1,30 @@
 # Changelog
 
+## v2.3.3 (2026-05-02) - 发布性能治理与 GitHub/CNB 发布链路收敛
+
+### 🚀 发布链路切换
+- **GitHub 不再直传 COS**: `.github/workflows/deploy.yml` 已收敛为 `build + sync-cnb`，GitHub 只负责质量门与代码同步，不再直接执行 `deploy-cos`。
+- **CNB 成为腾讯云侧部署执行器**: 根目录 `.cnb.yml` 回到源仓库管理，当前生产链路为 `GitHub main -> CNB mirror -> COS -> EdgeOne`。
+- **EdgeOne 刷新默认收敛**: CNB 侧 `TEO_PURGE_TYPE` 未显式设置时默认回退 `purge_all`，避免因目标域名不匹配导致刷新失败。
+
+### ⚙️ Workflow 运行时治理
+- **Node 24 兼容处理**: workflow 顶层新增 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`，并将 `actions/checkout`、`actions/setup-node` 升级到 Node 24 兼容 major，处理 GitHub Actions 的 Node 20 runtime 退役告警。
+
+### 🧭 文档与审计入口
+- **新增稳定发布链路文档**: 新增 `docs/deploy/github-main-cnb-cos-release-chain.md`，固定记录当前真实生产链路、配置边界、故障判断口径。
+- **部署契约回写**: 更新 `docs/astro-wxengine-publish-contract-v2.2.md`、`README.md`、`docs/README.md` 与 `docs/plans/2026-05-02-github-cnb-mirror-deploy-plan.md`，消除“GitHub 直传 COS”旧口径。
+- **Trellis spec / research 补齐**: 将 Node 24 workflow 处理策略与 GitHub -> CNB mirror 发布约束回写到 `.trellis/spec/` 和任务研究记录。
+
+### ✅ 验证
+- `pnpm build` 通过，当前构建 `39` 个页面，`Pagefind indexed 6 article pages`
+- `pnpm check:publish-health` 输出 PASS
+- YAML 语法校验通过：
+  - `.github/workflows/deploy.yml`
+  - `.cnb.yml`
+  - `docs/deploy/cnb-mirror-main.cnb.yml`
+
+---
+
 ## v2.3.1 (2026-05-01) - Obsidian / Astro 双语发布工作流收敛
 
 ### 🧭 文档治理与版本收敛

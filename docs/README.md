@@ -6,6 +6,8 @@
 
 - [v2.x 路线图](./plans/2026-03-10-v2.x-roadmap.md)
 - [v2.3.1 Astro / Obsidian 双语发布工作流收敛](./plans/2026-05-01-v2-3-1-astro-obsidian-bilingual-workflow.md)
+- [当前生产发布链路：GitHub main -> CNB -> COS](./deploy/github-main-cnb-cos-release-chain.md)
+- [GitHub -> CNB mirror 切换记录](./plans/2026-05-02-github-cnb-mirror-deploy-plan.md)
 - [v2.2.1 事故复盘](./2026-04-08-v2-2-1-content-id-incident-rca.md)
 - [Astro 发布契约 v2.2](./astro-wxengine-publish-contract-v2.2.md)
 
