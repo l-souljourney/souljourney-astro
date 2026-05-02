@@ -45,6 +45,10 @@
 - GitHub `sync-cnb` 首次实跑日志已确认：
   - `rebase` 模式在目标仓库独有 `.cnb.yml` 上产生冲突
   - 结果是 `No branches were successfully rebased, nothing to push`
+- CNB 首次真实构建 `cnb-ojg-1jnjsmo53` 已确认：
+  - `deploy to cos` 成功，用时约 `17s`
+  - `refresh edgeone cache` 因 `purge_host` 目标域名不匹配报错
+  - 处理策略：CNB 默认改为 `TEO_PURGE_TYPE=purge_all`
 
 ## Scope
 

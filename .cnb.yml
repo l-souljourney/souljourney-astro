@@ -55,6 +55,8 @@ main:
         - name: refresh edgeone cache
           image: node:20-alpine
           script: |
+            export TEO_PURGE_TYPE="${TEO_PURGE_TYPE:-purge_all}"
+
             if [ ! -f "script/edgeone-purge.js" ]; then
               echo "❌ missing script/edgeone-purge.js"
               exit 1

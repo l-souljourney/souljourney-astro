@@ -159,6 +159,7 @@
   - 删除 `deploy to github`
   - 保留 `build -> publish-health -> deploy to cos -> refresh edgeone cache`
   - COS 同步不得恢复 `--delete`
+  - CNB 侧 EdgeOne 刷新默认使用 `TEO_PURGE_TYPE=purge_all`
 - CNB 侧环境变量最少包含：
   - `COS_SECRET_ID`
   - `COS_SECRET_KEY`
