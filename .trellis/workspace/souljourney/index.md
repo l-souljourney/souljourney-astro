@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 5
+- **Total Sessions**: 6
 - **Last Active**: 2026-05-03
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~184 | Active |
+| `journal-1.md` | ~227 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 6 | 2026-05-03 | 完成 v2.3.5 Astro 6 升级闭环与上线验证 | `28346f8`, `4504885`, `731b688`, `39de18f`, `a44c197` | `main` |
 | 5 | 2026-05-03 | v2.3.4 开源文档治理收尾 | `421af31`, `ae82f03` | `main` |
 | 4 | 2026-05-02 | GitHub CNB release chain wrap-up | `ba7bf6f`, `15a53d1`, `c750b29`, `69ccd8a` | `main` |
 | 3 | 2026-05-01 | v2.3.1 Astro 双语发布工作流收口 | `c9936cc`, `7ce2528`, `631c1bc` | `main` |

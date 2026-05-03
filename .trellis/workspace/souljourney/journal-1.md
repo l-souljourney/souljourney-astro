@@ -188,3 +188,40 @@ Closed the v2.3.0 cleanup branch with docs/version alignment, Astro published-se
 ### Next Steps
 
 - None - task complete
+
+
+## Session 6: 完成 v2.3.5 Astro 6 升级闭环与上线验证
+
+**Date**: 2026-05-03
+**Task**: 完成 v2.3.5 Astro 6 升级闭环与上线验证
+**Branch**: `main`
+
+### Summary
+
+完成 Astro 6.2.1 与 Node 22 迁移，修复 Tailwind ESM 与无效封面回退，完成 GitHub Actions、CNB 镜像与生产站点回读验证，并收口 Trellis 文档。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `28346f8` | (see git log) |
+| `4504885` | (see git log) |
+| `731b688` | (see git log) |
+| `39de18f` | (see git log) |
+| `a44c197` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
