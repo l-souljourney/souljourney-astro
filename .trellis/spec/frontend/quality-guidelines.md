@@ -115,6 +115,65 @@
 - 是否增加了必要测试或至少更新了现有断言
 - 是否引入了新的硬编码、重复 union、无 cleanup 的客户端事件
 
+## Scenario: Public docs governance for an open-source repo
+
+### 1. Scope / Trigger
+- Trigger: 修改 `README.md`、`docs/README.md`、`update.md`、路线图、对外契约文档、部署说明文档，或调整历史 docs / `.trellis/tasks/archive/**` 的公开保留策略。
+
+### 2. Signatures
+- Public entry docs:
+  - `README.md`
+  - `docs/README.md`
+  - `docs/plans/*.md`
+  - `update.md`
+- Historical docs:
+  - `docs/archive/**`
+  - `.trellis/tasks/archive/**`
+
+### 3. Contracts
+- 活跃公开文档允许保留：
+  - 项目定位
+  - 版本状态
+  - 内容契约
+  - 架构边界
+  - 协作所需的中层说明
+- 活跃公开文档不得继续暴露：
+  - secrets / vars 名称
+  - 平台私有地址
+  - 运行证据、run id、控制台验证细节
+  - 运维执行命令
+  - 历史安全事件原始处理记录
+- 历史材料默认分为：
+  - archive + sanitize
+  - summary only
+  - remove from public repo
+
+### 4. Validation & Error Matrix
+- `README` / roadmap / `update.md` 版本不一致 -> 视为文档口径漂移
+- 活跃 docs 中保留 secret / token / env 名称 -> 视为公开深度过深
+- 历史研究原文继续暴露第三方平台细节 -> 应改为摘要或移除
+- 公开 docs 直接链接 `.trellis` 内部执行路径 -> 视为入口边界错误
+
+### 5. Good / Base / Bad Cases
+- Good: 活跃 docs 只保留当前有效口径，历史材料按公开级别分层
+- Base: 历史文档仍在仓库中，但已不作为主入口且完成脱敏
+- Bad: 将内部运维验证记录直接挂在公开 docs 主入口
+
+### 6. Tests Required
+- 修改公开文档后至少执行：
+  - 关键敏感词残留扫描
+  - `pnpm build`
+  - `pnpm check:publish-health`
+
+### 7. Wrong vs Correct
+#### Wrong
+- 把部署说明继续写成运维手册，保留 secrets 名称、平台地址和 run 证据
+- 为了保留历史，把原始研究记录直接留在公开 archive 中
+
+#### Correct
+- 活跃公开文档只保留中层说明
+- 高风险历史材料改为摘要或移除
+
 ---
 
 ## Known Historical Pitfalls
