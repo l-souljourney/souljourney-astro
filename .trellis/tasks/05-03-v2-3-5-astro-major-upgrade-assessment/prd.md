@@ -46,11 +46,11 @@
 
 ## Acceptance Criteria (evolving)
 
-* [ ] `prd.md` 明确记录当前架构、目标版本、升级目标与范围
-* [ ] 形成基于仓库证据和官方文档的升级可行性结论
-* [ ] 输出主要技术债与风险清单，并标注阻塞级别
-* [ ] 给出可执行的升级实施方案、阶段拆分、验证路径与回滚策略
-* [ ] 升级完成时，必须满足完整闭环验收：本地构建/检查、关键回归、GitHub Actions、CNB 构建、COS/EdgeOne 发布链
+* [x] `prd.md` 明确记录当前架构、目标版本、升级目标与范围
+* [x] 形成基于仓库证据和官方文档的升级可行性结论
+* [x] 输出主要技术债与风险清单，并标注阻塞级别
+* [x] 给出可执行的升级实施方案、阶段拆分、验证路径与回滚策略
+* [x] 升级完成时，必须满足完整闭环验收：本地构建/检查、关键回归、GitHub Actions、CNB 构建、COS/EdgeOne 发布链
 
 ## Definition of Done (team quality bar)
 
@@ -108,3 +108,11 @@
 
 * [`research/current-astro-architecture-audit.md`](./research/current-astro-architecture-audit.md) — 本地框架结构、依赖面、发布链路与验证债审计
 * [`research/astro-v6-official-notes.md`](./research/astro-v6-official-notes.md) — Astro 6 官方版本现状、升级要求、Tailwind 与 `svgOptimizer` 变化
+
+## Final Outcome
+
+* 已完成 `astro@6.2.1` 升级，并移除 `@astrojs/tailwind` 旧接入方式，改为 PostCSS + Tailwind 4 推荐路径
+* 已将 Node 运行时基线上提到 `22.12.0+`，覆盖本地开发、GitHub Actions 与 `.cnb.yml`
+* 本地验证闭环通过：`astro check`、`41/41` 测试、`pnpm build`、`pnpm check:publish-health`
+* 远端验证闭环通过：GitHub Actions run `25269114269` 成功，`sync-cnb` 成功，CNB `main` 镜像对齐到 `4504885f250a416277fd6c34e983e11a5a1cdeda`
+* 生产站点已回读确认：`https://www.l-souljourney.cn/` 与 `https://www.l-souljourney.cn/en/` 均输出 `Astro v6.2.1`，且无 `[[Pasted image ...]]` 无效封面残留
