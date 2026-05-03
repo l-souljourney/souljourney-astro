@@ -4,12 +4,13 @@
 
 ## 当前状态
 
-当前仓库口径已对齐到 `v2.3.0` 收敛版本：
+当前仓库口径已进入 `v2.3.4` 文档公开治理阶段：
 
 - 工作流：Trellis-first，OpenSpec 只保留历史归档
 - 内容治理：公开集合仅包含完整 `zh/en` 镜像对
 - 发布门禁：构建后必须通过 `publish-health`
-- 目标定位：为后续功能迭代与 Obsidian 持续推送提供更干净、更稳定的基础
+- 文档治理：公开入口与历史归档正在按开源仓库标准收敛
+- 目标定位：作为长期维护的开源双语博客平台，而不只是一次性个人站点模板
 
 ## 项目概览
 
@@ -19,17 +20,15 @@
 - 内容：Markdown/MDX（`src/content/blog/`）
 - 部署：GitHub `main` push 后由 Cloudflare Pages 自动拉取一版，同时 GitHub Actions 同步到 CNB mirror，由 CNB 在腾讯云侧构建并发布到 COS / EdgeOne
 
-## `v2.3.0` 收敛重点
+## `v2.3.4` 当前重点
 
-- 统一版本与文档口径，消除 `README` / `package.json` / 历史计划漂移
-- 对历史文档做物理归档，保留活跃索引
-- 规范当前最小公开内容基线：
-  - 保留 `souljourney` zh/en 镜像对
-  - 规范 Cursor zh/en 镜像对
-  - 将测试性质较强的 Astro 双语参考稿移出公开 blog 基线
-- 收敛 Astro 侧遗留技术点，包括：
-  - 公开内容查询 helper 复用
-  - 初始化脚本与页面切换场景下的事件绑定去重
+- 统一 `README`、`docs`、`update`、roadmap 与 Trellis 记录的版本口径
+- 收缩公开文档深度，保留架构与协作语义，移除不必要的运维细节
+- 对历史材料做公开级别治理：
+  - 活跃公开文档只保留当前有效入口
+  - 历史文档继续归档，但不再默认暴露内部工作记录
+  - 明显敏感或内部性过强的材料改为摘要或移出公开仓库
+- 保持 Astro 侧既有内容契约、双语公开规则与发布健康门禁不回退
 
 ## 快速开始
 
@@ -59,16 +58,16 @@ pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 - CI 必须通过 `check:publish-health` 后才会进入部署步骤
 - 若要验证“外部双语推送已经完整落地”，可执行 `pnpm check:publish-bilingual-readiness`
 
-## CI/CD 说明
+## 发布说明
 
 工作流：`.github/workflows/deploy.yml`
 
-- Cloudflare 线：
-  - GitHub `main` 分支 push 后，由 Cloudflare Pages / GitHub 集成自动拉取并部署一版
-- GitHub Actions -> CNB -> 腾讯云线：
-  - `build`：安装依赖、执行 `pnpm build`、执行发布健康门禁
-  - `sync-cnb`：仅在 `main` 分支 push 时运行，将当前仓库同步到 CNB mirror
-  - CNB `main.push`：在腾讯云侧执行 `build -> publish-health -> deploy to cos -> purge EdgeOne`
+- GitHub `main` 更新后，会触发站点构建与公开发布流程
+- 公开协作层面只需了解：
+  - GitHub 是唯一代码源
+  - 站点构建前会执行发布健康检查
+  - 国内公开主站与 GitHub 集成部署属于不同发布面
+- 更具体的链路说明见文档索引中的“当前生产发布链路”
 
 ## 文档索引
 

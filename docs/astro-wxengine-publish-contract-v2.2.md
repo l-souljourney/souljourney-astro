@@ -4,12 +4,12 @@
 
 ## 1. 发布链路
 
-`Obsidian Plugin -> wxengine /api/blog/publish -> GitHub Contents API -> Astro`
+`Obsidian Plugin -> wxengine publish -> GitHub repo update -> Astro`
 
-## 2. wxengine 发布接口
+## 2. wxengine 发布输入契约
 
-- 方法：`POST /api/blog/publish`
-- 认证：`Authorization: Bearer <token>`
+本文件描述的是 **Astro 侧消费契约**，不是 `wxengine` 的完整服务端 API 手册。
+对外协作只需要保证：进入 Astro 仓库的内容满足以下字段与规则。
 
 ### 2.1 必填字段（请求体）
 
@@ -37,13 +37,13 @@
 - `astro.recommend` / `astro.top` / `astro.hide` 仅允许 boolean。
 - `slug` 必须匹配：`^[a-z0-9]+(?:-[a-z0-9]+)*$`
 
-### 2.3 错误返回约定
+### 2.3 错误语义约定
 
-- 业务校验失败（缺必填、非法 categories、非法 slug）：`HTTP 422`
-- JSON 结构/类型错误（如 boolean 传字符串）：`HTTP 400`
-- 错误体至少包含：`message`
+- 业务校验失败时，应返回明确错误信息
+- 结构或类型不合法时，应返回可定位问题的错误信息
+- 外部调用方不应把“接口成功”直接等同于“公开发布完成”
 
-### 2.4 成功返回约定
+### 2.4 成功返回语义
 
 - 成功响应包含 `route`，字段路径：`data.route`
 - 路由制式：
@@ -103,10 +103,7 @@
 ## 5. 发布后的下游链路
 
 - `wxengine` 或本地 Git 只负责把内容写入 GitHub 仓库。
-- 成功写入 GitHub 后，真实公开发布链路为：
-  - `GitHub main push -> Cloudflare Pages 自动拉取部署`
-  - `GitHub main push -> GitHub Actions build + publish-health -> sync 到 CNB mirror`
-  - `CNB main.push -> build + publish-health -> deploy COS -> purge EdgeOne`
-- 因此“接口返回成功”只代表内容已入库，不代表 `www.l-souljourney.cn` 已经完成国内公开发布。
-- 当前稳定发布链路说明见：
+- 成功写入 GitHub 后，Astro 侧会继续完成构建、发布健康检查与公开发布流程。
+- 因此“接口返回成功”只代表内容已入库，不代表所有公开发布面已经更新完成。
+- 当前发布职责边界说明见：
   - [`docs/deploy/github-main-cnb-cos-release-chain.md`](./deploy/github-main-cnb-cos-release-chain.md)

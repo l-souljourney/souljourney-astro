@@ -1,93 +1,10 @@
-# GitHub source repo -> CNB mirror repo 第一阶段生产流水线
-# 说明：
-# 1. 此文件是本仓库对根目录 `.cnb.yml` 的说明性镜像，便于审计和回滚。
-# 2. 当前实际生效文件同时存在于：
-#    - GitHub 源仓库根目录 `.cnb.yml`
-#    - CNB mirror 仓库根目录 `.cnb.yml`
-
-main:
-  push:
-    - imports: https://cnb.cool/l-souljourney/env/-/blob/main/env.yml
-      env:
-        TZ: Asia/Shanghai
-
-      docker:
-        image: node:20-alpine
-        volumes:
-          - node_modules:copy-on-write
-          - /root/.local/share/pnpm:copy-on-write
-          - /root/.cache/pnpm:copy-on-write
-
-      stages:
-        - name: build project
-          script: |
-            npm install -g pnpm@9
-            pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-            pnpm install --frozen-lockfile
-            pnpm run build
-            echo "✅ build completed: $(du -sh dist/ | cut -f1)"
-
-        - name: publish health guard
-          script: |
-            MIN_MIRROR_PAIRS=2 \
-            MIN_ARTICLE_ROUTES=4 \
-            MIN_RSS_ITEMS=4 \
-            MAX_DUPLICATE_IDS=0 \
-            pnpm check:publish-health
-            echo "✅ publish health passed"
-
-        - name: deploy to cos
-          image: tencentcom/coscli:latest
-          script: |
-            if [ ! -d "dist" ]; then
-              echo "❌ dist directory not found"
-              exit 1
-            fi
-
-            if [ -z "${COS_SECRET_ID}" ] || [ -z "${COS_SECRET_KEY}" ] || [ -z "${COS_BUCKET}" ] || [ -z "${COS_REGION}" ]; then
-              echo "❌ COS environment variables are incomplete"
-              exit 1
-            fi
-
-            COS_ENDPOINT="cos.${COS_REGION}.myqcloud.com"
-            START_TS=$(date +%s)
-
-            coscli config set --secret_id "${COS_SECRET_ID}" --secret_key "${COS_SECRET_KEY}"
-            coscli config add --init-skip=true -b "${COS_BUCKET}" -r "${COS_REGION}"
-            coscli sync dist/ "cos://${COS_BUCKET}/" --force --disable-crc64 --recursive --endpoint "${COS_ENDPOINT}"
-
-            END_TS=$(date +%s)
-            echo "✅ COS deploy completed in $((END_TS - START_TS))s"
-
-        - name: refresh edgeone cache
-          image: node:20-alpine
-          script: |
-            export TEO_PURGE_TYPE="${TEO_PURGE_TYPE:-purge_all}"
-
-            if [ ! -f "script/edgeone-purge.js" ]; then
-              echo "❌ missing script/edgeone-purge.js"
-              exit 1
-            fi
-
-            node ./script/edgeone-purge.js
-
-pull_request:
-  push:
-    - env:
-        TZ: Asia/Shanghai
-
-      docker:
-        image: node:20-alpine
-        volumes:
-          - node_modules:copy-on-write
-          - /root/.local/share/pnpm:copy-on-write
-          - /root/.cache/pnpm:copy-on-write
-
-      stages:
-        - name: pr build check
-          script: |
-            npm install -g pnpm@9
-            pnpm config set registry https://mirrors.cloud.tencent.com/npm/
-            pnpm install --frozen-lockfile
-            pnpm run build
-            echo "✅ PR build check passed"
+# Historical note
+#
+# `v2.3.4` 起，公开 docs 不再保留用于说明生产发布实现细节的完整
+# CNB pipeline 镜像配置。当前文件仅保留为占位说明，避免继续暴露运维级配置。
+#
+# 当前有效的公开说明请改读：
+# - `docs/deploy/github-main-cnb-cos-release-chain.md`
+# - `docs/plans/2026-05-02-github-cnb-mirror-deploy-plan.md`
+#
+# 实际生产配置以仓库根目录 `.cnb.yml` 与对应平台侧配置为准。
