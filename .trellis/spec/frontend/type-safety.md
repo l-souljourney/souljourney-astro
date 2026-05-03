@@ -30,6 +30,50 @@
 - 需要额外内容完整性保护时，用显式 assertion / guard，例如 `assertNoEmbeddedFrontmatterAtBodyStart`
 - 不要把“构建一定正确”当成事实；内容边界需要运行时防守
 
+## Scenario: Article cover frontmatter normalization
+
+### 1. Scope / Trigger
+- Trigger: 任何公开文章卡片、文章页头图、SEO 图片逻辑直接读取 `post.data.cover`
+
+### 2. Signatures
+- `src/utils/getCover.ts`
+- `getCover(filename: string | null | undefined): Promise<string>`
+
+### 3. Contracts
+- 明确可公开访问的 cover 值：
+  - 绝对 URL
+  - 站内公开资源路径
+- 以下值不得直接拼成公开 URL：
+  - `null`
+  - 空字符串 / 纯空白
+  - Obsidian wikilink 形式，例如 `[[Pasted image 20260324113724.png]]`
+- 无效 cover 必须回退到 `public/assets/images/banner` 下的站点 banner 图
+
+### 4. Validation & Error Matrix
+- `cover` 为显式公开 URL / path -> 原样返回
+- `cover` 为空或缺失 -> fallback banner
+- `cover` 为 `[[...]]` -> fallback banner
+- 未做 normalize，直接把 `[[...]]` 输出到页面 -> 首页 / 列表页产生资源 `404`
+
+### 5. Good / Base / Bad Cases
+- Good: frontmatter 提供可公开 URL，页面直接稳定渲染
+- Base: frontmatter 未提供 cover，页面使用默认 banner
+- Bad: Obsidian 导出的 `[[...]]` 被当作最终图片地址输出
+
+### 6. Tests Required
+- `tests/v2.3.5-get-cover.test.ts`
+  - 显式 cover 原样保留
+  - `null` cover 回退 banner
+  - `[[Pasted image ...]]` cover 回退 banner
+
+### 7. Wrong vs Correct
+#### Wrong
+- 假设内容 frontmatter 只要通过 schema 就一定是页面可公开使用的图片 URL
+
+#### Correct
+- 把 schema 校验和运行时公开资源校验分开处理
+- 在 `getCover()` 里对 Obsidian 残留值做 normalize / fallback
+
 ---
 
 ## Preferred Patterns
