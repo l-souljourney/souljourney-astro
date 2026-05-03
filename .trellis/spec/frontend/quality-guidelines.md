@@ -15,6 +15,7 @@
 - 改分类、标签、归档、RSS、搜索集合时，确认中英文公开集合口径一致
 - 改客户端脚本时，确认 `astro:page-load` / transition 场景下不会重复绑定
 - 改常量、配置、分类 key、SEO 口径前，先全文搜索联动点
+- 改 `.mjs` 构建配置时，保持 ESM 语法闭环；不要在 `tailwind.config.mjs` 这类文件里混入裸 `require()`
 
 ---
 
@@ -25,6 +26,7 @@
 - 在组件或页面里复制粘贴 shared util 逻辑
 - 在 page transition 场景下直接绑定事件而不做 cleanup / 去重
 - 因为“小改动”跳过 `pnpm build`
+- 在 `.mjs` 配置文件里继续写 CommonJS `require()`，然后只在本地缓存环境里试出“看起来能过”
 
 ---
 
@@ -214,6 +216,7 @@
   - `pnpm install --frozen-lockfile`
   - `pnpm build`
   - `pnpm check:publish-health`
+- ESM 配置文件（例如 `tailwind.config.mjs`）必须使用 `import`，不能依赖 CommonJS `require`；否则 GitHub Node 22 build 会在运行时直接抛 `ReferenceError: require is not defined`
 - GitHub `sync-cnb` 必须：
   - 使用 `tencentcom/git-sync`
   - `PLUGIN_TARGET_URL=https://cnb.cool/l-souljourney/souljourney-astro.git`
@@ -236,6 +239,7 @@
 ### 4. Validation & Error Matrix
 - 缺少 `CNB_TOKEN` -> GitHub `sync-cnb` fail
 - GitHub workflow 中恢复 `deploy-cos` -> 违反单写约束，视为错误设计
+- `tailwind.config.mjs` 等 ESM 配置仍含 `require()` -> GitHub `build` fail，`sync-cnb` 被跳过
 - CNB 缺少 `COS_*` 变量 -> `deploy to cos` fail
 - CNB 缺少 `TEO_ZONE_ID` -> `script/edgeone-purge.js` 警告并跳过刷新
 - 使用 `rebase` 模式且源仓库缺少 `.cnb.yml` -> 目标仓库 `.cnb.yml` 可能产生 modify/delete 冲突，最终“workflow 成功但没有任何 branch 被推送”
