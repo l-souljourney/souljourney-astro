@@ -1,14 +1,54 @@
 ---
-import PagefindSearch from "astro-pagefind/components/Search";
+import "@pagefind/default-ui/css/ui.css";
+import { join } from "node:path/posix";
+
+const searchUiOptions = JSON.stringify({ showImages: false });
+const bundlePath = join(import.meta.env.BASE_URL, "pagefind/");
 ---
 
 <section class="vh-search fixed left-0 top-0 w-screen h-screen pt-[3.75rem] px-4 pb-4 flex items-center flex-col bg-black/26 opacity-0 pointer-events-none z-50 transition-opacity duration-180">
 	<main class="p-4 py-3 w-full max-w-[888px] max-h-[88vh] rounded-2xl bg-white dark:bg-[#252525] -translate-y-4 transition-transform duration-180 overflow-hidden">
         <div class="pagefind-wrapper">
-            <PagefindSearch id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
+			<div
+				id="search"
+				class="pagefind-ui pagefind-init"
+				data-pagefind-ui
+				data-bundle-path={bundlePath}
+				data-ui-options={searchUiOptions}
+			></div>
         </div>
 	</main>
 </section>
+
+<script>
+	import { PagefindUI } from "@pagefind/default-ui";
+
+	const initPagefindUi = () => {
+		const allSelector = "[data-pagefind-ui]";
+		for (const el of document.querySelectorAll(`${allSelector}.pagefind-init`)) {
+			const elSelector = [
+				...(el.id ? [`#${el.id}`] : []),
+				...[...el.classList.values()].map((className) => `.${className}`),
+				allSelector,
+			].join("");
+			const bundlePath = el.getAttribute("data-bundle-path");
+			const opts = JSON.parse(el.getAttribute("data-ui-options") ?? "{}");
+			new PagefindUI({
+				...opts,
+				element: elSelector,
+				bundlePath,
+			});
+			el.classList.remove("pagefind-init");
+		}
+	};
+
+	document.addEventListener("astro:page-load", initPagefindUi);
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initPagefindUi);
+	} else {
+		initPagefindUi();
+	}
+</script>
 
 <script>
     type SearchWindow = Window & {

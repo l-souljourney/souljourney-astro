@@ -9,13 +9,12 @@ const {
 	pageType,
 	pageRobots,
 	activeNav,
-	Home,
 	headings
 } = Astro.props;
 const resolvedPageCover = pageCover || pagecover || cover;
 // 网站配置
 import SITE_INFO from "@/config";
-const { GoogleAds, Theme } = SITE_INFO;
+const { GoogleAds } = SITE_INFO;
 const { ad_Client, asideAD_Slot, articleAD_Slot } = GoogleAds;
 // Head 依赖
 import Head from "@/components/Head/Head.astro";

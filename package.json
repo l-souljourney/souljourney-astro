@@ -5,11 +5,18 @@
   "description": "L-忠程的个人博客，记录投资感悟、AI探索、商业思考与人生哲学",
   "author": "执笔忠程",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "astro check",
+    "test": "node --import tsx --test tests/*.mjs tests/*.ts",
+    "verify:baseline": "pnpm check && pnpm test && pnpm build && pnpm check:publish-health",
     "newpost": "node ./script/newpost.js",
     "check:publish-health": "node ./script/publish-health.js",
     "check:publish-bilingual-readiness": "MAX_PENDING_TRANSLATIONS=0 node ./script/publish-health.js",
@@ -18,14 +25,14 @@
     "ondev": "astro preferences enable devToolbar"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.12",
-    "@astrojs/rss": "^4.0.14",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
-    "astro": "^5.16.0",
+    "@pagefind/default-ui": "^1.4.0",
+    "astro": "^6.2.1",
     "astro-icon": "^1.1.5",
-    "astro-pagefind": "^1.8.5",
     "medium-zoom": "^1.1.0",
     "overlayscrollbars": "^2.11.2",
     "pagefind": "^1.4.0",
@@ -34,7 +41,7 @@
     "vh-plugin": "^1.2.2"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/check": "^0.9.9",
     "@playform/compress": "^0.1.9",
     "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.22",
@@ -51,6 +58,8 @@
     "remark-math": "^6.0.0",
     "remark-sectionize": "^2.1.0",
     "tailwindcss": "^3.4.18",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.3",
     "unist-util-visit": "^5.0.0"
   },
   "pnpm": {

@@ -5,7 +5,7 @@ main:
         TZ: Asia/Shanghai
 
       docker:
-        image: node:20-alpine
+        image: node:22-alpine
         volumes:
           - node_modules:copy-on-write
           - /root/.local/share/pnpm:copy-on-write
@@ -17,6 +17,8 @@ main:
             npm install -g pnpm@9
             pnpm config set registry https://mirrors.cloud.tencent.com/npm/
             pnpm install --frozen-lockfile
+            pnpm run check
+            pnpm run test
             pnpm run build
             echo "✅ build completed: $(du -sh dist/ | cut -f1)"
 
@@ -53,7 +55,7 @@ main:
             echo "✅ COS deploy completed in $((END_TS - START_TS))s"
 
         - name: refresh edgeone cache
-          image: node:20-alpine
+          image: node:22-alpine
           script: |
             export TEO_PURGE_TYPE="${TEO_PURGE_TYPE:-purge_all}"
 
@@ -70,7 +72,7 @@ pull_request:
         TZ: Asia/Shanghai
 
       docker:
-        image: node:20-alpine
+        image: node:22-alpine
         volumes:
           - node_modules:copy-on-write
           - /root/.local/share/pnpm:copy-on-write
@@ -82,5 +84,7 @@ pull_request:
             npm install -g pnpm@9
             pnpm config set registry https://mirrors.cloud.tencent.com/npm/
             pnpm install --frozen-lockfile
+            pnpm run check
+            pnpm run test
             pnpm run build
             echo "✅ PR build check passed"

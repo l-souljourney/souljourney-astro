@@ -55,7 +55,7 @@
 	}
 </style>
 
-<script is:inline>
+<script>
 	type ThemeWindow = Window & {
 		getInitialTheme?: () => string;
 		applyTheme?: (theme: string) => void;
@@ -112,9 +112,10 @@
 	if (!themeWin.bindThemeToggle) {
 		themeWin.bindThemeToggle = () => {
 			const toggleBtn = document.getElementById("themeToggle");
-			if (toggleBtn) {
-				toggleBtn.removeEventListener("click", themeWin.handleToggleClick!);
-				toggleBtn.addEventListener("click", themeWin.handleToggleClick!);
+			const handleToggleClick = themeWin.handleToggleClick;
+			if (toggleBtn && handleToggleClick) {
+				toggleBtn.removeEventListener("click", handleToggleClick);
+				toggleBtn.addEventListener("click", handleToggleClick);
 			}
 		};
 	}

@@ -1,12 +1,19 @@
 ---
-const { headings } = Astro.props;
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+type TocHeading = {
+	depth: number;
+	slug: string;
+	text: string;
+};
+
+const { headings = [] } = Astro.props as { headings?: TocHeading[] };
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 
 // 只获取 h3 级别的标题
-const toc = headings?.filter((heading) => heading.depth === 3) || [];
+const toc = headings.filter((heading) => heading.depth === 3);
 ---
 
 

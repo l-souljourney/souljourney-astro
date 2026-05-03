@@ -2,7 +2,7 @@ import path from "path";
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import Compress from "@playform/compress";
-import { defineConfig } from 'astro/config';
+import { defineConfig, svgoOptimizer } from 'astro/config';
 import { fileURLToPath } from 'url';
 import icon from 'astro-icon';
 import pagefindArticlesOnly from "./src/integrations/pagefindArticlesOnly.mjs";
@@ -18,8 +18,6 @@ import { validateMarkdownIntegrityInDir } from './src/utils/contentIntegrityFs'
 // Markdown 配置================
 import SITE_INFO from './src/config';
 
-import tailwind from "@astrojs/tailwind";
-
 validateMarkdownIntegrityInDir(path.resolve(__dirname, "./src/content/blog"));
 
 // https://astro.build/config
@@ -27,7 +25,7 @@ export default defineConfig({
 	site: SITE_INFO.Site,
 	build: { assets: 'vh_static' },
 	experimental: {
-		svgo: true,
+		svgOptimizer: svgoOptimizer(),
 	},
 	i18n: {
 		defaultLocale: "zh",
@@ -37,7 +35,6 @@ export default defineConfig({
 		}
 	},
 	integrations: [
-		tailwind(),
 		icon(),
 		pagefindArticlesOnly(),
 		Compress({ CSS: false, Image: false, Action: { Passed: async () => true } }),
