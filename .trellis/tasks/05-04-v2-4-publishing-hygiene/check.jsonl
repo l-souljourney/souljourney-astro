@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend verification baseline and required quality gates."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Review checklist for publishSet, bilingual routing, and public content regression."}
+{"file": ".trellis/spec/frontend/publishing-commercialization-guidelines.md", "reason": "Verify publishing hygiene changes still satisfy commercial platform governance rules."}
+{"file": ".trellis/tasks/05-04-v2-4-publishing-hygiene/prd.md", "reason": "Current version acceptance criteria to verify against."}

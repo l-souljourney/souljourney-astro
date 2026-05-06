@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend task baseline and required pre-development checklist."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Publishing, route, SEO, and regression constraints for public content."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Content schema and shared util typing rules for frontmatter expansion."}
+{"file": ".trellis/spec/frontend/publishing-commercialization-guidelines.md", "reason": "Cross-version publishing hygiene rules for the commercial bilingual content platform."}
+{"file": ".trellis/tasks/05-04-v2-4-publishing-hygiene/prd.md", "reason": "Current version scope, acceptance criteria, and verification targets."}
+{"file": "docs/plans/2026-05-04-astro-commercial-roadmap.md", "reason": "Parent roadmap explaining why v2.4.0 is first in the commercialization sequence."}

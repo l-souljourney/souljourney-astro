@@ -25,9 +25,10 @@
 2. `directory-structure.md`
 3. `component-guidelines.md`
 4. `quality-guidelines.md`
-5. 若改客户端交互：再读 `hook-guidelines.md` 与 `state-management.md`
-6. 若改 schema / util / shared types：再读 `type-safety.md`
-7. 共享思考指南：`.trellis/spec/guides/index.md`
+5. 若涉及商业化内容站演进、发布治理、i18n、SEO、承接页：再读 `publishing-commercialization-guidelines.md`
+6. 若改客户端交互：再读 `hook-guidelines.md` 与 `state-management.md`
+7. 若改 schema / util / shared types：再读 `type-safety.md`
+8. 共享思考指南：`.trellis/spec/guides/index.md`
 
 ---
 
@@ -50,6 +51,7 @@
 | `directory-structure.md` | 目录与模块边界 | 页面、布局、组件、utils、scripts 分层明确 |
 | `component-guidelines.md` | Astro 组件与样式模式 | 以 Astro props + Tailwind 为主 |
 | `hook-guidelines.md` | 交互与生命周期模式 | 无 React hooks，主要是 DOM init + Astro events |
+| `publishing-commercialization-guidelines.md` | 商业化内容平台演进规则 | 发布治理、双语体验、承接页、SEO、变现准备 |
 | `state-management.md` | 状态归属 | Build-time data + URL state + 少量 DOM/localStorage 状态 |
 | `quality-guidelines.md` | 禁止项、测试与审查口径 | 双语发布治理与回归验证是重点 |
 | `type-safety.md` | 类型与运行时校验 | TS strict + Zod content schema + util local types |
