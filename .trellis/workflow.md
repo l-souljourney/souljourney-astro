@@ -194,7 +194,6 @@ When a user request matches one of these intents, load the corresponding skill (
 | "我记不住流程，先随便改" | Trellis 的价值就在于 task、PRD、验证和 spec 沉淀；缺一步，下一轮上下文就会漂 |
 | "既然是 Codex，就默认派 sub-agent" | 本仓库的 Codex 默认是主会话执行；只有用户明确要求并行/分工时才派 sub-agent |
 | "主会话执行就不用写 task/prd" | 主会话仍然需要 Trellis task 和 `prd.md`，否则需求和验收标准不会持久化 |
-| "OpenSpec 里以前有流程，这次继续建 change" | OpenSpec 在本仓库只保留历史参考；正式新任务一律进入 Trellis |
 
 [/Codex]
 

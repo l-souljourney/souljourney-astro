@@ -6,7 +6,7 @@
 
 当前仓库口径已进入 `v2.3.4` 文档公开治理阶段：
 
-- 工作流：Trellis-first，OpenSpec 只保留历史归档
+- 工作流：Trellis-first
 - 内容治理：公开集合仅包含完整 `zh/en` 镜像对
 - 发布门禁：构建后必须通过 `publish-health`
 - 文档治理：公开入口与历史归档正在按开源仓库标准收敛
@@ -76,7 +76,6 @@ pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 - 当前生产发布链路：`docs/deploy/github-main-cnb-cos-release-chain.md`
 - 路线图：`docs/plans/2026-03-10-v2.x-roadmap.md`
 - 事故复盘：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
-- OpenSpec 历史归档：`openspec/changes/archive/`
 
 ## 许可证
 

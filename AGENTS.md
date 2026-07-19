@@ -51,7 +51,6 @@ pnpm newpost      # 创建新博客文章
 ### 4.1 Trellis 默认工作流（项目特有，强制）
 
 - 正式开发任务默认走 Trellis；允许自然语言入口，如：`用 Trellis 开始 vX.Y.Z`、`继续当前 Trellis 任务`、`用 Trellis 检查并收尾`。
-- OpenSpec 自本规则生效后仅作为历史参考与归档材料；禁止再为新任务创建 OpenSpec change。存量 OpenSpec 仅允许做回读、收口、归档。
 - Codex 在本仓库默认使用**主会话执行** Trellis 流程；仅当用户明确要求`并行`、`子代理`、`分工`、`delegate`时，才允许派生 sub-agent。
 - 正式 Trellis 任务的最小流程：建/续 task → 写/改 `prd.md` → Change → Verify → 必要时更新 `.trellis/spec/` → 按 Trellis 任务记录收尾；GitHub 事项按需附加，不再是完成前置条件。
 - 在无自动 hook 继承的 shell 中执行 `.trellis/scripts/task.py` 时，显式传入稳定 `TRELLIS_CONTEXT_ID`，避免 current task 丢失。
