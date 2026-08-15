@@ -1,6 +1,6 @@
 # L-Souljourney Blog
 
-基于 Astro 5.x + TypeScript 构建的中英双语静态博客。
+基于 Astro 6.x + TypeScript 构建的中英双语静态博客。
 
 ## 当前状态
 
@@ -14,7 +14,7 @@
 
 ## 项目概览
 
-- 框架：Astro 5.x
+- 框架：Astro 6.x
 - 语言：TypeScript
 - 样式：Tailwind CSS + 自定义样式
 - 内容：Markdown/MDX（`src/content/blog/`）
