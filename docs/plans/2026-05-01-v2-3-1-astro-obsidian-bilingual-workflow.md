@@ -161,15 +161,6 @@ Obsidian 仓库后续版本应负责以下事项：
 
 ## 8. 下一步协同方式
 
-推荐使用 **两个终端 / 两个 Trellis 会话**：
+后续跨仓需求由统一规划与 Issue 明确范围、契约和各仓验收，再使用 Solo 实施；不再维护各仓 current task 或机械 PRD/JSONL。
 
-- 终端 A：`souljourney-blog`
-  - 负责 Astro 侧文档治理、契约收敛、必要程序调整
-- 终端 B：`obsidian-lengine-plugin`
-  - 负责插件侧双语同步发布编排、UI、命令、联调
-
-原因：
-
-- 两个仓库各自维护独立 `current task`
-- 各自验证命令、版本记录和 spec 更新边界更清楚
-- 避免跨仓库混写 PRD / research / 验证结果
+仓库尚未合并时，仍分别验证 Astro 消费端与插件发布端；字段变化同时核对 wxengine 生成端。未来仓库合并需要独立规划，不由本文授权。

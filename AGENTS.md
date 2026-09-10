@@ -1,151 +1,48 @@
 # AGENTS.md
 
-本文件是本仓库唯一强约束执行规则。目标：短、硬、可执行、可审计。
-版本：`souljourney-agent-init v1.0`
+本文件保存 Souljourney Blog 的项目事实与硬约束。默认中文沟通，在仓库根目录工作。
 
-## 1. 项目基础
+## 开发方式
 
-- 语言：默认中文（沟通、计划、提交说明、文档）。
-- 运行环境：macOS + `node` + `pnpm` + `git` + `gh`。
-- 工作目录：仓库根目录。
-- 真实优先：所有结论必须基于文件或命令输出，禁止猜测式结论。
+- 默认使用用户级 `solo-dev`（Solo）：读取规则和直接相关代码，明确范围与风险，最小完整实现，按风险验证并报告证据。
+- 不默认创建 task、PRD、JSONL 或 session journal。Git 保存代码事实；Issue 保存长期需求、blocker 和跨仓协调；项目文档保存长期决策。
+- 后续需求由统一项目规划与 Issue 确定；旧版本路线图不构成实施授权。仓库合并本身不在日常开发的隐含范围内。
+- `.trellis/` 仅为冷历史，不是当前规范、任务或执行入口。不得自动读取其 workflow/spec/task、运行生命周期脚本或恢复 hooks。
+- 主会话执行；只有用户明确要求并行、子代理或分工时才派生代理。
 
-## 2. 技术栈与关键入口（项目特有）
+## 工程事实与入口
 
-- 框架：Astro 6.x + TypeScript
-- 样式：Tailwind CSS + 部分自定义 CSS
-- 内容：Markdown/MDX 双语博客 (`src/content/blog/`)
-- 配置文件：`astro.config.mjs`、`tailwind.config.mjs`、`src/config.ts`
+- Astro 6.x + TypeScript + Tailwind CSS，Markdown/MDX 中英双语内容站，不是 React SPA。
+- Node >=22.12.0、pnpm >=9；依赖版本以 `package.json` 和锁文件为准。
+- 内容：`src/content/blog/`；schema：`src/content.config.ts`；公开集合：`src/utils/publishSet.ts`。
+- 页面与布局：`src/pages/`、`src/layouts/`；交互：`src/scripts/`；国际化：`src/i18n/`。
+- 配置：`astro.config.mjs`、`tailwind.config.mjs`、`src/config.ts`。`.mjs` 保持 ESM，不混用裸 `require()`。
+- 改 Astro/客户端交互时按需读 `docs/engineering/astro.md`；改内容、路由、SEO 或发布时读 `docs/engineering/publishing.md` 与其中的现行契约入口。
 
-常用命令：
+## 不可回退的合同
 
-```bash
-pnpm dev          # 启动开发服务器
-pnpm build        # 生产构建
-pnpm preview      # 预览构建
-pnpm newpost      # 创建新博客文章
-```
+- 公开输出复用 `publishSet`，不在页面另写公开条件。完整 zh/en 镜像对才能进入公开集合；单语稿允许入库但不公开。
+- 保持 `lang::source_id::slug` 内容 ID、镜像配对及冲突检查；不得恢复双语内容相互覆盖。
+- 中英文 canonical 指向自身，hreflang 只指向真实镜像；文章语言切换不得错误回退首页。
+- 新增发布字段必须核对 Obsidian payload、wxengine frontmatter 生成与 Astro 消费，不能假定上游透传。
+- 保留构建后的 publish-health 门禁。健康检查通过不等于外部双语发布全部就绪。
+- GitHub 是代码源；生产链路改动按现行部署文档核对，禁止引入双重部署写入或恢复 COS 同步删除。
 
-## 3. 执行协议（通用，强制）
+## 验证
 
-所有任务按以下顺序执行：
+- 常用命令：`pnpm dev`、`pnpm check`、`pnpm test`、`pnpm build`、`pnpm preview`。
+- 普通局部改动执行能覆盖风险的最小可靠检查；UI 改动在实际页面验证交互和外观。
+- 内容/schema/公开集合/路由/SEO 改动执行相关合同测试、`pnpm build`、`pnpm check:publish-health`；涉及外部双语就绪时再执行 `pnpm check:publish-bilingual-readiness`。
+- 发布或大范围集成执行 `pnpm verify:baseline`；部署配置变更还需校验 YAML 与镜像配置一致性，远端运行验证须先获授权。
+- 不关闭门禁、降低阈值或修改测试掩盖错误。验证失败先定位原因；报告必须区分已验证结果与未验证范围。
 
-1. Read：读取约束、相关代码和上下文证据
-2. Plan：明确目标、范围、风险、验收标准
-3. Change：最小改动，优先修复根因，避免无关重构
-4. Verify：执行最小相关验证并记录结果
-5. Report：按"改动/验证/风险与后续"输出
+## Git、外部操作与文件保护
 
-禁止在未验证的情况下声称"已修复""已完成""已通过"。
-- Report 最小格式：`What changed / Evidence(命令+关键输出) / Risk / Follow-ups`
-- Verify 失败：必须回到 Plan 先定位根因，不得绕过验证提交。
-- 默认不做无关重构/格式化/大面积重排；若必须跨模块改动，先列受影响文件与回滚策略。
-
-## 4. Skills 约束（通用，强制）
-
-- 用户点名 skill 或任务类型匹配 skill 时，必须调用。
-- 顺序：先流程型（如 brainstorming / debugging / TDD），再实现型。
-- 禁止以"任务简单"为由跳过 skill。
-- 若 skill 不可用，必须说明原因并执行等价降级流程，不得停在解释层。
-
-### 4.1 Trellis 默认工作流（项目特有，强制）
-
-- 正式开发任务默认走 Trellis；允许自然语言入口，如：`用 Trellis 开始 vX.Y.Z`、`继续当前 Trellis 任务`、`用 Trellis 检查并收尾`。
-- Codex 在本仓库默认使用**主会话执行** Trellis 流程；仅当用户明确要求`并行`、`子代理`、`分工`、`delegate`时，才允许派生 sub-agent。
-- 正式 Trellis 任务的最小流程：建/续 task → 写/改 `prd.md` → Change → Verify → 必要时更新 `.trellis/spec/` → 按 Trellis 任务记录收尾；GitHub 事项按需附加，不再是完成前置条件。
-- 在无自动 hook 继承的 shell 中执行 `.trellis/scripts/task.py` 时，显式传入稳定 `TRELLIS_CONTEXT_ID`，避免 current task 丢失。
-
-## 5. Git 与 GitHub 协议（Trellis-first，GitHub 可选）
-
-### 5.1 远程与分支
-
-- GitHub 远程名：`github`
-- `main` 上游必须是：`github/main`
-- 默认不直接提交到 `main`；正式版本和多步改动优先使用 `feature/<short>` 分支
-- 是否创建 GitHub Issue / PR / Milestone / Project 由用户决定；它们不是 Trellis 任务完成的强制前置条件
-
-### 5.2 gh 操作要求
-
-- 仅当本轮确实要读写 GitHub 实体时，才进入 `gh` 流程
-- GitHub 实体变更（Issue/PR/Milestone/Project/Release）必须用 `gh`
-- 全程非交互；命令显式带 `--repo l-souljourney/souljourney-astro`
-- 建议：`export GH_PAGER=cat`
-- 写操作必须遵循：Read -> Write -> Verify（写后回读）
-- 若 `gh` 因权限/能力不足无法完成 Project/Milestone 字段操作：必须在 Report 附失败证据与缺失 scope，并允许人工仅做字段补齐（禁止代替内容改写、合并或发布）。
-
-### 5.3 Trellis / GitHub 最小记录闭环
-
-- Trellis task（强制）：
-  - `title` 或 `id` 可对应版本，如 `<v2.2.2>` / `v2-2-2-*`
-  - `prd.md` 必须记录目标、范围、验收和验证口径
-  - 关键 research / 约束 / 风险必须回写到 `.trellis/tasks/<task>/`，不能只留在对话里
-- Issue（可选）：
-  - 若创建，标题包含 `<version>`
-  - Milestone / label / project 仅在当前版本确实采用 GitHub 跟踪时再维护
-- PR（可选）：
-  - 标题包含 `<version>`
-  - 若存在对应 Issue，可写 `Fixes #<issue>`；若无，则直接写版本范围摘要
-  - 包含 verification 命令和结果摘要
-
-### 5.4 Checkpoints（必须执行）
-
-- TaskReady：Trellis task / `prd.md` / 验证记录完整
-- PRReady：仅当本轮使用 PR 时，要求 version / verification 完整
-- BranchCleanupReady：仅当本轮走分支合并路径时，执行分支收尾
-- ReleaseReady：仅在版本聚合完整时允许 release/tag
-
-分支收尾命令：
-
-```bash
-git checkout main
-git pull github main
-git branch -d feature/<short>
-git branch --list
-git status --short --branch
-```
-
-## 6. 风险动作（需用户确认）
-
-以下动作执行前，必须先给"对象清单 + 预期效果"，并等待确认：
-
-- 批量操作（>5 个对象）
-- 修改 milestone/project 字段
-- 创建 release / 打 tag
-- 任何 `gh api` 的 POST/PATCH/DELETE
-
-## 7. 文档与文件保护
-
-- 根级持续更新只写 `update.md`。
-- 技术文档集中写入 `docs/`。
-- 禁止将任何敏感信息提交到仓库（如 `.env`、密钥、Token、API Key、凭证示例）；发现后必须脱敏或移除再提交。
-- 发现疑似敏感信息已进入改动或提交历史：立即停止后续操作，禁止推送/合并；在 Report 提供受影响文件与提交哈希，待人工确认处置后再继续。
-
-## 8. 参考文档边界
-
-- `docs/` 目录下的技术审计报告是参考文档，不是强制执行文件。
-- 强约束以本文件为准。
-
----
-`souljourney-agent-init v1.0`
-
-<!-- TRELLIS:START -->
-# Trellis Instructions
-
-These instructions are for AI assistants working in this project.
-
-This project is managed by Trellis. The working knowledge you need lives under `.trellis/`:
-
-- `.trellis/workflow.md` — development phases, when to create tasks, skill routing
-- `.trellis/spec/` — package- and layer-scoped coding guidelines (read before writing code in a given layer)
-- `.trellis/workspace/` — per-developer journals and session traces
-- `.trellis/tasks/` — active and archived tasks (PRDs, research, jsonl context)
-
-If a Trellis command is available on your platform (e.g. `/trellis:finish-work`, `/trellis:continue`), prefer it over manual steps. Not every platform exposes every command.
-
-If you're using Codex or another agent-capable tool, additional project-scoped helpers may live in:
-- `.agents/skills/` — reusable Trellis skills
-- `.codex/agents/` — optional custom subagents
-
-Managed by Trellis. Edits outside this block are preserved; edits inside may be overwritten by a future `trellis update`.
-
-<!-- TRELLIS:END -->
+- GitHub remote 为 `github`，`main` 跟踪 `github/main`；多步改动使用 `feature/<short>`，默认不直接提交 main。
+- 保留未知工作区与 staged 修改，不通过 reset、stash、强制 checkout 隐藏它们。仅精确暂存当前拥有的改动，禁止 `git add .`。
+- 本地修改不自动授权 commit、push、deploy、生产数据写入、破坏性操作、release/tag 或正式外部写回。同一明确对象与范围的授权不重复询问，范围或影响变化时重新确认。
+- 批量操作超过 5 个对象、修改 milestone/project、release/tag、任何 `gh api` POST/PATCH/DELETE，先给对象清单与预期效果并取得确认。
+- GitHub 实体读写使用非交互 `gh`，显式 `--repo l-souljourney/souljourney-astro`；写后回读。其他仓库操作需独立明确范围。
+- 不提交凭证、密钥、Token 或私有运维信息。发现疑似敏感信息进入改动或历史时停止推送/合并并报告受影响路径与提交。
+- 根级持续记录只写 `update.md`；技术文档放 `docs/`。公开文档保留契约与职责边界，不公开私有平台地址、凭证配置或内部运维证据。
+- 交付说明包含改动、验证证据、风险与后续；不得未经验证宣称完成。

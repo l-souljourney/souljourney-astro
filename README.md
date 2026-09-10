@@ -4,9 +4,9 @@
 
 ## 当前状态
 
-当前仓库口径已进入 `v2.3.4` 文档公开治理阶段：
+本仓库使用 Solo 开发方式；后续需求由统一项目规划与 Issue 确定，旧版本路线图仅供参考。
 
-- 工作流：Trellis-first
+- 工作流：用户级 Solo + 项目工程规则 + Git/Issue 持久记录
 - 内容治理：公开集合仅包含完整 `zh/en` 镜像对
 - 发布门禁：构建后必须通过 `publish-health`
 - 文档治理：公开入口与历史归档正在按开源仓库标准收敛
@@ -20,9 +20,9 @@
 - 内容：Markdown/MDX（`src/content/blog/`）
 - 部署：GitHub `main` push 后由 Cloudflare Pages 自动拉取一版，同时 GitHub Actions 同步到 CNB mirror，由 CNB 在腾讯云侧构建并发布到 COS / EdgeOne
 
-## `v2.3.4` 当前重点
+## 维护重点
 
-- 统一 `README`、`docs`、`update`、roadmap 与 Trellis 记录的版本口径
+- 保持代码事实、公开文档与已确认 Issue 的范围一致，不沿用已结束的旧 task
 - 收缩公开文档深度，保留架构与协作语义，移除不必要的运维细节
 - 对历史材料做公开级别治理：
   - 活跃公开文档只保留当前有效入口
@@ -65,7 +65,7 @@ pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 - GitHub `main` 更新后，会触发站点构建与公开发布流程
 - 公开协作层面只需了解：
   - GitHub 是唯一代码源
-  - 站点构建前会执行发布健康检查
+  - 站点构建后会执行发布健康检查
   - 国内公开主站与 GitHub 集成部署属于不同发布面
 - 更具体的链路说明见文档索引中的“当前生产发布链路”
 
@@ -74,7 +74,7 @@ pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 - 版本变更记录：`update.md`
 - 当前文档入口：`docs/README.md`
 - 当前生产发布链路：`docs/deploy/github-main-cnb-cos-release-chain.md`
-- 路线图：`docs/plans/2026-03-10-v2.x-roadmap.md`
+- 开发与发布规则：`docs/engineering/astro.md`、`docs/engineering/publishing.md`
 - 事故复盘：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
 
 ## 许可证
