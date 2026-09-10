@@ -3,7 +3,7 @@
   "name": "v2-4-publishing-hygiene",
   "title": "v2.4.0 publishing hygiene",
   "description": "",
-  "status": "in_progress",
+  "status": "obsolete",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
-  "meta": {}
+  "notes": "2026-09-10 用户决定结束陈旧任务，由后续跨仓统一项目规划与 Issue 重新确定需求；不代表原验收项已实现。",
+  "meta": {"retiredAt": "2026-09-10", "resolution": "superseded-by-unified-planning"}
 }

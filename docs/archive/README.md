@@ -15,4 +15,4 @@
 
 - 归档不代表删除价值，只代表不再作为当前迭代的主参考
 - 需要回看旧阶段设计时，优先从这里查
-- 当前开发与执行以 `docs/README.md` 和 Trellis task 为准
+- 当前开发以 `AGENTS.md`、`docs/README.md` 的现行工程合同和已确认 Issue 为准；历史 task 不再作为执行入口。

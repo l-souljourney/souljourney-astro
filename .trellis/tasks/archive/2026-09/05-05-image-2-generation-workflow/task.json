@@ -3,7 +3,7 @@
   "name": "image-2-generation-workflow",
   "title": "image-2 generation workflow doc",
   "description": "",
-  "status": "planning",
+  "status": "obsolete",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
-  "meta": {}
+  "notes": "2026-09-10 用户决定结束陈旧任务，由后续跨仓统一项目规划与 Issue 重新确定需求；未形成 PRD，不代表图片能力已实现。",
+  "meta": {"retiredAt": "2026-09-10", "resolution": "superseded-by-unified-planning"}
 }
