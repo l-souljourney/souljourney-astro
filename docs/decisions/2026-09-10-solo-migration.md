@@ -21,11 +21,11 @@
 
 ## 恢复与范围
 
-迁移前 HEAD：`0897fc930382173c0b5935dfb10bc82eaefe7d5f`。本地恢复 tag：`pre-vibe-coding-3.0`，未推送。工作分支：`feature/retire-trellis`。
+迁移前 HEAD：`0897fc930382173c0b5935dfb10bc82eaefe7d5f`。恢复 tag `pre-vibe-coding-3.0` 已推送。治理 PR [#41](https://github.com/l-souljourney/souljourney-astro/pull/41) 已 squash 合并，主线提交为 `b8385602c322bfd2e1bb3229d023f2dccffaa3bb`；本地与远端治理分支均已删除。
 
 Git tag 只覆盖受 Git 跟踪的内容；未跟踪的客户端配置在修改前另存仓库外本地备份。回退需同时考虑受控文件和本地客户端注册，先保护后续修改，不直接 reset 工作区。
 
-不修改全局 OMP 模型映射、安全扩展或系统 Trellis CLI。全局 runtime 消费者清理与卸载由总控 #13 决定。本次没有 push、deploy、release、远端 Issue 写回或代码提交授权。
+未修改全局 OMP 模型映射、安全扩展或系统 Trellis CLI；全局 runtime 消费者清理与卸载由 [l-souljourney/souljourney-code#13](https://github.com/l-souljourney/souljourney-code/issues/13) 管理。本仓迁移已完成提交、推送、PR 合并和 #40 证据回写；未创建 release，仓库合并仍不在本次范围。
 
 ## 验收边界
 
@@ -39,4 +39,4 @@ Git tag 只覆盖受 Git 跟踪的内容；未跟踪的客户端配置在修改�
 - 三个客户端配置均可解析且无项目 hook 注册；53 个 Trellis 入口退出，两个 obsolete 记录归档，活动任务与 session 指针为空。
 - 当前工程文档的本地链接有效；产品代码、测试、发布流水线、依赖声明与锁文件相对恢复点未改动。
 - 构建有浏览器数据过期提示，不阻断本次门禁；未为治理迁移升级依赖。
-- 新客户端会话与真实需求 Pilot 未验证；本地配置退役不等于全局 CLI 已卸载。未提交、未推送，也未关闭远端治理 Issue。
+- 新客户端会话与真实需求 Pilot 尚待验证；本地配置退役不等于全局 CLI 已卸载。PR 与 main 的 GitHub 构建门均通过，main 的 CNB 镜像同步及 Cloudflare Pages 检查成功；未直接读取 CNB 下游 COS/EdgeOne 部署日志。#40 保持开放用于 Pilot。
