@@ -11,13 +11,13 @@
 | `05-04-v2-4-publishing-hygiene` | obsolete，由统一规划取代 | 部分文档已落地，但发布字段与完整原验收未完成；不标 completed。 |
 | `05-05-image-2-generation-workflow` | obsolete，由统一规划取代 | 没有 PRD，仅有任务元数据与模板上下文；不代表图片能力已实现。 |
 
-两份记录移入 `.trellis/tasks/archive/2026-09/`，保留原始工件与结束理由，移除活动指针。obsolete 是退役历史标记，不新增 Trellis 状态机能力；不调用会自动标 completed 或自动提交的旧归档脚本。
+两份记录曾移入 `.trellis/tasks/archive/2026-09/`；2026-09-11 进一步物理删除冷历史目录，原始工件和 obsolete 理由保留在 Git 历史。obsolete 不代表功能 completed，不新增 Trellis 状态机，也不调用旧归档脚本。
 
 ## 当前执行合同
 
 默认用户级 `solo-dev` + 薄 `AGENTS.md` + 按需工程规则。Git 记录实现事实，Issue 保存长期需求与跨仓 blocker，项目文档保存稳定合同。普通工作不创建 task/PRD/JSONL/journal，不自动注入历史 spec。
 
-项目级 Trellis skills、agents、commands 与 hook 注册退出；保留无关客户端配置和 CNB 技能。`.trellis` 仅为冷历史，不是日常执行入口。原商业化 roadmap 仅作历史方向参考，不再宣布下一版本自动开工。
+项目级 Trellis skills、agents、commands 与 hook 注册退出；保留无关客户端配置和 CNB 技能。`.trellis` 已物理删除。原商业化 roadmap 仅作历史方向参考，不再宣布下一版本自动开工。
 
 ## 恢复与范围
 
@@ -40,3 +40,4 @@ Git tag 只覆盖受 Git 跟踪的内容；未跟踪的客户端配置在修改�
 - 当前工程文档的本地链接有效；产品代码、测试、发布流水线、依赖声明与锁文件相对恢复点未改动。
 - 构建有浏览器数据过期提示，不阻断本次门禁；未为治理迁移升级依赖。
 - 新客户端会话与真实需求 Pilot 尚待验证；本地配置退役不等于全局 CLI 已卸载。PR 与 main 的 GitHub 构建门均通过，main 的 CNB 镜像同步及 Cloudflare Pages 检查成功；未直接读取 CNB 下游 COS/EdgeOne 部署日志。#40 保持开放用于 Pilot。
+- 后续物理清理只删除 `.trellis` 冷历史、升级备份和同步上述边界；删除前工作区干净，无未跟踪 task 材料。产品代码、发布合同与流水线未改，不重复执行初次切换已记录的业务构建门禁；全局卸载和真实 Pilot 仍独立待确认。
