@@ -6,6 +6,7 @@
 
 - [Astro 开发规则](./engineering/astro.md)
 - [内容与发布规则](./engineering/publishing.md)
+- [EdgeOne Makers 部署规则](./engineering/makers.md)
 - [Trellis 退役决定与边界](./decisions/2026-09-10-solo-migration.md)
 - [v2.3.1 Astro / Obsidian 双语发布工作流收敛](./plans/2026-05-01-v2-3-1-astro-obsidian-bilingual-workflow.md)
 - [当前生产发布链路：GitHub main -> CNB -> COS](./deploy/github-main-cnb-cos-release-chain.md)

@@ -17,7 +17,7 @@
 - 内容：`src/content/blog/`；schema：`src/content.config.ts`；公开集合：`src/utils/publishSet.ts`。
 - 页面与布局：`src/pages/`、`src/layouts/`；交互：`src/scripts/`；国际化：`src/i18n/`。
 - 配置：`astro.config.mjs`、`tailwind.config.mjs`、`src/config.ts`。`.mjs` 保持 ESM，不混用裸 `require()`。
-- 改 Astro/客户端交互时按需读 `docs/engineering/astro.md`；改内容、路由、SEO 或发布时读 `docs/engineering/publishing.md` 与其中的现行契约入口。
+- 改 Astro/客户端交互时按需读 `docs/engineering/astro.md`；改内容、路由、SEO 或发布时读 `docs/engineering/publishing.md` 与其中的现行契约入口；改部署链路、EdgeOne Makers 项目配置或排查构建失败时读 `docs/engineering/makers.md`。
 
 ## 不可回退的合同
 
