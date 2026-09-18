@@ -30,15 +30,18 @@ export const ui = {
         'pagination.next': '下一页',
         'pagination.first': '第一页',
         'pagination.page': '页',
-        'category.empty.title': '当前分类暂无英文文章',
-        'category.empty.desc': '当前分类下暂无英文文章：',
-        'category.empty.back': '查看英文归档',
+        'category.empty.title': '该主题下暂无文章',
+        'category.empty.desc': '这个主题还在积累中：',
+        'category.empty.back': '查看全部文章',
 
         // Site Config
         'site.title': 'L-忠程丨生死看淡不服就淦',
         'site.subtitle': '生死看淡 不服就淦',
         'site.description': '执笔忠程的个人博客，记录投资感悟、AI探索、商业思考与人生哲学。从浙商精神到人生感悟，从技术梦想到中年思考，分享阅读心得与音乐情怀，探讨如何在变化的世界中活下来、活下去。',
         'site.author': '执笔忠程',
+
+        // 首页封面
+        'home.startReading': '开始阅读',
 
         // Header
         'header.search': '搜索',
@@ -112,6 +115,9 @@ export const ui = {
         'site.subtitle': 'Life and Death are trivial, Just do it.',
         'site.description': 'Personal blog of L-SoulJourney, recording investment insights, AI exploration, business thinking and life philosophy.',
         'site.author': 'L-SoulJourney',
+
+        // 首页封面
+        'home.startReading': 'Start reading',
 
         // Header
         'header.search': 'Search',

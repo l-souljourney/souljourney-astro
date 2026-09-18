@@ -41,7 +41,7 @@ const info = {
 <Layout title={info.title} description={info.description} activeNav={categories} pageRobots={pageRobots}>
 	{
 		isEmptyCategory ? (
-			<section class="flex-1 p-8 md:p-8 max-md:p-0 max-md:bg-transparent rounded-2xl bg-white dark:bg-[#222]/60 overflow-hidden vh-animation vh-animation-init">
+			<section class="flex-1 p-8 max-md:p-[1.18rem] rounded-2xl bg-white dark:bg-[#222]/60 overflow-hidden vh-animation vh-animation-init">
 				<div class="rounded-xl border border-dashed border-border p-6 bg-muted/20 dark:bg-muted/10">
 					<h1 class="text-lg font-semibold text-foreground">{t("category.empty.title")}</h1>
 					<p class="mt-2 text-sm text-muted-foreground">

@@ -3,6 +3,8 @@ import { getCategoriesList } from "@/utils/getArchive";
 import { getCollection } from "astro:content";
 import { getCategoryDisplayName, getAllCategoryPaths } from "@/utils/categoryMapping";
 import { getPublishedEntriesByLang } from "@/utils/publishSet";
+// i18n
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 export async function getStaticPaths(): Promise<any> {
 	const allPosts = await getCollection("blog");
 	const zhPosts = getPublishedEntriesByLang(allPosts, "zh");
@@ -20,7 +22,12 @@ export async function getStaticPaths(): Promise<any> {
 }
 // 获取分类列表
 const { categories } = Astro.params;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const articleList = await getCategoriesList(categories, 'zh');
+// 空分类不索引，并给出与英文侧一致的提示，而不是留一片空白
+const isEmptyCategory = articleList.length === 0;
+const pageRobots = isEmptyCategory ? "noindex, follow" : undefined;
 // 页面 Info
 import SITE_CONFIG from "@/config";
 const { Description } = SITE_CONFIG;
@@ -32,6 +39,22 @@ import Archive from "@/components/Archive/Archive.astro";
 const categoryDisplayName = getCategoryDisplayName(categories);
 ---
 
-<Layout title={`分类 ${categoryDisplayName} 下的文章`} description={Description} activeNav={categories}>
-	<Archive articleList={articleList} />
+<Layout title={`分类 ${categoryDisplayName} 下的文章`} description={Description} activeNav={categories} pageRobots={pageRobots}>
+	{
+		isEmptyCategory ? (
+			<section class="flex-1 p-8 max-md:p-[1.18rem] rounded-2xl bg-white dark:bg-[#222]/60 overflow-hidden vh-animation vh-animation-init">
+				<div class="rounded-xl border border-dashed border-border p-6 bg-muted/20 dark:bg-muted/10">
+					<h1 class="text-lg font-semibold text-foreground">{t("category.empty.title")}</h1>
+					<p class="mt-2 text-sm text-muted-foreground">
+						{t("category.empty.desc")} <span class="font-medium">{categoryDisplayName}</span>
+					</p>
+					<a href="/blog/archives" class="inline-flex mt-4 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+						{t("category.empty.back")}
+					</a>
+				</div>
+			</section>
+		) : (
+			<Archive articleList={articleList} />
+		)
+	}
 </Layout>
