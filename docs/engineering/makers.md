@@ -89,6 +89,12 @@
 
 因此：**旧 URL 的 301 走 `redirects`，有可靠实现路径。** `headers` / `caches` 在验证前不得作为方案前提。
 
+### 部署后的边缘传播窗口
+
+部署状态变为 `Success` 之后，边缘**不会立刻**切到新版本。实测：`Success` 后约 9 秒仍返回上一版（含旧重定向规则与旧 release 身份），约 30 秒后全部切换。
+
+> 结论：**部署完成后不要立刻验证**，否则会把上一版的结果当成新版的结论。留出至少 30 秒，或用 `/.well-known/sj-release.json` 的 `commit` 先确认线上确实是目标版本，再做功能验证。这已成为发布身份的一个实际用途。
+
 > 已知缓存现状（2026-09-18 实测）：`/assets/images/**` 为 `max-age=31536000,immutable`；但带内容 hash 的 `/vh_static/*` 与 `pagefind/*` 是 `max-age=0,must-revalidate`，每次访问都需重新验证。若要改善需先确认 `caches` 生效范围，并审计哪些路径确实带 hash。
 
 ## 变更纪律
