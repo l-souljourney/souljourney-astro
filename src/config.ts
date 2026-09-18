@@ -43,12 +43,12 @@ export default {
   // Theme: { ... } removed
   // 导航栏 - 5个分类 + 昔日 + 关于
   Navs: [
-    { text: 'nav.investment', link: '/categories/investment', icon: 'Nav_investment', id: 'investment' },
-    { text: 'nav.ai_era', link: '/categories/ai-era', icon: 'Nav_ai', id: 'ai-era' },
-    { text: 'nav.business', link: '/categories/zhejiang-business', icon: 'Nav_business', id: 'zhejiang-business' },
-    { text: 'nav.philosophy', link: '/categories/philosophy', icon: 'Nav_philosophy', id: 'philosophy' },
-    { text: 'nav.life', link: '/categories/life', icon: 'Nav_life', id: 'life' },
-    { text: 'nav.archives', link: '/archives', icon: 'Nav_archives', id: 'archives' },
+    { text: 'nav.investment', link: '/blog/categories/investment', icon: 'Nav_investment', id: 'investment' },
+    { text: 'nav.ai_era', link: '/blog/categories/ai-era', icon: 'Nav_ai', id: 'ai-era' },
+    { text: 'nav.business', link: '/blog/categories/zhejiang-business', icon: 'Nav_business', id: 'zhejiang-business' },
+    { text: 'nav.philosophy', link: '/blog/categories/philosophy', icon: 'Nav_philosophy', id: 'philosophy' },
+    { text: 'nav.life', link: '/blog/categories/life', icon: 'Nav_life', id: 'life' },
+    { text: 'nav.archives', link: '/blog/archives', icon: 'Nav_archives', id: 'archives' },
     { text: 'nav.about', link: '/about', icon: 'Nav_about', id: 'about' },
   ] as { text: UIKeys; link: string; icon: string; id: string; target?: string }[],
   // 侧边栏个人网站

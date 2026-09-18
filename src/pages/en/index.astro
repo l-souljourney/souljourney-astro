@@ -1,0 +1,26 @@
+---
+// i18n
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// 页面 Info
+import SITE_CONFIG from "@/config";
+const { Description } = SITE_CONFIG;
+// 公共 Layout
+import Layout from "@/layouts/Layout/Layout.astro";
+---
+
+<Layout description={Description} hideAside>
+	<section class="relative w-full h-max pb-[6.88rem]">
+		<section class="flex flex-col items-start gap-[1.18rem] py-[3.88rem]">
+			<h1 class="text-3xl md:text-[2.6rem] font-bold leading-tight text-foreground">{t('site.title')}</h1>
+			<p class="text-lg text-primary">{t('site.subtitle')}</p>
+			<p class="max-w-[42rem] text-base leading-relaxed text-muted-foreground">{t('site.description')}</p>
+			<section class="flex flex-wrap items-center gap-[0.88rem] pt-[0.68rem]">
+				<a href="/en/blog" class="inline-flex items-center h-[2.38rem] px-[1.18rem] rounded-2xl bg-primary text-primary-foreground text-[0.98rem] font-semibold transition-colors hover:bg-primary/88">{t('nav.posts')}</a>
+				<a href="/en/about" class="inline-flex items-center h-[2.38rem] px-[1.18rem] rounded-2xl border border-border text-foreground text-[0.98rem] font-semibold transition-colors hover:bg-accent hover:text-accent-foreground">{t('nav.about')}</a>
+			</section>
+		</section>
+	</section>
+</Layout>

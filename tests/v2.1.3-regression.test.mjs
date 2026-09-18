@@ -4,9 +4,9 @@ import { readFileSync } from 'node:fs';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 
-const zhArticlePage = read('src/pages/article/[...article].astro');
-const enArticlePage = read('src/pages/en/article/[...article].astro');
-const enCategoryPage = read('src/pages/en/categories/[...categories].astro');
+const zhArticlePage = read('src/pages/blog/[...slug].astro');
+const enArticlePage = read('src/pages/en/blog/[...slug].astro');
+const enCategoryPage = read('src/pages/en/blog/categories/[...categories].astro');
 const headComponent = read('src/components/Head/Head.astro');
 const tocComponent = read('src/components/TOC/TOC.astro');
 const mobileSidebar = read('src/components/MobileSidebar/MobileSidebar.astro');

@@ -3,29 +3,24 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parse } from 'devalue';
 
+// /blog 下的聚合页段名。它们与正文页同处 blog/ 之下，必须显式排除，
+// 否则 articleRoutes 会把分类/标签/归档页算进去，正文页丢失时门禁不会报警。
+const BLOG_AGGREGATE_SEGMENTS = new Set(['categories', 'tag', 'archives']);
+
 const countArticleRoutes = (distDir) => {
-	const roots = [path.join(distDir, 'article'), path.join(distDir, 'en', 'article')];
+	const roots = [path.join(distDir, 'blog'), path.join(distDir, 'en', 'blog')];
 	let count = 0;
 
 	for (const root of roots) {
 		if (!fs.existsSync(root)) {
 			continue;
 		}
-		const stack = [root];
-		while (stack.length > 0) {
-			const current = stack.pop();
-			if (!current) {
+		for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+			if (!entry.isDirectory() || BLOG_AGGREGATE_SEGMENTS.has(entry.name)) {
 				continue;
 			}
-			for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
-				const full = path.join(current, entry.name);
-				if (entry.isDirectory()) {
-					stack.push(full);
-					continue;
-				}
-				if (entry.isFile() && entry.name === 'index.html') {
-					count += 1;
-				}
+			if (fs.existsSync(path.join(root, entry.name, 'index.html'))) {
+				count += 1;
 			}
 		}
 	}

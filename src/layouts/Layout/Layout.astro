@@ -9,7 +9,8 @@ const {
 	pageType,
 	pageRobots,
 	activeNav,
-	headings
+	headings,
+	hideAside = false
 } = Astro.props;
 const resolvedPageCover = pageCover || pagecover || cover;
 // 网站配置
@@ -59,7 +60,7 @@ const lang = getLangFromUrl(Astro.url);
 				<section class="main-inner-content flex-1 pb-[0.88rem] w-full min-w-0 h-max overflow-hidden">
 					<slot />
 				</section>
-				<Aside />
+				{!hideAside && <Aside />}
 			</section>
 			<BackTop />
 		</main>

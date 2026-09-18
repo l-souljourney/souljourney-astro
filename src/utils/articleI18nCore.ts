@@ -5,10 +5,17 @@ export type ArticleRoute = {
   slug: string;
 };
 
-const ARTICLE_PATH_RE = /^\/(?:(en)\/)?article\/([^/]+)\/?$/;
+/**
+ * /blog 之下与正文同级的聚合页段名。`/blog/archives` 只有一段，
+ * 会被文章路径正则误判为 slug 为 "archives" 的正文页，必须显式排除。
+ * 分类与标签是两段（`/blog/categories/<x>`），正则本身不会命中。
+ */
+const RESERVED_BLOG_SEGMENTS = new Set(['categories', 'tag', 'archives']);
+
+const ARTICLE_PATH_RE = /^\/(?:(en)\/)?blog\/([^/]+)\/?$/;
 
 export const getArticlePath = (lang: SiteLang, slug: string) =>
-  lang === 'en' ? `/en/article/${slug}` : `/article/${slug}`;
+  lang === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`;
 
 export const parseArticleRoute = (pathname: string): ArticleRoute | null => {
   const match = pathname.match(ARTICLE_PATH_RE);
@@ -17,6 +24,10 @@ export const parseArticleRoute = (pathname: string): ArticleRoute | null => {
   }
 
   const [, enPrefix, slug] = match;
+  if (RESERVED_BLOG_SEGMENTS.has(slug)) {
+    return null;
+  }
+
   return {
     lang: enPrefix ? 'en' : 'zh',
     slug,

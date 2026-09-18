@@ -1,6 +1,6 @@
 ---
 const { time, sitename, title, site, slug, auther, lang: pageLang } = Astro.props;
-const path = pageLang === "en" ? `/en/article/${slug}` : `/article/${slug}`;
+const path = pageLang === "en" ? `/en/blog/${slug}` : `/blog/${slug}`;
 const normalizedSite = String(site || "").replace(/\/$/, "");
 const articleURL = `${normalizedSite}${path}`;
 

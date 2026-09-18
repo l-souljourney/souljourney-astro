@@ -5,20 +5,31 @@ import path from 'node:path';
 
 const read = (p) => readFileSync(path.resolve(process.cwd(), p), 'utf8');
 
-const zhHomePage = read('src/pages/[...page].astro');
-const enHomePage = read('src/pages/en/[...page].astro');
-const zhCategoryPage = read('src/pages/categories/[...categories].astro');
-const enCategoryPage = read('src/pages/en/categories/[...categories].astro');
-const zhTagPage = read('src/pages/tag/[...tags].astro');
-const enTagPage = read('src/pages/en/tag/[...tags].astro');
+const zhBlogIndex = read('src/pages/blog/index.astro');
+const enBlogIndex = read('src/pages/en/blog/index.astro');
+const zhCategoryPage = read('src/pages/blog/categories/[...categories].astro');
+const enCategoryPage = read('src/pages/en/blog/categories/[...categories].astro');
+const zhTagPage = read('src/pages/blog/tag/[...tags].astro');
+const enTagPage = read('src/pages/en/blog/tag/[...tags].astro');
 const archiveUtils = read('src/utils/getArchive.ts');
 const postInfoUtils = read('src/utils/getPostInfo.ts');
 const zhRssPage = read('src/pages/rss.xml.ts');
 const enRssPage = read('src/pages/en/rss.xml.ts');
 
-test('home pages should paginate only the published locale set', () => {
-  assert.match(zhHomePage, /getSortedPublishedBlogEntriesByLang\(posts,\s*"zh"\)/, 'zh home page should use sorted published zh entries');
-  assert.match(enHomePage, /getSortedPublishedBlogEntriesByLang\(posts,\s*"en"\)/, 'en home page should use sorted published en entries');
+test('blog index pages should list only the published locale set', () => {
+  assert.match(zhBlogIndex, /getSortedPublishedBlogEntriesByLang\(posts,\s*"zh"\)/, 'zh blog index should use sorted published zh entries');
+  assert.match(enBlogIndex, /getSortedPublishedBlogEntriesByLang\(posts,\s*"en"\)/, 'en blog index should use sorted published en entries');
+});
+
+// 品牌首页不再承担内容列表职责，内容浏览改为 /blog/。
+test('brand home should not render the article list itself', () => {
+  const zhHomePage = read('src/pages/index.astro');
+  const enHomePage = read('src/pages/en/index.astro');
+
+  for (const [name, source] of [['zh home', zhHomePage], ['en home', enHomePage]]) {
+    assert.doesNotMatch(source, /ArticleCard/, `${name} must not render article cards`);
+    assert.doesNotMatch(source, /getCollection/, `${name} must not query the blog collection`);
+  }
 });
 
 test('archive and post info utilities should derive data from publish-set helper', () => {

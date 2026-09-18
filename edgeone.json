@@ -1,0 +1,169 @@
+{
+  "redirects": [
+    {
+      "source": "/article/souljourney",
+      "destination": "/blog/souljourney",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/article/souljourney",
+      "destination": "/en/blog/souljourney",
+      "statusCode": 301
+    },
+    {
+      "source": "/article/v2-3-2-astro-demo",
+      "destination": "/blog/v2-3-2-astro-demo",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/article/v2-3-2-astro-demo",
+      "destination": "/en/blog/v2-3-2-astro-demo",
+      "statusCode": 301
+    },
+    {
+      "source": "/article/cursor-pool-failure-night-programming-god-fall",
+      "destination": "/blog/cursor-pool-failure-night-programming-god-fall",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/article/cursor-pool-failure-night-programming-god-fall",
+      "destination": "/en/blog/cursor-pool-failure-night-programming-god-fall",
+      "statusCode": 301
+    },
+    {
+      "source": "/categories/ai-era",
+      "destination": "/blog/categories/ai-era",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/categories/ai-era",
+      "destination": "/en/blog/categories/ai-era",
+      "statusCode": 301
+    },
+    {
+      "source": "/categories/investment",
+      "destination": "/blog/categories/investment",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/categories/investment",
+      "destination": "/en/blog/categories/investment",
+      "statusCode": 301
+    },
+    {
+      "source": "/categories/life",
+      "destination": "/blog/categories/life",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/categories/life",
+      "destination": "/en/blog/categories/life",
+      "statusCode": 301
+    },
+    {
+      "source": "/categories/philosophy",
+      "destination": "/blog/categories/philosophy",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/categories/philosophy",
+      "destination": "/en/blog/categories/philosophy",
+      "statusCode": 301
+    },
+    {
+      "source": "/categories/zhejiang-business",
+      "destination": "/blog/categories/zhejiang-business",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/categories/zhejiang-business",
+      "destination": "/en/blog/categories/zhejiang-business",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7",
+      "destination": "/blog/tag/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/%E5%A4%A7%E6%A8%A1%E5%9E%8B",
+      "destination": "/blog/tag/%E5%A4%A7%E6%A8%A1%E5%9E%8B",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/%E4%BA%A4%E6%98%93",
+      "destination": "/blog/tag/%E4%BA%A4%E6%98%93",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/AI",
+      "destination": "/blog/tag/AI",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/AI%E7%BC%96%E7%A8%8B",
+      "destination": "/blog/tag/AI%E7%BC%96%E7%A8%8B",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/Claude",
+      "destination": "/blog/tag/Claude",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/Cursor",
+      "destination": "/blog/tag/Cursor",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/GPT",
+      "destination": "/blog/tag/GPT",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/AI",
+      "destination": "/en/blog/tag/AI",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/Claude",
+      "destination": "/en/blog/tag/Claude",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/Cursor",
+      "destination": "/en/blog/tag/Cursor",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/GPT",
+      "destination": "/en/blog/tag/GPT",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/Large%20Language%20Model",
+      "destination": "/en/blog/tag/Large%20Language%20Model",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/LLM",
+      "destination": "/en/blog/tag/LLM",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/tag/MCP",
+      "destination": "/en/blog/tag/MCP",
+      "statusCode": 301
+    },
+    {
+      "source": "/archives",
+      "destination": "/blog/archives",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/archives",
+      "destination": "/en/blog/archives",
+      "statusCode": 301
+    }
+  ]
+}

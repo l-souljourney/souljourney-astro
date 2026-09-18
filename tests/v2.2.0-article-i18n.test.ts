@@ -8,8 +8,8 @@ import { getAlternateArticlePathFromMirrorPairs, parseArticleRoute } from '../sr
 
 const read = (p: string) => readFileSync(path.resolve(process.cwd(), p), 'utf8');
 
-const zhArticlePage = read('src/pages/article/[...article].astro');
-const enArticlePage = read('src/pages/en/article/[...article].astro');
+const zhArticlePage = read('src/pages/blog/[...slug].astro');
+const enArticlePage = read('src/pages/en/blog/[...slug].astro');
 const headComponent = read('src/components/Head/Head.astro');
 const headerComponent = read('src/components/Header/Header.astro');
 
@@ -30,14 +30,22 @@ const createEntry = (
 });
 
 test('parseArticleRoute should preserve the current zh/en article path contract', () => {
-  assert.deepEqual(parseArticleRoute('/article/shared-slug'), {
+  assert.deepEqual(parseArticleRoute('/blog/shared-slug'), {
     lang: 'zh',
     slug: 'shared-slug',
   });
-  assert.deepEqual(parseArticleRoute('/en/article/shared-slug'), {
+  assert.deepEqual(parseArticleRoute('/en/blog/shared-slug'), {
     lang: 'en',
     slug: 'shared-slug',
   });
+});
+
+test('parseArticleRoute should not treat blog aggregation routes as articles', () => {
+  assert.equal(parseArticleRoute('/blog/archives'), null);
+  assert.equal(parseArticleRoute('/en/blog/archives'), null);
+  assert.equal(parseArticleRoute('/blog/categories/investment'), null);
+  assert.equal(parseArticleRoute('/blog/tag/AI'), null);
+  assert.equal(parseArticleRoute('/blog'), null);
   assert.equal(parseArticleRoute('/archives'), null);
 });
 
@@ -48,12 +56,12 @@ test('published article language switch should resolve to the mirrored article r
   ]);
 
   assert.equal(
-    getAlternateArticlePathFromMirrorPairs('/article/mirror-article', publishSet.mirrorPairs),
-    '/en/article/mirror-article'
+    getAlternateArticlePathFromMirrorPairs('/blog/mirror-article', publishSet.mirrorPairs),
+    '/en/blog/mirror-article'
   );
   assert.equal(
-    getAlternateArticlePathFromMirrorPairs('/en/article/mirror-article', publishSet.mirrorPairs),
-    '/article/mirror-article'
+    getAlternateArticlePathFromMirrorPairs('/en/blog/mirror-article', publishSet.mirrorPairs),
+    '/blog/mirror-article'
   );
 });
 
@@ -63,7 +71,7 @@ test('incomplete mirror pairs should not resolve article alternates', () => {
   ]);
 
   assert.equal(
-    getAlternateArticlePathFromMirrorPairs('/article/zh-only', publishSet.mirrorPairs),
+    getAlternateArticlePathFromMirrorPairs('/blog/zh-only', publishSet.mirrorPairs),
     null
   );
 });

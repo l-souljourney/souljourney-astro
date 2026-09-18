@@ -19,7 +19,7 @@ export async function GET(context: any) {
 			title: post.data.title,
 			pubDate: post.data.updated || post.data.date,
 			description: getDescription(post),
-			link: `/article/${post.data.slug}`
+			link: `/blog/${post.data.slug}`
 		})).sort((a: any, b: any) => (new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())),
 	});
 	// 添加 XML 样式表指令

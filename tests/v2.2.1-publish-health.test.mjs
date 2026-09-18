@@ -13,10 +13,10 @@ import {
 const createTempDist = () => {
 	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'publish-health-'));
 	const dist = path.join(root, 'dist');
-	fs.mkdirSync(path.join(dist, 'article', 'souljourney'), { recursive: true });
-	fs.mkdirSync(path.join(dist, 'en', 'article', 'souljourney'), { recursive: true });
-	fs.writeFileSync(path.join(dist, 'article', 'souljourney', 'index.html'), '<html></html>');
-	fs.writeFileSync(path.join(dist, 'en', 'article', 'souljourney', 'index.html'), '<html></html>');
+	fs.mkdirSync(path.join(dist, 'blog', 'souljourney'), { recursive: true });
+	fs.mkdirSync(path.join(dist, 'en', 'blog', 'souljourney'), { recursive: true });
+	fs.writeFileSync(path.join(dist, 'blog', 'souljourney', 'index.html'), '<html></html>');
+	fs.writeFileSync(path.join(dist, 'en', 'blog', 'souljourney', 'index.html'), '<html></html>');
 	fs.mkdirSync(path.join(dist, 'en'), { recursive: true });
 	fs.writeFileSync(path.join(dist, 'rss.xml'), '<rss><channel><item></item></channel></rss>');
 	fs.writeFileSync(path.join(dist, 'en', 'rss.xml'), '<rss><channel><item></item></channel></rss>');
@@ -114,6 +114,25 @@ test('publish health should reject a malformed release manifest', () => {
 		const metrics = collectPublishHealth({ entries, distDir: path.join(root, 'dist') });
 		assert.equal(metrics.releaseManifest, 0, `should reject: ${JSON.stringify(broken)}`);
 	}
+});
+
+test('publish health should not count blog aggregation pages as article routes', () => {
+	const root = createTempDist();
+	const dist = path.join(root, 'dist');
+
+	// 聚合页与正文页同处 blog/ 之下，只有正文页才应计入 articleRoutes
+	fs.writeFileSync(path.join(dist, 'blog', 'index.html'), '<html></html>');
+	for (const segment of ['categories/investment', 'tag/AI', 'archives']) {
+		fs.mkdirSync(path.join(dist, 'blog', segment), { recursive: true });
+		fs.writeFileSync(path.join(dist, 'blog', segment, 'index.html'), '<html></html>');
+	}
+
+	const entries = [
+		{ id: 'zh::obs_a::souljourney', data: { lang: 'zh', source_id: 'obs_a', slug: 'souljourney' } },
+	];
+	const metrics = collectPublishHealth({ entries, distDir: dist });
+
+	assert.equal(metrics.articleRoutes, 2, 'only blog/souljourney and en/blog/souljourney are article routes');
 });
 
 test('publish health should fail when mirror pairs collapse to zero', () => {
