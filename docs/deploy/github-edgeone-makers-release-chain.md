@@ -72,7 +72,33 @@ COS 与 TEO **没有整体退役**，但职责已收缩：
 
 都会触发 Makers 生产构建。**构建即门禁**：任一环节失败都不会产生新部署。
 
-## 6. 协作边界
+## 6. 发布身份与验证
+
+每次构建产出 `/.well-known/sj-release.json`，让公开面能用机器回答「线上跑的是哪一版」：
+
+```json
+{
+  "schema": 1,
+  "source": "github:l-souljourney/souljourney-astro",
+  "commit": "<40 位提交号>",
+  "commit_source": "env | git | unknown",
+  "built_at": "<构建时间>",
+  "content_digest": "sha256:<已发布内容集合摘要>",
+  "content_entries": 6
+}
+```
+
+验证方式：
+
+```sh
+curl -s https://www.l-souljourney.cn/.well-known/sj-release.json
+```
+
+应返回与当前 `main` 提交一致的 `commit`。`commit_source` 为 `unknown` 表示构建环境既没有 CI 变量、也读不到 git 元数据，此时不应把该文件当作可信证据。
+
+`content_digest` 覆盖已发布内容集合，不覆盖渲染产物（封面随机化会让 HTML 每次构建不同）。发布身份的存在性是 `pnpm check:publish-health` 的检查项之一。
+
+## 7. 协作边界
 
 这份文档用于说明**当前公开发布拓扑与职责边界**，不是完整运维手册。
 

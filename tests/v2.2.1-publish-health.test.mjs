@@ -23,6 +23,25 @@ const createTempDist = () => {
 	return root;
 };
 
+const writeReleaseManifest = (root, manifest) => {
+	const dir = path.join(root, 'dist', '.well-known');
+	fs.mkdirSync(dir, { recursive: true });
+	fs.writeFileSync(
+		path.join(dir, 'sj-release.json'),
+		typeof manifest === 'string' ? manifest : JSON.stringify(manifest)
+	);
+};
+
+const RELEASE_MANIFEST_FIXTURE = {
+	schema: 1,
+	source: 'github:example/repo',
+	commit: 'deadbeef',
+	commit_source: 'env',
+	built_at: '2026-01-01T00:00:00.000Z',
+	content_digest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
+	content_entries: 2,
+};
+
 test('publish health should pass for one complete mirror pair', () => {
 	const root = createTempDist();
 	const entries = [
@@ -36,6 +55,8 @@ test('publish health should pass for one complete mirror pair', () => {
 		minArticleRoutes: 1,
 		minRssItems: 1,
 		maxDuplicateIds: 0,
+		// 本用例只验证 mirror pair 行为；发布身份门禁由下方专门用例覆盖。
+		minReleaseManifest: 0,
 	});
 
 	assert.deepEqual(metrics, {
@@ -49,8 +70,50 @@ test('publish health should pass for one complete mirror pair', () => {
 		duplicateIds: 0,
 		articleRoutes: 2,
 		rssItems: 2,
+		releaseManifest: 0,
 	});
 	assert.deepEqual(failures, []);
+});
+
+test('publish health should require the release manifest in the build output', () => {
+	const root = createTempDist();
+	const entries = [
+		{ id: 'zh::obs_a::souljourney', data: { lang: 'zh', source_id: 'obs_a', slug: 'souljourney' } },
+		{ id: 'en::obs_a::souljourney', data: { lang: 'en', source_id: 'obs_a', slug: 'souljourney' } },
+	];
+
+	const metrics = collectPublishHealth({ entries, distDir: path.join(root, 'dist') });
+	const thresholds = resolveThresholdsFromEnv({});
+
+	assert.equal(metrics.releaseManifest, 0);
+	assert.ok(
+		validatePublishHealth(metrics, thresholds).some((item) => item.includes('releaseManifest='))
+	);
+
+	writeReleaseManifest(root, RELEASE_MANIFEST_FIXTURE);
+	const repaired = collectPublishHealth({ entries, distDir: path.join(root, 'dist') });
+	assert.equal(repaired.releaseManifest, 1);
+	assert.equal(
+		validatePublishHealth(repaired, thresholds).some((item) => item.includes('releaseManifest=')),
+		false
+	);
+});
+
+test('publish health should reject a malformed release manifest', () => {
+	const entries = [
+		{ id: 'zh::obs_a::souljourney', data: { lang: 'zh', source_id: 'obs_a', slug: 'souljourney' } },
+	];
+
+	for (const broken of [
+		'{not json',
+		{ ...RELEASE_MANIFEST_FIXTURE, content_digest: '' },
+		{ ...RELEASE_MANIFEST_FIXTURE, commit: '' },
+	]) {
+		const root = createTempDist();
+		writeReleaseManifest(root, broken);
+		const metrics = collectPublishHealth({ entries, distDir: path.join(root, 'dist') });
+		assert.equal(metrics.releaseManifest, 0, `should reject: ${JSON.stringify(broken)}`);
+	}
 });
 
 test('publish health should fail when mirror pairs collapse to zero', () => {
@@ -150,5 +213,6 @@ test('publish health should use the v2.3.0 default thresholds', () => {
 		maxSlugConflicts: 0,
 		maxDuplicateLocaleConflicts: 0,
 		maxCategoryConflicts: 0,
+		minReleaseManifest: 1,
 	});
 });

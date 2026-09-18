@@ -47,8 +47,27 @@ const countRssItems = (distDir) => {
 	return count;
 };
 
-const buildPairKey = (entry) => `${entry?.data?.source_id ?? ''}::${entry?.data?.slug ?? ''}`;
+// 发布身份必须随产物一起公开；缺失或损坏视为门禁失败。
+const readReleaseManifest = (distDir) => {
+	const file = path.join(distDir, '.well-known', 'sj-release.json');
+	if (!fs.existsSync(file)) {
+		return null;
+	}
+	try {
+		const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+		if (typeof manifest?.content_digest !== 'string' || !manifest.content_digest) {
+			return null;
+		}
+		if (typeof manifest?.commit !== 'string' || !manifest.commit) {
+			return null;
+		}
+		return manifest;
+	} catch {
+		return null;
+	}
+};
 
+const buildPairKey = (entry) => `${entry?.data?.source_id ?? ''}::${entry?.data?.slug ?? ''}`;
 const getConflictKeys = (groups) =>
 	new Set(
 		[...groups.entries()]
@@ -175,6 +194,7 @@ export const collectPublishHealth = ({ entries, distDir }) => {
 		duplicateIds: entries.length - idSet.size,
 		articleRoutes,
 		rssItems,
+		releaseManifest: readReleaseManifest(distDir) ? 1 : 0,
 	};
 };
 
@@ -226,6 +246,11 @@ export const validatePublishHealth = (metrics, thresholds) => {
 			`categoryConflicts=${metrics.categoryConflicts} is above maxCategoryConflicts=${thresholds.maxCategoryConflicts}`
 		);
 	}
+	if (metrics.releaseManifest < thresholds.minReleaseManifest) {
+		failures.push(
+			`releaseManifest=${metrics.releaseManifest} is below minReleaseManifest=${thresholds.minReleaseManifest} (expected dist/.well-known/sj-release.json with commit and content_digest)`
+		);
+	}
 	return failures;
 };
 
@@ -258,6 +283,7 @@ export const resolveThresholdsFromEnv = (env = process.env) => {
 		maxSlugConflicts: readInt('MAX_SLUG_CONFLICTS', 0),
 		maxDuplicateLocaleConflicts: readInt('MAX_DUPLICATE_LOCALE_CONFLICTS', 0),
 		maxCategoryConflicts: readInt('MAX_CATEGORY_CONFLICTS', 0),
+		minReleaseManifest: readInt('MIN_RELEASE_MANIFEST', 1),
 	};
 };
 

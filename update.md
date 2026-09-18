@@ -1,5 +1,19 @@
 # Changelog
 
+## 未发布 - 2026-09-18 发布身份（Release Identity）
+
+### 🪪 线上版本可被机器回答
+- **新增 `/.well-known/sj-release.json`**: 每次构建公开 `commit` / `commit_source` / `built_at` / `content_digest` / `content_entries`，用于回答「线上跑的是哪一版」，为后续 `sj inspect / plan / verify` 提供机器可读证据。
+- **摘要口径**: `content_digest` 只覆盖已发布内容集合（条目 `id` + Astro content digest），**不覆盖渲染产物**——封面随机化会让 HTML 每次构建不同，字节哈希不可用。
+- **不伪造降级**: 构建环境缺少 CI 变量与 git 元数据时，`commit` 记为 `unknown` 且 `commit_source` 标为 `unknown`，不填假提交号。
+
+### 🚦 门禁
+- `check:publish-health` 新增发布身份检查项（`minReleaseManifest`，默认 1）：产物缺少或损坏该文件即失败。
+
+### 📚 文档
+- `docs/engineering/publishing.md` 记录发布身份契约与摘要口径。
+- `docs/deploy/github-edgeone-makers-release-chain.md` 新增「发布身份与验证」章节，含 curl 验证方式与 `commit_source: unknown` 的解读边界。
+
 ## 未发布 - 2026-09-18 发布链路迁移到 EdgeOne Makers
 
 ### 🚀 单链路收敛

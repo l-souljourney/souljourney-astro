@@ -11,6 +11,7 @@
 - 新字段或语义变化核对 Obsidian payload、wxengine frontmatter 生成及 Astro 消费；不能仅凭本地 Markdown 成功证明上游支持。
 - canonical 指向当前语言自身；hreflang 仅指向真实镜像，文章语言切换不能退回错误首页。路由变更检查中英文文章页、Head、Header 及直接消费者。
 - 图片字段沿用现有 schema 与封面工具；旧 image-2 task 已结束，不代表存在新的图片生成流程。
+- 每次构建公开一份发布身份 `/.well-known/sj-release.json`，由 `src/pages/.well-known/sj-release.json.ts` 生成，含 `commit` / `commit_source` / `built_at` / `content_digest` / `content_entries`。`content_digest` 只覆盖已发布内容集合（`id` + Astro content digest），**不覆盖渲染产物**——封面随机化会让 HTML 每次构建不同，字节哈希不可用。构建环境缺少 git 与 CI 变量时 `commit` 记为 `unknown` 且 `commit_source` 为 `unknown`，不伪造提交号。
 
 ## 发布门禁
 
@@ -18,7 +19,7 @@
 
 `check:publish-health` 验证公开面与冲突阈值，默认允许仓库保留单语稿。`check:publish-bilingual-readiness` 额外要求 pending translations 为零；只有涉及外部双语推送就绪时才用它证明就绪，不能混淆两者。
 
-保留 mirror pairs、路由/RSS 数量、重复 ID、source ID/slug/语言/分类冲突检查。不通过降低阈值绕过失败。
+保留 mirror pairs、路由/RSS 数量、重复 ID、source ID/slug/语言/分类冲突检查，以及发布身份产物存在性。不通过降低阈值绕过失败。
 
 ## 生产与公开文档边界
 
