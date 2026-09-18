@@ -76,7 +76,20 @@
   - `caches[].cacheTtl` 必须是非负整数
 - 用途：**旧 URL 的 301、安全响应头、静态资源缓存策略应写在这里**，而不是依赖控制台或 edge middleware。edge middleware（`middleware.js`）适合需要请求级逻辑的场景（改写、鉴权、按地理位置分流）。
 - 平台级 TLS 选项（强制 HTTPS、HSTS 开关、OCSP 装订、证书申请）**不在该配置内**，属于控制台项目设置，CLI 无对应命令。
-- 待确认：各键在 **Git 集成型**项目构建下的实际生效范围，尚未做端到端实测。优先用 preview 环境验证后再用于生产。
+
+### 实测结论（2026-09-18）
+
+| 能力 | 结论 | 证据 |
+| --- | --- | --- |
+| `redirects` | ✅ **在 Git 集成构建下生效** | 在不存在的路径 `/__eo-config-probe` 上返回 `301 → /about`。该路径没有页面、也没有 middleware，重定向只能来自配置文件 |
+| 配置文件不抢占构建命令 | ✅ | 加了 `edgeone.json` 后构建日志仍为 `BuildScript: pnpm verify:baseline`，`publish-health` 仍 PASS。**不在配置里声明 `buildCommand`，项目设置就不会被覆盖** |
+| 配置校验 | ✅ | 构建日志出现 `none error in configuration file` 与 `End validating!`；本地 `edgeone validate` 输出同一段落 |
+| `headers` | ❓ 未成立 | 在探针路径上未观察到注入的响应头。尚未区分「配置项无效」与「不作用于 404 fallback」，**用途未确认前不要依赖它** |
+| `caches` | ❓ 未测 | 未做探针 |
+
+因此：**旧 URL 的 301 走 `redirects`，有可靠实现路径。** `headers` / `caches` 在验证前不得作为方案前提。
+
+> 已知缓存现状（2026-09-18 实测）：`/assets/images/**` 为 `max-age=31536000,immutable`；但带内容 hash 的 `/vh_static/*` 与 `pagefind/*` 是 `max-age=0,must-revalidate`，每次访问都需重新验证。若要改善需先确认 `caches` 生效范围，并审计哪些路径确实带 hash。
 
 ## 变更纪律
 
