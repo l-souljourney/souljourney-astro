@@ -22,8 +22,8 @@
 
 ## 生产与公开文档边界
 
-生产职责见 [当前发布链路](../deploy/github-main-cnb-cos-release-chain.md)。GitHub 是代码源，GitHub 构建/健康门通过后同步 CNB；CNB 负责腾讯云侧发布，不能恢复 GitHub/CNB 双重写入或 COS 同步删除。
+生产职责见 [当前发布链路](../deploy/github-edgeone-makers-release-chain.md)。GitHub 是代码源，EdgeOne Makers 从 `main` 构建并部署；门禁（`pnpm verify:baseline`）是 Makers 构建命令的组成部分，且与 GitHub Actions 使用同一条命令。不能引入第二个站点托管写入面，也不能把已退出的 CNB / COS 站点托管 / Cloudflare Pages 链路重新接回。
 
-变更发布配置时核对 `.github/workflows/deploy.yml`、`.cnb.yml` 与 `docs/deploy/cnb-mirror-main.cnb.yml` 的对应关系，校验 YAML 并执行适用门禁。生产、推送与外部验证需明确授权，治理改动不授权触发部署。
+变更发布配置时核对 `.github/workflows/deploy.yml`、`docs/engineering/makers.md` 与 Makers 侧项目构建设置的一致性，校验 YAML 并执行适用门禁。生产、推送与外部验证需明确授权，治理改动不授权触发部署。
 
 公开文档只保存项目事实、契约、架构与协作边界；不公开私有地址、凭证配置、内部运维命令或原始运行证据。历史资料按公开深度保留摘要，不把冷历史重新挂成当前执行规范。

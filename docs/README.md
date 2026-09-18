@@ -9,7 +9,7 @@
 - [EdgeOne Makers 部署规则](./engineering/makers.md)
 - [Trellis 退役决定与边界](./decisions/2026-09-10-solo-migration.md)
 - [v2.3.1 Astro / Obsidian 双语发布工作流收敛](./plans/2026-05-01-v2-3-1-astro-obsidian-bilingual-workflow.md)
-- [当前生产发布链路：GitHub main -> CNB -> COS](./deploy/github-main-cnb-cos-release-chain.md)
+- [当前生产发布链路：GitHub main -> EdgeOne Makers](./deploy/github-edgeone-makers-release-chain.md)
 - [v2.2.1 事故复盘](./2026-04-08-v2-2-1-content-id-incident-rca.md)
 - [Astro 发布契约 v2.2](./astro-wxengine-publish-contract-v2.2.md)
 

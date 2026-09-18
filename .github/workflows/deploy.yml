@@ -1,4 +1,4 @@
-name: Build + Sync to CNB
+name: Quality Gate
 
 on:
   push:
@@ -7,11 +7,8 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  CNB_MIRROR_REPO_URL: https://cnb.cool/l-souljourney/souljourney-astro.git
-
 jobs:
-  build:
+  gate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,54 +28,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Astro check
-        run: pnpm check
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
-
-      - name: Publish health guard
-        env:
-          MIN_MIRROR_PAIRS: "2"
-          MIN_ARTICLE_ROUTES: "4"
-          MIN_RSS_ITEMS: "4"
-          MAX_DUPLICATE_IDS: "0"
-        run: pnpm check:publish-health
-
-  sync-cnb:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Validate CNB sync secret
-        run: |
-          if [ -z "${{ secrets.CNB_TOKEN }}" ]; then
-            echo "❌ missing secret: CNB_TOKEN"
-            exit 1
-          fi
-          echo "✅ CNB_TOKEN is configured"
-
-      - name: Sync repository to CNB mirror
-        uses: docker://tencentcom/git-sync
-        env:
-          PLUGIN_TARGET_URL: ${{ env.CNB_MIRROR_REPO_URL }}
-          PLUGIN_AUTH_TYPE: https
-          PLUGIN_BRANCH: main
-          PLUGIN_USERNAME: cnb
-          PLUGIN_PASSWORD: ${{ secrets.CNB_TOKEN }}
-          PLUGIN_SYNC_MODE: push
-          PLUGIN_FORCE: "true"
-
-      - name: Show sync target
-        run: |
-          echo "✅ Synced current main to CNB mirror"
-          echo "🔁 Target: ${CNB_MIRROR_REPO_URL}"
+      # 与 EdgeOne Makers 侧构建命令保持一致：check / test / build / publish-health
+      # 门禁定义只有 package.json 一处，改阈值或加步骤都改那里。
+      - name: Quality gate
+        run: pnpm verify:baseline

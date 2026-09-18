@@ -38,7 +38,7 @@
 
 ## Git、外部操作与文件保护
 
-- GitHub remote 为 `github`，`main` 跟踪 `github/main`；多步改动使用 `feature/<short>`，默认不直接提交 main。
+- GitHub remote 为 `github`，`main` 跟踪 `github/main`。日常改动直接提交 `main`，不引入 feature 分支流程。注意：**`main` push 会直接触发 EdgeOne Makers 生产部署**，提交即发布；发布门禁是 Makers 构建命令的组成部分，门禁失败则不产生新部署。
 - 保留未知工作区与 staged 修改，不通过 reset、stash、强制 checkout 隐藏它们。仅精确暂存当前拥有的改动，禁止 `git add .`。
 - 本地修改不自动授权 commit、push、deploy、生产数据写入、破坏性操作、release/tag 或正式外部写回。同一明确对象与范围的授权不重复询问，范围或影响变化时重新确认。
 - 批量操作超过 5 个对象、修改 milestone/project、release/tag、任何 `gh api` POST/PATCH/DELETE，先给对象清单与预期效果并取得确认。

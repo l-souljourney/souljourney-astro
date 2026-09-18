@@ -18,7 +18,7 @@
 - 语言：TypeScript
 - 样式：Tailwind CSS + 自定义样式
 - 内容：Markdown/MDX（`src/content/blog/`）
-- 部署：GitHub `main` push 后由 Cloudflare Pages 自动拉取一版，同时 GitHub Actions 同步到 CNB mirror，由 CNB 在腾讯云侧构建并发布到 COS / EdgeOne
+- 部署：GitHub `main` push 后由 EdgeOne Makers（Git 集成型项目）构建并部署到 Production；发布门禁 `pnpm verify:baseline` 是 Makers 构建命令的组成部分，门禁失败即不产生新部署
 
 ## 维护重点
 
@@ -73,7 +73,7 @@ pnpm check:publish-bilingual-readiness # 严格双语发布就绪检查
 
 - 版本变更记录：`update.md`
 - 当前文档入口：`docs/README.md`
-- 当前生产发布链路：`docs/deploy/github-main-cnb-cos-release-chain.md`
+- 当前生产发布链路：`docs/deploy/github-edgeone-makers-release-chain.md`
 - 开发与发布规则：`docs/engineering/astro.md`、`docs/engineering/publishing.md`
 - 事故复盘：`docs/2026-04-08-v2-2-1-content-id-incident-rca.md`
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## 未发布 - 2026-09-18 发布链路迁移到 EdgeOne Makers
+
+### 🚀 单链路收敛
+- **www 切换到 EdgeOne Makers**: `www.l-souljourney.cn` 由 Git 集成型 Makers 项目从 `main` 构建部署，境内外由平台就近调度，不再按线路拆分公开面。
+- **门禁成为构建的一部分**: Makers 侧构建命令由 `pnpm run build` 改为 `pnpm verify:baseline`；任一环节失败即构建失败，不产生新部署，线上保持上一版。GitHub Actions 门禁改用同一条命令，两条链路只保留一处定义。
+- **安装命令收紧**: Makers 侧改为 `pnpm install --frozen-lockfile`。
+- **TLS 配置**: 开启强制 HTTPS（`http://` 301 到 https）与 OCSP 装订；HSTS 暂不开启，避免不可回退的浏览器侧锁定。
+
+### 🧹 退役的发布面
+- **CNB 链路退出**: 删除 `.cnb.yml`、`docs/deploy/cnb-mirror-main.cnb.yml` 与 Actions 的 `sync-cnb` job，不再同步 CNB 镜像。
+- **COS 站点托管退出**: 网站桶不再被取源，仅作冷备保留。
+- **EdgeOne TEO 缓存刷新退出**: 删除 `script/edgeone-purge.js`、对应测试与 `purge:edgeone` 脚本。
+- **Cloudflare Pages 退出**: 删除 DNSPod 的 `www` 境外线路记录，境外流量合并回 Makers。
+
+### 📌 保留范围
+- **COS 与 TEO 未整体退役**: `cloudcos.l-souljourney.cn` → TEO → COS 图片资产桶仍在生产链路上，后续不得把站点迁移理解为 COS 全部下线。
+
+### 📚 文档
+- 发布链路文档由 `docs/deploy/github-main-cnb-cos-release-chain.md` 改写为 `docs/deploy/github-edgeone-makers-release-chain.md`。
+- `docs/engineering/makers.md` 新增「声明式配置」章节，记录 `edgeone.json` 的 `redirects` / `headers` / `rewrites` / `caches` / `trailingSlash` 能力与条目约束。
+- `docs/engineering/publishing.md` 更新生产职责与配置核对口径。
+
 ## 未发布 - 2026-09-10 Solo 治理切换
 
 - 默认开发由 Trellis 切换为用户级 Solo，项目规则和发布安全门槛按需读取。

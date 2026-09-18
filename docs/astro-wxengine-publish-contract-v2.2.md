@@ -106,4 +106,4 @@
 - 成功写入 GitHub 后，Astro 侧会继续完成构建、发布健康检查与公开发布流程。
 - 因此“接口返回成功”只代表内容已入库，不代表所有公开发布面已经更新完成。
 - 当前发布职责边界说明见：
-  - [`docs/deploy/github-main-cnb-cos-release-chain.md`](./deploy/github-main-cnb-cos-release-chain.md)
+  - [`docs/deploy/github-edgeone-makers-release-chain.md`](./deploy/github-edgeone-makers-release-chain.md)

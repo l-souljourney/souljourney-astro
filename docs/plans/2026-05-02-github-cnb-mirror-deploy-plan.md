@@ -46,7 +46,7 @@
 
 如果你想了解**当前有效口径**，请优先看：
 
-- [当前生产发布链路：GitHub main -> CNB -> COS](../deploy/github-main-cnb-cos-release-chain.md)
+- [当前生产发布链路：GitHub main -> EdgeOne Makers](../deploy/github-edgeone-makers-release-chain.md)（本计划描述的 CNB 链路已于 2026-09-18 退役）
 - [Astro 发布契约 v2.2](../astro-wxengine-publish-contract-v2.2.md)
 - [v2.x 路线图](./2026-03-10-v2.x-roadmap.md)
 

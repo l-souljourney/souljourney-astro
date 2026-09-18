@@ -65,8 +65,21 @@
 - 事件类型：`deployment.created`、`deployment.succeeded`、`deployment.failed`、`domain.added`、`project.created`、`project.settings.updated`、`project.deleted`。
 - 用途：弥补"命令行难以查询部署状态"的缺口，把部署结果接入外部核验。
 
+## 声明式配置（`edgeone.json`）
+
+- 仓库根目录可放 `edgeone.config.ts` / `edgeone.json` / `edgeone.json5`。三者同时存在时 `edgeone.config.ts` 优先（会有告警）。
+- 顶层可声明 `redirects` / `headers` / `rewrites` / `caches` / `trailingSlash`，另有 `buildCommand` / `installCommand` / `nodeVersion` 等构建相关键。
+- `edgeone compile` 把 TS 编译成 JSON，`edgeone validate` 做校验。**构建日志中出现 `Start validating the configuration file` 段落，即表示构建过程读取并校验了该文件。**
+- 条目约束：
+  - `redirects[].statusCode` 只接受 `301` / `302` / `303` / `304` / `307` / `308`
+  - `redirects` / `rewrites` / `caches` 各最多 100 条；`headers[].headers[]` 每条最多 100 个
+  - `caches[].cacheTtl` 必须是非负整数
+- 用途：**旧 URL 的 301、安全响应头、静态资源缓存策略应写在这里**，而不是依赖控制台或 edge middleware。edge middleware（`middleware.js`）适合需要请求级逻辑的场景（改写、鉴权、按地理位置分流）。
+- 平台级 TLS 选项（强制 HTTPS、HSTS 开关、OCSP 装订、证书申请）**不在该配置内**，属于控制台项目设置，CLI 无对应命令。
+- 待确认：各键在 **Git 集成型**项目构建下的实际生效范围，尚未做端到端实测。优先用 preview 环境验证后再用于生产。
+
 ## 变更纪律
 
-- 改 `.nvmrc`、构建命令或输出目录都会改变生产构建结果，按发布门禁验证。
+- 改 `.nvmrc`、构建命令或输出目录都会改变生产构建结果，按发布门禁验证。当前 Makers 侧构建命令为 `pnpm verify:baseline`，与 GitHub Actions 门禁同源。
 - 不在本仓库任何文档、日志或代码中写入账号标识、访问签名或凭证。
 - 本文件描述平台事实与能力边界，不构成生产切换授权；迁移范围以 Issue 为准。
