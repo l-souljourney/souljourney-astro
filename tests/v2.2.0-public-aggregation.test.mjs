@@ -22,7 +22,6 @@ test('blog index pages should list only the published locale set', () => {
 });
 
 // 品牌首页不再承担内容列表职责，内容浏览改为 /blog/。
-// 同时锁住横向内边距：主容器不提供左右留白，页面必须自带，否则文字在任何窄视口下都会贴边。
 test('brand home should not render the article list itself', () => {
   const zhHomePage = read('src/pages/index.astro');
   const enHomePage = read('src/pages/en/index.astro');
@@ -30,8 +29,20 @@ test('brand home should not render the article list itself', () => {
   for (const [name, source] of [['zh home', zhHomePage], ['en home', enHomePage]]) {
     assert.doesNotMatch(source, /ArticleCard/, `${name} must not render article cards`);
     assert.doesNotMatch(source, /getCollection/, `${name} must not query the blog collection`);
-    assert.match(source, /px-\[0\.88rem\]/, `${name} must carry its own horizontal padding`);
   }
+});
+
+// 水平留白由主容器统一提供。容器缺失会让全站（含 768–1458px 的桌面端）贴边；
+// 页面再各自补齐则会重复内缩，所以留白只能有一个来源。
+test('main container should carry the shared horizontal gutter', () => {
+  const layout = read('src/layouts/Layout/Layout.astro');
+  assert.match(layout, /main-inner[^"]*px-\[0\.88rem\]/, 'main-inner should carry the shared gutter');
+});
+
+// 年份列在移动端宽度受限，折行会被 leading-[3.75rem] 放大成两行大字
+test('archive year column should not wrap at narrow widths', () => {
+  const archiveComponent = read('src/components/Archive/Archive.astro');
+  assert.match(archiveComponent, /whitespace-nowrap/, 'the archive year cell must not wrap');
 });
 
 test('archive and post info utilities should derive data from publish-set helper', () => {
