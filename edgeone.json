@@ -1,0 +1,20 @@
+{
+  "redirects": [
+    {
+      "source": "/__eo-config-probe",
+      "destination": "/about",
+      "statusCode": 301
+    }
+  ],
+  "headers": [
+    {
+      "source": "/__eo-config-probe-headers",
+      "headers": [
+        {
+          "key": "x-eo-config-probe",
+          "value": "applied"
+        }
+      ]
+    }
+  ]
+}
