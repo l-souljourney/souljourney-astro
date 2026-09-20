@@ -17,7 +17,7 @@
 - 框架：Astro 6.x
 - 语言：TypeScript
 - 样式：Tailwind CSS + 自定义样式
-- 内容：Markdown/MDX（`src/content/blog/`）
+- 内容：Markdown（`src/content/blog/`）
 - 部署：GitHub `main` push 后由 EdgeOne Makers（Git 集成型项目）构建并部署到 Production；发布门禁 `pnpm verify:baseline` 是 Makers 构建命令的组成部分，门禁失败即不产生新部署
 
 ## 维护重点

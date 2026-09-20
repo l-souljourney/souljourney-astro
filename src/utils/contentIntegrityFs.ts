@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { hasDuplicateFrontmatterAtBodyStart } from "./contentIntegrity";
 
-const isMarkdownFile = (file: string): boolean => file.endsWith(".md") || file.endsWith(".mdx");
+const isMarkdownFile = (file: string): boolean => file.endsWith(".md");
 
 const walkMarkdownFiles = (baseDir: string): string[] => {
 	const result: string[] = [];

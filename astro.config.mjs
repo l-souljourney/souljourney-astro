@@ -1,5 +1,4 @@
 import path from "path";
-import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import Compress from "@playform/compress";
 import { defineConfig, svgoOptimizer } from 'astro/config';
@@ -43,7 +42,6 @@ export default defineConfig({
 			// 处理末尾带 / 的 url
 			serialize: (item) => ({ ...item, url: item.url.endsWith('/') ? item.url.slice(0, -1) : item.url })
 		}),
-		mdx({ extendMarkdownConfig: false })
 	],
 	markdown: {
 		remarkPlugins: [remarkMath, remarkDirective, remarkNote,],

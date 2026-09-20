@@ -12,7 +12,7 @@
 
 ## 工程事实与入口
 
-- Astro 6.x + TypeScript + Tailwind CSS，Markdown/MDX 中英双语内容站，不是 React SPA。
+- Astro 6.x + TypeScript + Tailwind CSS，Markdown 中英双语内容站，不是 React SPA。
 - Node >=22.12.0、pnpm >=9；依赖版本以 `package.json` 和锁文件为准。
 - 内容：`src/content/blog/`；schema：`src/content.config.ts`；公开集合：`src/utils/publishSet.ts`。
 - 页面与布局：`src/pages/`、`src/layouts/`；交互：`src/scripts/`；国际化：`src/i18n/`。
