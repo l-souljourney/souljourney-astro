@@ -41,7 +41,22 @@ test("only article templates should carry data-pagefind-body", () => {
   }
 });
 
-test("search component should use direct pagefind UI instead of astro-pagefind wrapper", () => {
-  assert.match(searchComponent, /@pagefind\/default-ui/, "search component should import Pagefind default UI directly");
+test("search component should use the official Pagefind components instead of a wrapper", () => {
+  assert.match(searchComponent, /@pagefind\/component-ui/, "search component should use Pagefind Component UI directly");
+  assert.match(searchComponent, /pagefind-modal/, "the modal should be the official component");
   assert.doesNotMatch(searchComponent, /astro-pagefind\/components\/Search/, "search component should not depend on astro-pagefind wrapper");
+  // 旧的 Default UI 已整体换掉：既不自研弹窗逻辑，也不留两套 UI 依赖。
+  assert.doesNotMatch(searchComponent, /@pagefind\/default-ui/, "the old default UI should be gone");
+});
+
+// 实测（pagefind 1.4.0 与 1.5.2 行为一致）：addDirectory() 返回的 page_count 是 glob
+// 命中的文件数（35），不等于索引进去的页数（6，见 pagefind-entry.json 的 languages）。
+// 所以集成只能从 entry 文件读真实索引页数。升级 Pagefind 时若这里变了，测试会先失败，
+// 提醒重新核对，而不是把扫描数当索引数报出去。
+test("indexed page count comes from the pagefind entry file, not from addDirectory", () => {
+  const integration = read("src/integrations/pagefindArticlesOnly.mjs");
+  assert.match(integration, /pagefind-entry\.json/, "indexed count is read from the entry file");
+  assert.match(integration, /languages/, "the entry file groups counts by language");
+  assert.match(integration, /Pagefind scanned/, "the scanned count is reported separately");
+  assert.match(integration, /Pagefind indexed/, "the indexed count is reported separately");
 });

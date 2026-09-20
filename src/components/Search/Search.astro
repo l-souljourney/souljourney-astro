@@ -1,279 +1,79 @@
 ---
-import "@pagefind/default-ui/css/ui.css";
+// 搜索 UI 用 Pagefind 官方 Component UI：弹窗、输入框、结果与键盘提示都由组件自己组装，
+// 这里只负责声明组件、把 Header 的入口按钮接上，以及把站点主题映射到组件变量。
 import { join } from "node:path/posix";
 
-const searchUiOptions = JSON.stringify({ showImages: false });
 const bundlePath = join(import.meta.env.BASE_URL, "pagefind/");
 ---
 
-<section class="vh-search fixed left-0 top-0 w-screen h-screen pt-[3.75rem] px-4 pb-4 flex items-center flex-col bg-black/26 opacity-0 pointer-events-none z-50 transition-opacity duration-180">
-	<main class="p-4 py-3 w-full max-w-[888px] max-h-[88vh] rounded-2xl bg-white dark:bg-[#252525] -translate-y-4 transition-transform duration-180 overflow-hidden">
-        <div class="pagefind-wrapper">
-			<div
-				id="search"
-				class="pagefind-ui pagefind-init"
-				data-pagefind-ui
-				data-bundle-path={bundlePath}
-				data-ui-options={searchUiOptions}
-			></div>
-        </div>
-	</main>
-</section>
+<pagefind-config bundle-path={bundlePath}></pagefind-config>
+<pagefind-modal reset-on-close></pagefind-modal>
 
 <script>
-	import { PagefindUI } from "@pagefind/default-ui";
+	import "@pagefind/component-ui/css";
+	import "@pagefind/component-ui";
 
-	const initPagefindUi = () => {
-		const allSelector = "[data-pagefind-ui]";
-		for (const el of document.querySelectorAll(`${allSelector}.pagefind-init`)) {
-			const elSelector = [
-				...(el.id ? [`#${el.id}`] : []),
-				...[...el.classList.values()].map((className) => `.${className}`),
-				allSelector,
-			].join("");
-			const bundlePath = el.getAttribute("data-bundle-path");
-			const opts = JSON.parse(el.getAttribute("data-ui-options") ?? "{}");
-			new PagefindUI({
-				...opts,
-				element: elSelector,
-				bundlePath,
-			});
-			el.classList.remove("pagefind-init");
-		}
+	type SearchWindow = Window & { __vhSearchThemeBound?: boolean };
+
+	// Header 的搜索入口打开官方弹窗；弹窗自身的开关、ESC、点背景关闭、焦点与滚动锁定
+	// 都由组件负责，这里不再自研。
+	const bindSearchEntry = () => {
+		const searchBtn = document.querySelector(".search-btn");
+		const searchModal = document.querySelector("pagefind-modal") as (HTMLElement & { open?: () => void }) | null;
+		if (!searchBtn || !searchModal || typeof searchModal.open !== "function") return;
+		if (searchBtn.getAttribute("data-search-bound") === "true") return;
+		searchBtn.setAttribute("data-search-bound", "true");
+		searchBtn.addEventListener("click", () => searchModal.open?.());
 	};
 
-	document.addEventListener("astro:page-load", initPagefindUi);
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initPagefindUi);
-	} else {
-		initPagefindUi();
+	// 组件用 [data-pf-theme="dark"] 切暗色，站点用 html.dark；把两者同步起来，
+	// 观察 class 变化即可覆盖首屏与手动切换两条路径。
+	const syncSearchTheme = () => {
+		document.documentElement.dataset.pfTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+	};
+
+	const start = () => {
+		bindSearchEntry();
+		syncSearchTheme();
+	};
+
+	start();
+	document.addEventListener("astro:page-load", start);
+
+	const win = window as SearchWindow;
+	if (!win.__vhSearchThemeBound) {
+		new MutationObserver(syncSearchTheme).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+		win.__vhSearchThemeBound = true;
 	}
 </script>
 
-<script>
-    type SearchWindow = Window & {
-        __vhSearchCleanup?: () => void;
-        __vhSearchBoundButton?: string;
-        __vhSearchPageLoadBound?: boolean;
-    };
-
-    const initSearchModal = () => {
-        const win = window as SearchWindow;
-        const searchBtn = document.querySelector(".search-btn") as HTMLElement | null;
-        const searchModal = document.querySelector(".vh-search") as HTMLElement | null;
-        const searchMain = document.querySelector(".vh-search > main");
-
-        if (!searchBtn || !searchModal || !searchMain) return;
-
-        if (!searchBtn.dataset.searchBindId) {
-            searchBtn.dataset.searchBindId = `search-btn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        }
-
-        const buttonId = searchBtn.dataset.searchBindId;
-        if (!buttonId) return;
-
-        if (win.__vhSearchBoundButton === buttonId) return;
-        if (typeof win.__vhSearchCleanup === "function") {
-            win.__vhSearchCleanup();
-        }
-
-        const openModal = (e: Event) => {
-            e.stopPropagation();
-            searchModal.classList.add("active");
-            setTimeout(() => {
-                const input = searchModal.querySelector("input");
-                if (input) input.focus();
-            }, 100);
-        };
-
-        const closeModal = () => {
-            searchModal.classList.remove("active");
-        };
-
-        const stopPropagation = (e: Event) => {
-            e.stopPropagation();
-        };
-
-        const closeOnEscape = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && searchModal.classList.contains("active")) {
-                closeModal();
-            }
-        };
-
-        searchBtn.addEventListener("click", openModal);
-        searchModal.addEventListener("click", closeModal);
-        searchMain.addEventListener("click", stopPropagation);
-        document.addEventListener("keydown", closeOnEscape);
-
-        searchModal.dataset.boundButton = buttonId;
-        win.__vhSearchBoundButton = buttonId;
-        win.__vhSearchCleanup = () => {
-            searchBtn.removeEventListener("click", openModal);
-            searchModal.removeEventListener("click", closeModal);
-            searchMain.removeEventListener("click", stopPropagation);
-            document.removeEventListener("keydown", closeOnEscape);
-        };
-    };
-
-    initSearchModal();
-    const searchWin = window as SearchWindow;
-    if (!searchWin.__vhSearchPageLoadBound) {
-        document.addEventListener("astro:page-load", initSearchModal);
-        searchWin.__vhSearchPageLoadBound = true;
-    }
-</script>
-
-<style>
-    /* Active state for search modal */
-    .vh-search.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    .vh-search.active > main {
-        transform: translateY(0);
-    }
-</style>
-
 <style is:global>
-    /* Override Pagefind styles to match the modal */
-    .vh-search .pagefind-wrapper {
-        width: 100%;
-    }
-    
-    .vh-search .pagefind-ui {
-        width: 100%;
-    }
+	/* 变量按“离元素更近者胜”的继承规则挂在 body 上，用站点令牌驱动，
+	   这样亮/暗两套配色跟着 html.dark 自动切换，不需要打特异性官司。 */
+	body {
+		--pf-font: inherit;
+		--pf-text: hsl(var(--foreground));
+		--pf-text-secondary: hsl(var(--muted-foreground));
+		--pf-text-muted: hsl(var(--muted-foreground));
+		--pf-background: hsl(var(--card));
+		--pf-border: hsl(var(--border));
+		--pf-border-focus: hsl(var(--primary) / 0.5);
+		--pf-hover: hsl(var(--accent));
+		--pf-mark: hsl(var(--foreground));
+		--pf-outline-focus: hsl(var(--primary));
+		--pf-modal-backdrop: rgb(0 0 0 / 0.26);
+		--pf-modal-max-width: 888px;
+		--pf-modal-max-height: 88vh;
+		--pf-modal-top: 3.75rem;
+		--pf-shadow-lg: 0 16px 48px rgb(0 0 0 / 0.2);
+	}
 
-    .vh-search .pagefind-ui .pagefind-ui__search-input {
-        background-color: hsl(var(--muted));
-        border: none;
-        border-radius: 0.66rem;
-        padding: 1rem 1rem 1rem 2.5rem;
-        font-size: 1rem;
-        color: hsl(var(--foreground));
-        box-sizing: border-box;
-        font-weight: normal;
-    }
-    
-    /* Position the search icon */
-    .vh-search .pagefind-ui .pagefind-ui__search-clear {
-        background-color: transparent;
-        top: 50%;
-        transform: translateY(-50%);
-        color: hsl(var(--foreground));
-    }
-    
-    /* Ensure the form relative positioning for icon */
-    .vh-search .pagefind-ui form {
-        position: relative;
-    }
-    
-    /* Custom icon styling if needed, or rely on Pagefind's default */
-    .vh-search .pagefind-ui .pagefind-ui__search-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        opacity: 0.6;
-        color: hsl(var(--foreground));
-    }
-
-    .vh-search .pagefind-ui .pagefind-ui__drawer {
-        background-color: hsl(var(--card));
-        max-height: 70vh;
-        overflow-y: auto;
-    }
-
-    .vh-search .pagefind-ui .pagefind-ui__result {
-        border-bottom: 1px solid hsl(var(--border));
-        padding: 1rem 0;
-    }
-
-    .vh-search .pagefind-ui .pagefind-ui__result-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-    
-    .vh-search .pagefind-ui .pagefind-ui__result-link {
-        color: hsl(var(--foreground));
-    }
-
-    .vh-search .pagefind-ui .pagefind-ui__result-excerpt {
-        color: hsl(var(--muted-foreground));
-    }
-    
-    
-    /* ========== Dark Mode Overrides ========== */
-    html.dark .vh-search {
-        /* Color variables for dark mode */
-        --search-dark-bg-input: #333333;
-        --search-dark-bg-hover: #444444;
-        --search-dark-border: #444444;
-        --search-dark-text-primary: #eeeeee;
-        --search-dark-text-secondary: #aaaaaa;
-        --search-dark-text-tertiary: #888888;
-    }
-    
-    /* Input field */
-    html.dark .vh-search .pagefind-ui__search-input {
-        background-color: var(--search-dark-bg-input) !important;
-        color: var(--search-dark-text-primary) !important;
-    }
-    
-    html.dark .vh-search .pagefind-ui__search-input::placeholder {
-        color: var(--search-dark-text-secondary) !important;
-        opacity: 0.6;
-    }
-    
-    /* Results container */
-    html.dark .vh-search .pagefind-ui__drawer {
-        background-color: transparent !important;
-    }
-    
-    /* Individual result items */
-    html.dark .vh-search .pagefind-ui__result {
-        border-bottom-color: var(--search-dark-border) !important;
-    }
-    
-    html.dark .vh-search .pagefind-ui__result-title a {
-        color: var(--search-dark-text-primary) !important;
-        font-weight: 500;
-    }
-    
-    html.dark .vh-search .pagefind-ui__result-excerpt {
-        color: var(--search-dark-text-secondary) !important;
-    }
-    
-    html.dark .vh-search .pagefind-ui__result-link {
-        color: var(--search-dark-text-tertiary) !important;
-    }
-    
-    html.dark .vh-search .pagefind-ui__message {
-        color: var(--search-dark-text-secondary) !important;
-    }
-    
-    /* Buttons */
-    html.dark .vh-search .pagefind-ui__button {
-        background-color: var(--search-dark-bg-input) !important;
-        color: var(--search-dark-text-primary) !important;
-        border: 1px solid var(--search-dark-border) !important;
-        transition: background-color 0.18s ease-in-out;
-    }
-    
-    html.dark .vh-search .pagefind-ui__button:hover {
-        background-color: var(--search-dark-bg-hover) !important;
-    }
-    
-    /* Icons */
-    html.dark .vh-search .pagefind-ui__search-icon,
-    html.dark .vh-search .pagefind-ui__search-icon svg {
-        color: var(--search-dark-text-secondary) !important;
-        fill: var(--search-dark-text-secondary) !important;
-    }
-    
-    html.dark .vh-search .pagefind-ui__search-clear {
-        color: var(--search-dark-text-secondary) !important;
-        background-color: transparent !important;
-    }
+	/* 弹窗与 Header 的间距对齐旧版的 pt-[3.75rem]，小屏留出边距。 */
+	dialog.pf-modal {
+		margin-inline: auto;
+		width: calc(100% - 2rem);
+	}
 </style>

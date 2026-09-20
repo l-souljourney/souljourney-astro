@@ -54,8 +54,12 @@ test('mobile sidebar should avoid double /en prefix', () => {
   assert.match(mobileSidebar, /path\.startsWith\(["']\/en["']\)/, 'mobile sidebar missing /en prefix guard');
 });
 
-test('search modal binding should be keyed by current trigger element', () => {
-  assert.match(searchComponent, /boundButton/, 'search modal does not track bound button identity');
+// 弹窗本身已交给 Pagefind Component UI，这里要固定的是同一件事的另一半：
+// Header 入口在 client-side 导航后既要重新接上，又不能重复绑定。
+test('search entry should bind once and rebind across page transitions', () => {
+  assert.match(searchComponent, /data-search-bound/, 'search entry missing idempotent bind guard');
+  assert.match(searchComponent, /astro:page-load/, 'search entry missing page-load rebind');
+  assert.match(searchComponent, /pagefind-modal/, 'search should use the official modal component');
 });
 
 test('theme toggle listeners should only bind once across page transitions', () => {
