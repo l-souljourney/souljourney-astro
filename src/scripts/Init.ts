@@ -12,10 +12,6 @@ import initWebSiteTime from "@/scripts/Footer";
 import initMobileSidebar from "@/scripts/MobileSidebar";
 // Google 广告
 import GoogleAdInit from "@/scripts/GoogleAd";
-// Han Analytics 统计
-import HanAnalyticsInit from "@/scripts/HanAnalytics";
-//  谷歌 SEO 推送
-import SeoPushInit from "@/scripts/SeoPush";
 // SmoothScroll 滚动优化
 import SmoothScroll from "@/scripts/Smoothscroll";
 
@@ -44,10 +40,6 @@ const indexInit = async (isReady: boolean = true) => {
     initMobileSidebar();
     // Google 广告
     GoogleAdInit();
-    // Han Analytics 统计
-    HanAnalyticsInit();
-    // SEO 推送
-    SeoPushInit();
     // SmoothScroll
     SmoothScroll();
   } catch (error) {

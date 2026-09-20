@@ -74,21 +74,6 @@ export default {
   ],
   // 博客音乐组件解析接口 - 保留音乐功能，符合80后情怀
   vhMusicApi: '',
-  // 评论组件 - 引导到公众号交流
-  Comment: {
-    // Twikoo 评论
-    Twikoo: {
-      enable: false,
-      envId: ''
-    },
-    // Waline 评论
-    Waline: {
-      enable: false,
-      serverURL: ''
-    }
-  },
-  // 统计分析
-  HanAnalytics: { enable: false, server: '', siteId: '' },
   // Google 广告
   GoogleAds: {
     ad_Client: '',
@@ -103,12 +88,6 @@ export default {
     Name: 'L-忠程丨生死看淡不服就淦',
     // 引流文案
     Description: '文章交流与作者互动，都在公众号留言区。'
-  },
-  // SEO推送
-  SeoPush: {
-    enable: false,
-    serverApi: '',
-    paramsName: 'url'
   },
   // 页面阻尼滚动速度
   ScrollSpeed: 666,

@@ -4,10 +4,6 @@ import mediumZoom from 'medium-zoom';
 const ViewImgList: string[] = [
   // 文章内图片 - 使用简单选择器，因为 article 中的所有 img 都需要支持放大
   "article img",
-  // Twikoo 评论区图片
-  ".vh-comment>.twikoo>.tk-comments img:not(.tk-avatar-img,.OwO-item img,.tk-owo-emotion)",
-  // Waline 评论区图片
-  ".vh-comment div[data-waline] img:not(.wl-user-avatar,.wl-avatar img,.wl-reaction-list img,.wl-panel img,.tk-owo-emotion,.wl-emoji)"
 ];
 
 // 初始化
