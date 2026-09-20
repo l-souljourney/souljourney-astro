@@ -1,75 +1,46 @@
-// src/plugins/remark-note.js
-import { visit } from 'unist-util-visit';
-import getReadingTime from 'reading-time';
-import { toString } from 'mdast-util-to-string';
-import { assertNoEmbeddedFrontmatterAtBodyStart } from '../utils/contentIntegrity';
+// 正文的渲染合同：Markdown 里的链接与图片需要带上页面既有的行为属性。
+import type { HastPluginDefinition } from "satteri";
 
-// 处理标签
-const remarkNote = () => {
-  return (tree: any, file: any) => {
-    const fileRef = file.path || file.history?.[0] || "unknown-markdown-file";
-    assertNoEmbeddedFrontmatterAtBodyStart(String(file.value || ""), fileRef);
-    // 文章字数统计
-    const textOnPage = toString(tree);
-    const readingTime = getReadingTime(textOnPage);
-    file.data.astro.frontmatter.reading_time = readingTime.minutes
-    file.data.astro.frontmatter.article_word_count = readingTime.words
-
-    visit(tree, (node) => {
-      const { type, name, attributes } = node;
-      // 处理组件
-      if (type == 'textDirective' || type == 'leafDirective' || type == 'containerDirective') {
-        // 设置 HTML 标签和 class
-        const data = node.data || (node.data = {});
-        const hProperties = data.hProperties || (data.hProperties = {});
-        // 根据指令类型设置标签
-        data.hName = name == 'btn' ? 'a' : 'section';
-        // 这是 a 标签
-        attributes.link && (hProperties.href = attributes.link);
-        // 校验相册元素
-        if (name == 'picture') {
-          node.children = node.children.flatMap((child: any) => (child.type === 'paragraph' ? child.children : child));
-        }
-        // 处理 video 组件
-        if (name.startsWith('vh')) {
-          Object.keys(node.attributes).forEach((i: any) => (hProperties[`data-${i}`] = node.attributes[i]));
-        }
-        // 设置 class
-        hProperties.class = `vh-node vh-${name}${attributes.type ? ` ${name}-${attributes.type}` : ''}`;
-      }
-    });
-  };
-}
-
-
-//  处理 HTML 标签
-const addClassNames = () => {
-  return (tree: any) => {
-    visit(tree, (node, index, parent) => {
-      // 处理 a 标签
-      if (node.tagName === 'a') {
-        node.properties.target = '_blank', node.properties.rel = 'noopener nofollow'
-        node.children = [{ type: 'element', tagName: 'span', children: node.children || [] }];
-        // 处理 pre 标签
-      } else if (node.tagName === 'pre') {
-        const divNode = { type: 'element', tagName: 'section', properties: { class: 'vh-code-box' }, children: [{ type: 'element', tagName: 'span', properties: { class: 'vh-code-copy' } }, node] };
-        // 替换父节点的 children 中的 pre 节点为新的 div 节点
-        if (parent && index !== null) parent.children.splice(index, 1, divNode);
-        // 处理 img 标签
-      } else if (node.tagName === 'img') {
-        // 添加 class 和 loading 属性
-        node.properties.class = 'vh-article-img';
-        node.properties['data-vh-lz-src'] = node.properties.src;
-        node.properties.src = '/assets/images/lazy-loading.webp';
-        // 处理 section 标签
-      } else if (node.tagName === 'section') {
-        if (node.properties.class && node.properties.class.includes('vh-vhVideo')) {
-          node.children = [{ type: 'element', tagName: 'section', properties: { class: 'vh-space-loading' }, children: [{ type: 'element', tagName: 'span' }, { type: 'element', tagName: 'span' }, { type: 'element', tagName: 'span' }] }];
-        }
-      }
-    });
-
-  };
-}
-
-export { remarkNote, addClassNames } 
+export const addClassNames: HastPluginDefinition = {
+	name: "souljourney-article-media",
+	element: [
+		{
+			// 正文中的链接：站内与站外一视同仁（沿用旧管线行为），
+			// 新窗口打开、加 rel，文字外面再套一层 span。
+			// 属性随替换一次性写入 —— 先 setProperty 再 replaceNode 会让补丁落空。
+			filter: ["a"],
+			visit(node, ctx) {
+				ctx.replaceNode(node, {
+					...node,
+					properties: {
+						...node.properties,
+						target: "_blank",
+						// hast 把 rel 当列表属性：数组形式序列化后就是 "noopener nofollow"。
+						rel: ["noopener", "nofollow"],
+					},
+					children: [
+						{
+							type: "element",
+							tagName: "span",
+							properties: {},
+							children: node.children,
+						},
+					],
+				});
+			},
+		},
+		{
+			// 正文中的图片：交给 scripts/vhLazyImg.ts 做懒加载 ——
+			// 原图地址挪到 data-vh-lz-src，src 先指向占位图。
+			filter: ["img"],
+			visit(node, ctx) {
+				const originalSrc = node.properties?.src;
+				ctx.setProperty(node, "class", "vh-article-img");
+				if (typeof originalSrc === "string" && originalSrc.length > 0) {
+					ctx.setProperty(node, "data-vh-lz-src", originalSrc);
+					ctx.setProperty(node, "src", "/assets/images/lazy-loading.webp");
+				}
+			},
+		},
+	],
+};

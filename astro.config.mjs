@@ -8,11 +8,11 @@ import pagefindArticlesOnly from "./src/integrations/pagefindArticlesOnly.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Markdown 配置================
-import remarkMath from "remark-math";
-import rehypeSlug from "rehype-slug";
-import rehypeKatex from "rehype-katex";
-import remarkDirective from "remark-directive";
-import { remarkNote, addClassNames } from './src/plugins/markdown.custom'
+// Astro 7 起 Sätteri 是默认 Markdown processor；这里显式配置它，只为挂上本仓的
+// 正文渲染合同插件（见 src/plugins/markdown.custom.ts）。旧 remark/rehype 插件链
+// 已随 #43 Phase B 移除。
+import { satteri } from '@astrojs/markdown-satteri';
+import { addClassNames } from './src/plugins/markdown.custom'
 import { validateMarkdownIntegrityInDir } from './src/utils/contentIntegrityFs'
 // Markdown 配置================
 import SITE_INFO from './src/config';
@@ -47,8 +47,9 @@ export default defineConfig({
 		}),
 	],
 	markdown: {
-		remarkPlugins: [remarkMath, remarkDirective, remarkNote,],
-		rehypePlugins: [rehypeKatex, rehypeSlug, addClassNames],
+		processor: satteri({
+			hastPlugins: [addClassNames],
+		}),
 		syntaxHighlight: 'shiki',
 		shikiConfig: {
 			theme: {

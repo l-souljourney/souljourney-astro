@@ -31,7 +31,7 @@ import SITE_CONFIG from "@/config";
 const { Site, Title, Author, GoogleAds } = SITE_CONFIG;
 // 处理文章内容
 const description = getDescription(post);
-const { Content, remarkPluginFrontmatter, headings } = await render(post);
+const { Content, headings } = await render(post);
 // 优先使用 frontmatter 的统计字段，缺失时回退实时计算值。
 const readingTime = getReadingTime(post.body);
 const articleWordCount = typeof post.data.word_count === "number" ? post.data.word_count : readingTime.words;

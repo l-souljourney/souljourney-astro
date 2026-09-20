@@ -1,10 +1,4 @@
-import { inRouter, outRouter } from "@/utils/updateRouter";
-// 初始化文章代码块
-import codeInit from "@/scripts/Code";
-// 初始化视频播放器
-import videoInit from "@/scripts/Video";
-// 初始化 LivePhoto
-import livePhotoInit from '@/scripts/LivePhoto'
+import { inRouter } from "@/utils/updateRouter";
 // 初始化BackTop组件
 import BackTopInitFn from "@/scripts/BackTop";
 // 图片懒加载
@@ -28,7 +22,6 @@ import SmoothScroll from "@/scripts/Smoothscroll";
 // ============================================================
 
 // 页面初始化 Only
-const videoList: any[] = [];
 type InitWindow = Window & {
   __vhGlobalInitBound?: boolean;
   __vhConsoleBannerShown?: boolean;
@@ -38,12 +31,6 @@ const indexInit = async (isReady: boolean = true) => {
   // 如果不需要初始化则直接返回
   if (!isReady) return;
   try {
-    // 代码块处理
-    codeInit();
-    // 初始化视频播放器
-    videoInit(videoList);
-    // 初始化 LivePhoto
-    livePhotoInit();
     // 图片懒加载
     vhLzImgInit();
     // 图片灯箱
@@ -77,13 +64,6 @@ export default () => {
   if (!win.__vhGlobalInitBound) {
     // 进入页面时触发 (包含首次加载)
     inRouter(() => indexInit(true));
-
-    // 离开当前页面时触发
-    outRouter(() => {
-      // 销毁播放器
-      videoList.forEach((i: any) => i.destroy());
-      videoList.length = 0;
-    });
 
     win.__vhGlobalInitBound = true;
   }
