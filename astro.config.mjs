@@ -23,6 +23,9 @@ validateMarkdownIntegrityInDir(path.resolve(__dirname, "./src/content/blog"));
 export default defineConfig({
 	site: SITE_INFO.Site,
 	build: { assets: 'vh_static' },
+	// Astro 7 默认改为 'jsx'（按 JSX 规则剥离内联元素间空白）。升级提交先显式固定
+	// Astro 6 的 true 行为，避免把渲染差异混进框架升级；是否采用新默认另行评估。
+	compressHTML: true,
 	experimental: {
 		svgOptimizer: svgoOptimizer(),
 	},
