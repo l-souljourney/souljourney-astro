@@ -29,3 +29,8 @@ test/
 /public/hanplayer
 /public/MineWeb
 /public/other
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*
