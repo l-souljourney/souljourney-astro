@@ -1,6 +1,6 @@
 # Astro 发布契约 v2.2（Obsidian / wxengine / Astro）
 
-更新时间：2026-05-02
+更新时间：2026-09-24
 
 ## 1. 发布链路
 
@@ -46,16 +46,18 @@
 ### 2.4 成功返回语义
 
 - 成功响应包含 `route`，字段路径：`data.route`
+- `route` 是内容公开后的 canonical 预期路由，不代表当前已可访问；未形成 zh/en 镜像对时对应页面不存在。
 - 路由制式：
-  - 中文：`/article/{slug}`
-  - 英文：`/en/article/{slug}`
+  - 中文：`/blog/{slug}`
+  - 英文：`/en/blog/{slug}`
+- 历史 `/article/{slug}`、`/en/article/{slug}` 仅为既有已公开文章的兼容入口，由站点在 `edgeone.json` 中逐条 301 到 `/blog` 制式；新内容与新发布调用方不再使用该制式。
 
 ### 2.5 双语镜像发布约束
 
 - 只有完整 zh/en 镜像对可以进入正式公开发布集合。
 - 未形成镜像对的稿件视为 `pending_translation`：
   - 保留在仓库
-  - 不进入 article route
+  - 不进入文章路由（`/blog/{slug}`）
   - 不进入首页、归档、分类、标签
   - 不进入 RSS、sitemap、Pagefind 搜索索引
 - 因此发布器在生成翻译稿时，必须复用原稿的 `source_id` 与 `slug`，只能变更：
@@ -96,7 +98,8 @@
 
 - 文章详情页参数统一使用 `slug`（不再使用 frontmatter `id`）。
 - 文章卡片、首页、归档、分类、标签、侧栏推荐、RSS 全部使用公开 publish set 生成链接。
-- 中文链接：`/article/{slug}`；英文链接：`/en/article/{slug}`。
+- 中文链接：`/blog/{slug}`；英文链接：`/en/blog/{slug}`。
+- `/article/*` 为历史兼容制式，仅对已公开的旧文章在 `edgeone.json` 逐条 301，不是 canonical，也不对新稿提供。
 - 文章级语言切换和 `hreflang` 只指向同 `source_id + slug` 的公开镜像稿件。
 - 不再允许“缺失镜像时回首页”或“只按 `lang + slug` 猜测对稿”的宽松策略。
 
