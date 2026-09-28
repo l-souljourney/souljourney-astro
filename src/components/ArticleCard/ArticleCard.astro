@@ -65,7 +65,7 @@ const gradient = categoryGradients[post.data.categories] || categoryGradients.de
 	</h2>
 
 	<h4 class="mt-auto px-[1.166rem] pt-[0.66rem] pb-[1rem] w-full h-max overflow-hidden flex flex-wrap">
-		{post.data.tags.map((tag: string) => (
+		{(post.data.tags || []).map((tag: string) => (
 			<a 
 				href={withLangPrefix(`/blog/tag/${tag}`)} 
 				class="mr-[0.88rem] text-zinc-600 dark:text-zinc-400 text-[0.688rem] font-normal transition-colors duration-180 hover:text-primary last:mr-0 before:content-['#']"
